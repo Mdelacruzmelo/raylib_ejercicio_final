@@ -25,7 +25,7 @@ Vector2 characterPosition = { screenWidth / 2, screenHeight / 2 };
 Vector2 mousePosition = { 0.f, 0.f };
 static const float cursorSize = 50.f;
 static const float cursorRadius = cursorSize / 2;
-static const float cursorDepth = 5.f;
+static const float cursorDepth = 2.5f;
 
 static void GameDrawing();
 
@@ -95,8 +95,20 @@ static void GameDrawing() {
 	// Mouse
 
 	Vector2 mousePosition = GetMousePosition();
-	DrawRectangle(mousePosition.x - cursorRadius, mousePosition.y, cursorSize, cursorDepth, WHITE);
-	DrawRectangle(mousePosition.x, mousePosition.y - cursorRadius, cursorDepth, cursorSize, WHITE);
+	DrawRectangle(
+		mousePosition.x - cursorRadius,
+		mousePosition.y - (cursorDepth / 2),
+		cursorSize,
+		cursorDepth,
+		WHITE
+	);
+	DrawRectangle(
+		mousePosition.x - (cursorDepth / 2),
+		mousePosition.y - cursorRadius,
+		cursorDepth,
+		cursorSize,
+		WHITE
+	);
 
 	// Linetrace
 	DrawLineV(characterPosition, mousePosition, Fade(WHITE, 0.1f));
