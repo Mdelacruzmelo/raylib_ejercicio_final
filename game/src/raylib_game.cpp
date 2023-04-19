@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "raymath.h"
+#include <cmath>
 
 Font font = { 0 };
 Music music = { 0 };
@@ -16,7 +17,8 @@ static const float velocity = 1.f;
 static const float acceleration = 4.f;
 static const float characterSize = 40.f;
 static const float characterRadius = characterSize / 2;
-Vector2 characterPosition = { 0.f, 0.f };
+static const float attackRadius = 70.f;
+Vector2 characterPosition = { screenWidth / 2, screenHeight / 2 };
 
 // Mouse
 
@@ -43,7 +45,7 @@ int main(void)
 
 	while (!WindowShouldClose())
 	{
-		UpdateMusicStream(music);
+		// UpdateMusicStream(music);
 		BeginDrawing();
 		ClearBackground(BLACK);
 		GameDrawing();
@@ -97,7 +99,21 @@ static void GameDrawing() {
 	DrawRectangle(mousePosition.x, mousePosition.y - cursorRadius, cursorDepth, cursorSize, WHITE);
 
 	// Linetrace
+	DrawLineV(characterPosition, mousePosition, Fade(WHITE, 0.1f));
 
-	DrawLineV(characterPosition, mousePosition, WHITE);
+	// Attack aiming and radius
 
+	Vector2 vDifference = Vector2{ mousePosition.x - characterPosition.x, mousePosition.y - characterPosition.y };
+	float hipotenuse = sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+	Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
+	Vector2 scaledVector = Vector2Scale(normalizedAiming, attackRadius);
+	DrawLineV(characterPosition, Vector2Add(characterPosition, scaledVector), RED);
+
+	float vectorLength = Vector2Length(vDifference);
+	DrawText(
+		TextFormat("Vector length: %f", vectorLength),
+		950,
+		40,
+		24,
+		WHITE);
 }
