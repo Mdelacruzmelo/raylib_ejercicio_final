@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "Character.h"
 #include "PlayerController.h"
+#include "EnvironmentHandler.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -22,8 +23,11 @@ int main(void)
 	PlayMusicStream(music);
 
 	Character* character = new Character();
+
 	PlayerController* controller = new PlayerController();
 	controller->SetPawn(character);
+
+	EnvironmentHandler* environmentHandler = new EnvironmentHandler();
 
 	SetTargetFPS(60);
 
