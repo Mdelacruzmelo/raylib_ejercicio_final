@@ -17,7 +17,7 @@ static const float velocity = 1.f;
 static const float acceleration = 4.f;
 static const float characterSize = 40.f;
 static const float characterRadius = characterSize / 2;
-static const float attackRadius = 70.f;
+static const float attackDistance = 70.f;
 Vector2 characterPosition = { screenWidth / 2, screenHeight / 2 };
 
 // Mouse
@@ -118,8 +118,10 @@ static void GameDrawing() {
 	Vector2 vDifference = Vector2{ mousePosition.x - characterPosition.x, mousePosition.y - characterPosition.y };
 	float hipotenuse = sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 	Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-	Vector2 scaledVector = Vector2Scale(normalizedAiming, attackRadius);
-	DrawLineV(characterPosition, Vector2Add(characterPosition, scaledVector), RED);
+	Vector2 scaledVector = Vector2Scale(normalizedAiming, attackDistance);
+	Vector2 endVector = Vector2Add(characterPosition, scaledVector);
+
+	DrawLineV(characterPosition, endVector, RED);
 
 	float vectorLength = Vector2Length(vDifference);
 	DrawText(
@@ -128,4 +130,15 @@ static void GameDrawing() {
 		40,
 		24,
 		WHITE);
+
+	// Attack campus with click
+	if (IsMouseButtonPressed(0)) {
+		Vector2 circle1Center = { (endVector.x + characterPosition.x) / 2,(endVector.y + characterPosition.y) / 2 };
+		DrawCircle(circle1Center.x, circle1Center.y, 30.f, RED);
+		Vector2 circle2Center = { endVector.x,endVector.y };
+		DrawCircle(circle2Center.x, circle2Center.y, 20.f, RED);
+
+		// Todo, mirar cuando se ataca, con qué intersectan los circulos para afectar al objetivo del ataque
+	}
 }
+
