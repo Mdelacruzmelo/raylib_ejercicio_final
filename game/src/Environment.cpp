@@ -150,3 +150,16 @@ void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 	doorQuantity = newDoorQuantity;
 	doors = newDoors;
 }
+
+Door* Environment::GetDoor(char* doorIdInput)
+{
+	Door* doorFound = nullptr;
+
+	for (int i = 0; i < doorQuantity; i++) {
+		if (doors[i].GetId() == doorIdInput) {
+			doorFound = &doors[i];
+		}
+	}
+
+	return doorFound;
+}

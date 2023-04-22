@@ -48,6 +48,15 @@ void PlayerController::Play()
 
 		character->Draw();
 
+		if (character->GetIsTransporting()) {
+			DrawText(
+				TextFormat("IS TRANSPORTING"),
+				100,
+				440,
+				24,
+				WHITE);
+		}
+
 		// Linetrace
 
 		DrawLineV(character->pos, mousePosition, Fade(WHITE, 0.1f));

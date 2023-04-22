@@ -32,15 +32,16 @@ int main(void)
 
 	Environment* env1 = new Environment(DARKGRAY);
 	env1->Activate();
-	env1->AddDoor(SIDE_RIGHT, "door_1");
+	env1->AddDoor(SIDE_RIGHT, "door_A");
 	envHandler->Append(env1);
 
 	// Environment 2
 
 	Environment* env2 = new Environment(DARKPURPLE);
-	env2->Deactivate();
-	env2->AddDoor(SIDE_LEFT, "door_1");
+	env2->AddDoor(SIDE_LEFT, "door_B");
 	envHandler->Append(env2);
+
+	env1->GetDoor("door_A")->Target("door_B");
 
 	while (!WindowShouldClose())
 	{

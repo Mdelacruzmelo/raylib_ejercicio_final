@@ -4,7 +4,6 @@
 #include "raylib.h"
 #include "Door.h"
 #include "EnvironmentUtils.h"
-#include "Character.h"
 
 class Environment
 {
@@ -18,6 +17,7 @@ public:
 	void Activate();
 	void Deactivate();
 	void AddDoor(E_Side doorSide, char* doorIdInput);
+	Door* GetDoor(char* doorIdInput);
 
 private:
 

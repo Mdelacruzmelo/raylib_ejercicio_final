@@ -48,3 +48,19 @@ bool Character::GetIsInteracting()
 {
 	return isInteracting;
 }
+
+void Character::TransportToDoor(char* doorTargetIdInput)
+{
+	isTransporting = true;
+	doorTargetId = doorTargetIdInput;
+}
+
+bool Character::GetIsTransporting()
+{
+	return isTransporting;
+}
+
+void Character::SetIsTransporting(bool isTransportingInput)
+{
+	isTransporting = isTransportingInput;
+}

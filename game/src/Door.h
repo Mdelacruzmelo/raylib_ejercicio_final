@@ -14,6 +14,9 @@ public:
 	float GetHeight();
 	float GetWidth();
 	Rectangle GetRect();
+	char* GetId();
+	void Target(char* targetIdInput);
+	char* GetTargetId();
 
 private:
 
@@ -22,4 +25,5 @@ private:
 	float height = 70.f;
 	E_Side doorSide;
 	char* doorId;
+	char* doorTargetId;
 };

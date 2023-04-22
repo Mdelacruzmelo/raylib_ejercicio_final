@@ -25,12 +25,7 @@ void Door::Draw(Vector2 posInput, Character* character)
 		CheckCollisionRecs(character->GetRect(), GetRect()) &&
 		character->GetIsInteracting()
 		) {
-		DrawText(
-			TextFormat("INTERACTING"),
-			100,
-			440,
-			24,
-			WHITE);
+		character->TransportToDoor(GetTargetId());
 	}
 }
 
@@ -52,4 +47,19 @@ float Door::GetWidth()
 Rectangle Door::GetRect()
 {
 	return Rectangle{ pos.x, pos.y, width, height };
+}
+
+char* Door::GetId()
+{
+	return doorId;
+}
+
+void Door::Target(char* targetIdInput)
+{
+	doorTargetId = targetIdInput;
+}
+
+char* Door::GetTargetId()
+{
+	return doorTargetId;
 }

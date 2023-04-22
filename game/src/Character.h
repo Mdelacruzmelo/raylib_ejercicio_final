@@ -19,9 +19,14 @@ public:
 	Rectangle GetRect();
 	void SetIsInteracting(bool isInteractingInput);
 	bool GetIsInteracting();
+	void TransportToDoor(char* doorTargetIdInput);
+	bool GetIsTransporting();
+	void SetIsTransporting(bool isTransportingInput);
 
 private:
 
 	bool isInteracting = false;
+	bool isTransporting = false;
+	char* doorTargetId;
 
 };
