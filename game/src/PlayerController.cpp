@@ -2,9 +2,10 @@
 #include "raymath.h" // for vectors
 #include <cmath> // for simple math
 
-PlayerController::PlayerController(Character* characterInput)
+PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 {
 	character = characterInput;
+	hud = hudInput;
 }
 
 void PlayerController::Play()
@@ -47,6 +48,7 @@ void PlayerController::Play()
 		// Draw character
 
 		character->Draw();
+		hud->Draw();
 
 		// Linetrace
 
@@ -87,6 +89,24 @@ void PlayerController::Play()
 		}
 		else {
 			character->SetIsInteracting(false);
+		}
+
+		// Inventario
+
+		if (IsKeyDown(KEY_ONE)) {
+			hud->ItemNumberPress(1);
+		}
+		if (IsKeyDown(KEY_TWO)) {
+			hud->ItemNumberPress(2);
+		}
+		if (IsKeyDown(KEY_THREE)) {
+			hud->ItemNumberPress(3);
+		}
+		if (IsKeyDown(KEY_FOUR)) {
+			hud->ItemNumberPress(4);
+		}
+		if (IsKeyDown(KEY_FIVE)) {
+			hud->ItemNumberPress(5);
 		}
 
 	}

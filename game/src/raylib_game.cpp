@@ -3,6 +3,7 @@
 #include "PlayerController.h"
 #include "EnvironmentHandler.h"
 #include "Environment.h"
+#include "HUD.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -25,7 +26,8 @@ int main(void)
 	SetTargetFPS(60);
 
 	Character* character = new Character();
-	PlayerController* controller = new PlayerController(character);
+	HUD* hud = new HUD(character);
+	PlayerController* controller = new PlayerController(character, hud);
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 
 	// Environment 1

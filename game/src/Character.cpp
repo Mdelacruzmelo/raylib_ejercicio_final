@@ -44,6 +44,21 @@ Vector2 Character::GetSize()
 	return Vector2{ size, size };
 }
 
+int Character::GetLevel()
+{
+	return level;
+}
+
+float Character::GetNormalizedHealth()
+{
+	return health / maxHealth;
+}
+
+float Character::GetNormalizedExperience()
+{
+	return experience / maxExperience;
+}
+
 float Character::GetAttackDistance()
 {
 	return attackDistance;

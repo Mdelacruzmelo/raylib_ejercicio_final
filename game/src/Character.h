@@ -9,17 +9,25 @@ public:
 	void Draw();
 	void Move(Vector2 movement);
 	void Attack(Vector2 endVector);
+
 	Rectangle GetRect();
 	Vector2 GetSize();
+	int GetLevel();
+	float GetNormalizedHealth();
+	float GetNormalizedExperience();
 	float GetAttackDistance();
+
 	void SetIsInteracting(bool isInteractingInput);
 	bool GetIsInteracting();
+
 	bool GetIsTransporting();
 	void SetIsTransporting(bool isTransportingInput);
+
 	char* GetDoorTargetId();
 	void SetDoorTargetId(char* doorTargetIdInput);
-	void SetPosition(Vector2 newPos);
+
 	Vector2 GetPosition();
+	void SetPosition(Vector2 newPos);
 
 private:
 
@@ -28,6 +36,18 @@ private:
 	float size = 40.f;
 	float radius = size / 2;
 	float attackDistance = 70.f;
+
+	float health = 70.f;
+	float maxHealth = 100.f;
+
+	float attack = 100.f;
+	float maxAttack = 100.f;
+
+	int level = 1;
+
+	float experience = 10.f;
+	float maxExperience = 100.f;
+
 	Vector2 pos = { 600.f, 540.f };
 
 	bool isInteracting = false;

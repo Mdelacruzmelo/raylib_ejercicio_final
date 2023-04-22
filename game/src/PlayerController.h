@@ -1,11 +1,12 @@
 #pragma once
 #include "raylib.h"
 #include "Character.h"
+#include "HUD.h"
 
 class PlayerController
 {
 public:
-	PlayerController(Character* characterInput);
+	PlayerController(Character* characterInput, HUD* hudInput);
 
 	Vector2 mousePosition = { 0.f, 0.f };
 	float cursorSize = 50.f;
@@ -18,5 +19,6 @@ public:
 private:
 
 	Character* character = nullptr;
+	HUD* hud = nullptr;
 
 };
