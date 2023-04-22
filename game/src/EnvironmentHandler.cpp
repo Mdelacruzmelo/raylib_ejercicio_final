@@ -23,42 +23,98 @@ void EnvironmentHandler::Draw()
 		// Recorro todos los environments
 		for (int i = 0; i < quantity; i++) {
 
-			bool correctEnvironment = false;
+			Door* doorFound = nullptr;
+			Vector2 endLocation = { 0.f, 0.f };
 
-			// Recorro todas las puertas
-			for (int j = 0; j < environments[i].GetDoorQuantity(); j++) {
+			// Recorro todas las puertas Top
 
-				Door doorRef = environments[i].GetDoors()[j];
+			if (!doorFound) {
+				for (int j = 0; j < environments[i].GetTopDoorQuantity(); j++) {
 
-				// Si coincide el nombre unico de puerta, entonces vamos
-				if (doorRef.GetId() == character->GetDoorTargetId()) {
+					Door* topDoorRef = &environments[i].GetTopDoors()[j];
 
-					environments[i].Activate();
-					character->SetPosition(doorRef.GetPosition());
-
-					DrawText(
-						TextFormat("Vector X: %f", doorRef.GetPosition().x),
-						450,
-						440,
-						24,
-						WHITE);
-
-					DrawText(
-						TextFormat("Vector Y: %f", doorRef.GetPosition().y),
-						450,
-						470,
-						24,
-						WHITE);
-					// character->SetIsTransporting(false);
-					// character->SetDoorTargetId(nullptr);
-
-					correctEnvironment = true;
-
+					if (topDoorRef->GetId() == character->GetDoorTargetId()) {
+						doorFound = topDoorRef;
+						endLocation = Vector2{
+							doorFound->GetPosition().x + (doorFound->GetSize().x / 2), // mitad H de la puerta
+							doorFound->GetPosition().y + doorFound->GetSize().y + character->GetSize().y
+						};
+					}
 				}
 			}
 
-			// desactiva los entornos que no coincidan
-			if (!correctEnvironment) environments[i].Deactivate();
+			// Recorro todas las puertas Bottom
+
+			if (!doorFound) {
+
+				for (int j = 0; j < environments[i].GetBottomDoorQuantity(); j++) {
+
+					Door* bottomDoorRef = &environments[i].GetBottomDoors()[j];
+
+					if (bottomDoorRef->GetId() == character->GetDoorTargetId()) {
+						doorFound = bottomDoorRef;
+						endLocation = Vector2{
+							doorFound->GetPosition().x + (doorFound->GetSize().x / 2), // mitad H de la puerta
+							doorFound->GetPosition().y - character->GetSize().y - 5
+						};
+					}
+				}
+			}
+
+			// Recorro todas las puertas Right
+
+			if (!doorFound) {
+
+				for (int j = 0; j < environments[i].GetRightDoorQuantity(); j++) {
+
+					Door* rightDoorRef = &environments[i].GetRightDoors()[j];
+
+					if (rightDoorRef->GetId() == character->GetDoorTargetId()) {
+						doorFound = rightDoorRef;
+						endLocation = Vector2{
+							doorFound->GetPosition().x - character->GetSize().x - 5,
+							doorFound->GetPosition().y + (doorFound->GetSize().y / 2) // mitad V de la puerta,
+						};
+					}
+				}
+			}
+
+			// Recorro todas las puertas Left
+
+			if (!doorFound) {
+
+				for (int j = 0; j < environments[i].GetLeftDoorQuantity(); j++) {
+
+					Door* leftDoorRef = &environments[i].GetLeftDoors()[j];
+
+					if (leftDoorRef->GetId() == character->GetDoorTargetId()) {
+						doorFound = leftDoorRef;
+						endLocation = Vector2{
+							doorFound->GetPosition().x + doorFound->GetSize().x + character->GetSize().x,
+							doorFound->GetPosition().y + (doorFound->GetSize().y / 2) // mitad V de la puerta,
+						};
+					}
+				}
+			}
+
+			if (doorFound) {
+				environments[i].Activate();
+				character->SetIsTransporting(false);
+				character->SetIsInteracting(false);
+				character->SetPosition(endLocation);
+				character->SetDoorTargetId(nullptr);
+
+				DrawText(
+					TextFormat("Vector Y: %f", doorFound->GetPosition().y),
+					450,
+					470,
+					24,
+					WHITE);
+			}
+			else {
+				environments[i].Deactivate();
+			}
+
 		}
 	}
 

@@ -50,7 +50,7 @@ void PlayerController::Play()
 
 		// Linetrace
 
-		DrawLineV(character->pos, mousePosition, Fade(WHITE, 0.1f));
+		DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
 
 		// Movimiento
 
@@ -58,13 +58,13 @@ void PlayerController::Play()
 
 		// Attack aiming and radius
 
-		Vector2 vDifference = Vector2{ mousePosition.x - character->pos.x, mousePosition.y - character->pos.y };
+		Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
 		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-		Vector2 scaledVector = Vector2Scale(normalizedAiming, character->attackDistance);
-		Vector2 endVector = Vector2Add(character->pos, scaledVector);
+		Vector2 scaledVector = Vector2Scale(normalizedAiming, character->GetAttackDistance());
+		Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
 
-		DrawLineV(character->pos, endVector, RED);
+		DrawLineV(character->GetPosition(), endVector, RED);
 
 		// Atacar
 
@@ -82,8 +82,12 @@ void PlayerController::Play()
 
 		// Interactuar
 
-		if (IsKeyDown(KEY_SPACE)) character->SetIsInteracting(true);
-		else character->SetIsInteracting(false);
+		if (IsKeyDown(KEY_SPACE) && !character->GetIsInteracting()) {
+			character->SetIsInteracting(true);
+		}
+		else {
+			character->SetIsInteracting(false);
+		}
 
 	}
 

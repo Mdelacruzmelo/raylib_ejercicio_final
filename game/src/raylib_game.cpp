@@ -39,9 +39,19 @@ int main(void)
 
 	Environment* env2 = new Environment(DARKPURPLE);
 	env2->AddDoor(SIDE_LEFT, "door_B");
+	env2->AddDoor(SIDE_BOTTOM, "door_C");
 	envHandler->Append(env2);
 
+	// Environment 3
+
+	Environment* env3 = new Environment(BLACK);
+	env3->AddDoor(SIDE_TOP, "door_D");
+	envHandler->Append(env3);
+
 	env1->GetDoor("door_A")->Target("door_B");
+	env2->GetDoor("door_B")->Target("door_A");
+	env3->GetDoor("door_D")->Target("door_C");
+	env2->GetDoor("door_C")->Target("door_D");
 
 	while (!WindowShouldClose())
 	{

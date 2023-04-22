@@ -9,15 +9,17 @@ public:
 	Door();
 	Door(E_Side doorSideInput, char* doorIdInput);
 
-	void Draw(Vector2 posInput, Character* character);
+	void Draw(Character* character);
 	E_Side GetDoorSide();
 	float GetHeight();
 	float GetWidth();
 	Rectangle GetRect();
+	Vector2 GetSize();
 	char* GetId();
 	void Target(char* targetIdInput);
 	char* GetTargetId();
 	Vector2 GetPosition();
+	void SetPosition(Vector2 newPos);
 
 private:
 

@@ -36,7 +36,17 @@ void Character::Attack(Vector2 endVector) {
 
 Rectangle Character::GetRect()
 {
-	return Rectangle{ pos.x, pos.y, size, size };
+	return Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
+}
+
+Vector2 Character::GetSize()
+{
+	return Vector2{ size, size };
+}
+
+float Character::GetAttackDistance()
+{
+	return attackDistance;
 }
 
 void Character::SetIsInteracting(bool isInteractingInput)
@@ -47,11 +57,6 @@ void Character::SetIsInteracting(bool isInteractingInput)
 bool Character::GetIsInteracting()
 {
 	return isInteracting;
-}
-
-void Character::TransportToDoor()
-{
-	isTransporting = true;
 }
 
 void Character::SetDoorTargetId(char* doorTargetIdInput)
@@ -77,4 +82,9 @@ char* Character::GetDoorTargetId()
 void Character::SetPosition(Vector2 newPos)
 {
 	pos = newPos;
+}
+
+Vector2 Character::GetPosition()
+{
+	return pos;
 }
