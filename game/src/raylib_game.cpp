@@ -32,6 +32,7 @@ int main(void)
 	Environment* env1 = new Environment(DARKGRAY);
 	env1->Activate();
 	env1->AddDoor(SIDE_LEFT);
+	env1->AddDoor(SIDE_RIGHT);
 
 	envHandler->Append(env1);
 

@@ -1,7 +1,8 @@
 #pragma once
-#pragma warning(disable : 4430)
+#pragma warning(disable : 4430 )
 
 #include "raylib.h"
+#include "Door.h"
 #include "EnvironmentUtils.h"
 
 class Environment
@@ -22,6 +23,6 @@ private:
 	bool active = false;
 	int doorQuantity = 0;
 	Color color;
-	// Door* doors;
+	Door* doors;
 
 };
