@@ -15,7 +15,6 @@ public:
 	Character* character = nullptr;
 
 	void Play();
-	void SetPawn(Character* characterInput);
 
 private:
 

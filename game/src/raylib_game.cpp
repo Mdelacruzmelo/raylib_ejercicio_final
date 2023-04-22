@@ -26,7 +26,7 @@ int main(void)
 
 	Character* character = new Character();
 	PlayerController* controller = new PlayerController(character);
-	EnvironmentHandler* envHandler = new EnvironmentHandler();
+	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 
 	// Environment 1
 

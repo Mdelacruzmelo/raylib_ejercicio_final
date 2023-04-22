@@ -6,10 +6,10 @@ Character::Character()
 
 void Character::Draw() {
 	DrawRectangle(
-		pos.x - characterRadius,
-		pos.y - characterRadius,
-		characterSize,
-		characterSize,
+		pos.x - radius,
+		pos.y - radius,
+		size,
+		size,
 		WHITE
 	);
 }
@@ -32,4 +32,19 @@ void Character::Attack(Vector2 endVector) {
 
 	// Todo, mirar cuando se ataca, con qué intersectan los circulos para afectar al objetivo del ataque
 
+}
+
+Rectangle Character::GetRect()
+{
+	return Rectangle{ pos.x, pos.y, size, size };
+}
+
+void Character::SetIsInteracting(bool isInteractingInput)
+{
+	isInteracting = isInteractingInput;
+}
+
+bool Character::GetIsInteracting()
+{
+	return isInteracting;
 }

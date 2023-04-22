@@ -1,8 +1,8 @@
 #include "EnvironmentHandler.h"
 
-EnvironmentHandler::EnvironmentHandler()
+EnvironmentHandler::EnvironmentHandler(Character* characterInput)
 {
-	// environments = new Environment[quantity];
+	character = characterInput;
 }
 
 void EnvironmentHandler::Draw()
@@ -15,10 +15,10 @@ void EnvironmentHandler::Draw()
 		}
 	}
 
-	if (envToDraw) envToDraw->Draw();
-	else environments[0].Draw();
+	if (envToDraw) envToDraw->Draw(character);
+	else environments[0].Draw(character);
 
-	DrawText(TextFormat("envs quantity %d", quantity), 100, 300, 16, WHITE);
+	// DrawText(TextFormat("envs quantity %d", quantity), 100, 300, 16, WHITE);
 
 }
 

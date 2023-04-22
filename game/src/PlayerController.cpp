@@ -7,10 +7,6 @@ PlayerController::PlayerController(Character* characterInput)
 	character = characterInput;
 }
 
-void PlayerController::SetPawn(Character* characterInput) {
-	character = characterInput;
-}
-
 void PlayerController::Play()
 {
 	// Movimiento
@@ -86,13 +82,9 @@ void PlayerController::Play()
 
 		// Interactuar
 
-		if (IsKeyDown(KEY_E)) {
+		if (IsKeyDown(KEY_SPACE)) character->SetIsInteracting(true);
+		else character->SetIsInteracting(false);
 
-			/*if (CheckCollisionRecs()) {
-
-			}*/
-
-		}
 	}
 
 

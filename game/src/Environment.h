@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "Door.h"
 #include "EnvironmentUtils.h"
+#include "Character.h"
 
 class Environment
 {
@@ -11,7 +12,7 @@ public:
 	Environment();
 	Environment(Color colorInput);
 
-	void Draw();
+	void Draw(Character* characterInput);
 	bool GetIsActivated();
 	Color GetColor();
 	void Activate();

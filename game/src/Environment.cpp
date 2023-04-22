@@ -11,7 +11,7 @@ Environment::Environment(Color colorInput)
 	color = colorInput;
 }
 
-void Environment::Draw()
+void Environment::Draw(Character* characterInput)
 {
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), color);
 
@@ -80,40 +80,40 @@ void Environment::Draw()
 		}
 	}
 
-	// Top doors, Y = 0.f
+	// Dibujar Top doors, Y = 0.f
 
 	float distanceXTopDoors = (float)GetScreenWidth() / (topDoorsQuantity + 1);
 	for (int i = 1; i <= topDoorsQuantity; i++) {
 		Vector2 posTopDraw = { distanceXTopDoors * i, 0.f };
-		topDoors[i - 1].Draw(posTopDraw);
+		topDoors[i - 1].Draw(posTopDraw, characterInput);
 	}
 
-	// Bottom doors, Y = ScreenHeight - height
+	// Dibujar Bottom doors, Y = ScreenHeight - height
 
 	float distanceXBottomDoors = (float)GetScreenWidth() / (bottomDoorsQuantity + 1);
 	for (int i = 1; i <= bottomDoorsQuantity; i++) {
 		Vector2 posBottomDraw = { distanceXBottomDoors * i, (GetScreenHeight() - topDoors[i - 1].GetHeight()) };
-		bottomDoors[i - 1].Draw(posBottomDraw);
+		bottomDoors[i - 1].Draw(posBottomDraw, characterInput);
 	}
 
-	// Right doors, X = ScreenWidth - width
+	// Dibujar Right doors, X = ScreenWidth - width
 
 	float distanceYRightDoors = (float)GetScreenHeight() / (rightDoorsQuantity + 1);
 	for (int i = 1; i <= rightDoorsQuantity; i++) {
 		Vector2 posRightDraw = { GetScreenWidth() - rightDoors[i - 1].GetWidth(), distanceYRightDoors * i };
-		rightDoors[i - 1].Draw(posRightDraw);
+		rightDoors[i - 1].Draw(posRightDraw, characterInput);
 	}
 
-	// Left doors, X = 0.f
+	// Dibujar Left doors, X = 0.f
 
 	float distanceYLeftDoors = (float)GetScreenHeight() / (leftDoorsQuantity + 1);
 	for (int i = 1; i <= leftDoorsQuantity; i++) {
 		Vector2 posLeftDraw = { 0.f, distanceYLeftDoors * i };
-		leftDoors[i - 1].Draw(posLeftDraw);
+		leftDoors[i - 1].Draw(posLeftDraw, characterInput);
 	}
 
 
-	DrawText(TextFormat("doors quantity %d", doorQuantity), 100, 330, 16, WHITE);
+	// DrawText(TextFormat("doors quantity %d", doorQuantity), 100, 330, 16, WHITE);
 
 }
 
