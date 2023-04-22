@@ -1,5 +1,4 @@
 #include "Door.h"
-// #include "Environment.h"
 
 Door::Door()
 {
@@ -9,21 +8,10 @@ Door::Door()
 	doorSide = SIDE_LEFT;
 }
 
-Door::Door(E_Side doorSideInput/*, Environment* environmentOwnerInput*/)
+Door::Door(E_Side doorSideInput, char* doorIdInput)
 {
 	doorSide = doorSideInput;
-	// environmentOwner = environmentOwnerInput;
-}
-
-//void Door::To(Door* doorTo, Environment* environmentTargetInput)
-//{
-//	environmentTarget = environmentTargetInput;
-//}
-
-void Door::Transport()
-{
-	// environmentOwner->Deactivate();
-	// environmentTarget->Activate();
+	doorId = doorIdInput;
 }
 
 void Door::Draw(Vector2 posInput)

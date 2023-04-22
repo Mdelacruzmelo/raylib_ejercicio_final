@@ -84,6 +84,15 @@ void PlayerController::Play()
 			24,
 			WHITE);
 
+		// Interactuar
+
+		if (IsKeyDown(KEY_E)) {
+
+			/*if (CheckCollisionRecs()) {
+
+			}*/
+
+		}
 	}
 
 

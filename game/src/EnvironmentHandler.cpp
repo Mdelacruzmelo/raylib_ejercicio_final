@@ -2,7 +2,7 @@
 
 EnvironmentHandler::EnvironmentHandler()
 {
-	environments = new Environment[quantity];
+	// environments = new Environment[quantity];
 }
 
 void EnvironmentHandler::Draw()
@@ -18,11 +18,14 @@ void EnvironmentHandler::Draw()
 	if (envToDraw) envToDraw->Draw();
 	else environments[0].Draw();
 
+	DrawText(TextFormat("envs quantity %d", quantity), 100, 300, 16, WHITE);
+
 }
 
 void EnvironmentHandler::Append(Environment* newEnvironment)
 {
 	int newQuantity = quantity + 1;
+
 	Environment* newEnvs = new Environment[newQuantity];
 
 	for (int i = 0; i < newQuantity; i++) {
@@ -30,6 +33,8 @@ void EnvironmentHandler::Append(Environment* newEnvironment)
 		if (i < quantity) newEnvs[i] = environments[i];
 		else newEnvs[i] = *newEnvironment;
 
-		environments = newEnvs;
 	}
+
+	quantity = newQuantity;
+	environments = newEnvs;
 }

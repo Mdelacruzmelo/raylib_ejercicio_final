@@ -22,21 +22,25 @@ int main(void)
 
 	SetMusicVolume(music, 1.0f);
 	PlayMusicStream(music);
+	SetTargetFPS(60);
 
 	Character* character = new Character();
-
 	PlayerController* controller = new PlayerController(character);
-
 	EnvironmentHandler* envHandler = new EnvironmentHandler();
+
+	// Environment 1
 
 	Environment* env1 = new Environment(DARKGRAY);
 	env1->Activate();
-	env1->AddDoor(SIDE_LEFT);
-	env1->AddDoor(SIDE_RIGHT);
-
+	env1->AddDoor(SIDE_RIGHT, "door_1");
 	envHandler->Append(env1);
 
-	SetTargetFPS(60);
+	// Environment 2
+
+	Environment* env2 = new Environment(DARKPURPLE);
+	env2->Deactivate();
+	env2->AddDoor(SIDE_LEFT, "door_1");
+	envHandler->Append(env2);
 
 	while (!WindowShouldClose())
 	{

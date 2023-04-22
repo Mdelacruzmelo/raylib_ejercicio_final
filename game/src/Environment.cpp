@@ -13,8 +13,6 @@ Environment::Environment(Color colorInput)
 
 void Environment::Draw()
 {
-	DrawText(TextFormat("QUANTITY %d", doorQuantity), 10, 140, 24, WHITE);
-
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), color);
 
 	// Dibujar todas las puertas
@@ -109,13 +107,13 @@ void Environment::Draw()
 	// Left doors, X = 0.f
 
 	float distanceYLeftDoors = (float)GetScreenHeight() / (leftDoorsQuantity + 1);
-	DrawText(TextFormat("ENTRANDO"), 10, 240, 24, WHITE);
-	DrawText(TextFormat("FOR LOOP I = %d", leftDoorsQuantity), 10, 270, 24, WHITE);
 	for (int i = 1; i <= leftDoorsQuantity; i++) {
 		Vector2 posLeftDraw = { 0.f, distanceYLeftDoors * i };
-		DrawText(TextFormat("ENTRE"), 10, 300, 24, WHITE);
 		leftDoors[i - 1].Draw(posLeftDraw);
 	}
+
+
+	DrawText(TextFormat("doors quantity %d", doorQuantity), 100, 330, 16, WHITE);
 
 }
 
@@ -139,14 +137,14 @@ Color Environment::GetColor()
 	return color;
 }
 
-void Environment::AddDoor(E_Side doorSide)
+void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 {
 	int newDoorQuantity = doorQuantity + 1;
 	Door* newDoors = new Door[newDoorQuantity];
 
 	for (int i = 0; i < newDoorQuantity; i++) {
 		if (i < doorQuantity) newDoors[i] = doors[i];
-		else newDoors[i] = Door(doorSide);
+		else newDoors[i] = Door(doorSide, doorIdInput);
 	}
 
 	doorQuantity = newDoorQuantity;

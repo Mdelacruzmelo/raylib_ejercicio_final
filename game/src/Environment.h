@@ -16,7 +16,7 @@ public:
 	Color GetColor();
 	void Activate();
 	void Deactivate();
-	void AddDoor(E_Side doorSide);
+	void AddDoor(E_Side doorSide, char* doorIdInput);
 
 private:
 
@@ -24,5 +24,5 @@ private:
 	int doorQuantity = 0;
 	Color color;
 	Door* doors;
-
+	char* environmentId;
 };
