@@ -5,12 +5,13 @@
 class EnvironmentHandler
 {
 public:
-	EnvironmentHandler(Environment* environmentsInput, int size);
+	EnvironmentHandler();
 
 	int quantity = 0;
 	Environment* environments;
 
 	void Draw();
+	void Append(Environment* newEnvironment);
 
 private:
 

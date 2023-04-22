@@ -1,15 +1,8 @@
 #include "EnvironmentHandler.h"
 
-EnvironmentHandler::EnvironmentHandler(Environment* environmentsInput, int size)
+EnvironmentHandler::EnvironmentHandler()
 {
-	quantity = size;
-	Environment* envResult = new Environment[size];
-
-	for (int i = 0; i < size; i++) {
-		envResult[i] = environmentsInput[i];
-	}
-
-	environments = envResult;
+	environments = new Environment[quantity];
 }
 
 void EnvironmentHandler::Draw()
@@ -25,4 +18,18 @@ void EnvironmentHandler::Draw()
 	if (envToDraw) envToDraw->Draw();
 	else environments[0].Draw();
 
+}
+
+void EnvironmentHandler::Append(Environment* newEnvironment)
+{
+	int newQuantity = quantity + 1;
+	Environment* newEnvs = new Environment[newQuantity];
+
+	for (int i = 0; i < newQuantity; i++) {
+
+		if (i < quantity) newEnvs[i] = environments[i];
+		else newEnvs[i] = *newEnvironment;
+
+		environments = newEnvs;
+	}
 }

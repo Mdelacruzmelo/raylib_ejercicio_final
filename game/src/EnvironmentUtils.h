@@ -1,8 +1,8 @@
 #pragma once
 
 enum E_Side {
-	ENV_TOP,
-	ENV_BOTTOM,
-	ENV_RIGHT,
-	ENV_LEFT,
+	SIDE_TOP,
+	SIDE_BOTTOM,
+	SIDE_RIGHT,
+	SIDE_LEFT,
 };

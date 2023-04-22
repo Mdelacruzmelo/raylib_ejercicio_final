@@ -1,22 +1,27 @@
 #pragma once
+#pragma warning(disable : 4430)
+
 #include "raylib.h"
 #include "EnvironmentUtils.h"
-#include "Door.h"
 
 class Environment
 {
 public:
 	Environment();
+	Environment(Color colorInput);
 
 	void Draw();
 	bool GetIsActivated();
+	Color GetColor();
 	void Activate();
+	void Deactivate();
 	void AddDoor(E_Side doorSide);
 
 private:
 
 	bool active = false;
 	int doorQuantity = 0;
-	Door* doors = new Door[doorQuantity];
+	Color color;
+	// Door* doors;
 
 };

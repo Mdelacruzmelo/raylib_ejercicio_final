@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "PlayerController.h"
 #include "EnvironmentHandler.h"
+#include "Environment.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -24,10 +25,15 @@ int main(void)
 
 	Character* character = new Character();
 
-	PlayerController* controller = new PlayerController();
-	controller->SetPawn(character);
+	PlayerController* controller = new PlayerController(character);
 
-	EnvironmentHandler* environmentHandler = new EnvironmentHandler();
+	EnvironmentHandler* envHandler = new EnvironmentHandler();
+
+	Environment* env1 = new Environment(DARKGRAY);
+	env1->Activate();
+	env1->AddDoor(SIDE_LEFT);
+
+	envHandler->Append(env1);
 
 	SetTargetFPS(60);
 
@@ -39,6 +45,7 @@ int main(void)
 
 		ClearBackground(BLACK);
 
+		envHandler->Draw();
 		controller->Play();
 
 		EndDrawing();

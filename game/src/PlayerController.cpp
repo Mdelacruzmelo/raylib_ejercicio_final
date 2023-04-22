@@ -1,10 +1,10 @@
-#include "PlayerController.h";
+#include "PlayerController.h"
 #include "raymath.h" // for vectors
 #include <cmath> // for simple math
 
-PlayerController::PlayerController()
+PlayerController::PlayerController(Character* characterInput)
 {
-
+	character = characterInput;
 }
 
 void PlayerController::SetPawn(Character* characterInput) {
@@ -32,17 +32,17 @@ void PlayerController::Play()
 	mousePosition = GetMousePosition();
 
 	DrawRectangle(
-		mousePosition.x - cursorRadius,
-		mousePosition.y - (cursorDepth / 2),
-		cursorSize,
-		cursorDepth,
+		(int)(mousePosition.x - cursorRadius),
+		(int)(mousePosition.y - (cursorDepth / 2)),
+		(int)cursorSize,
+		(int)cursorDepth,
 		WHITE
 	);
 	DrawRectangle(
-		mousePosition.x - (cursorDepth / 2),
-		mousePosition.y - cursorRadius,
-		cursorDepth,
-		cursorSize,
+		(int)(mousePosition.x - (cursorDepth / 2)),
+		(int)(mousePosition.y - cursorRadius),
+		(int)cursorDepth,
+		(int)cursorSize,
 		WHITE
 	);
 
@@ -63,7 +63,7 @@ void PlayerController::Play()
 		// Attack aiming and radius
 
 		Vector2 vDifference = Vector2{ mousePosition.x - character->pos.x, mousePosition.y - character->pos.y };
-		float hipotenuse = sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
 		Vector2 scaledVector = Vector2Scale(normalizedAiming, character->attackDistance);
 		Vector2 endVector = Vector2Add(character->pos, scaledVector);
