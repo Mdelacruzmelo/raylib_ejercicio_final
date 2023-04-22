@@ -11,13 +11,15 @@ public:
 	Environment();
 	Environment(Color colorInput);
 
-	void Draw(Character* characterInput);
+	void Draw(Character* characterRef);
 	bool GetIsActivated();
 	Color GetColor();
 	void Activate();
 	void Deactivate();
 	void AddDoor(E_Side doorSide, char* doorIdInput);
 	Door* GetDoor(char* doorIdInput);
+	Door* GetDoors();
+	int GetDoorQuantity();
 
 private:
 

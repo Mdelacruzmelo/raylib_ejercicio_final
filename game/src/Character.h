@@ -19,9 +19,12 @@ public:
 	Rectangle GetRect();
 	void SetIsInteracting(bool isInteractingInput);
 	bool GetIsInteracting();
-	void TransportToDoor(char* doorTargetIdInput);
+	void TransportToDoor();
 	bool GetIsTransporting();
 	void SetIsTransporting(bool isTransportingInput);
+	char* GetDoorTargetId();
+	void SetDoorTargetId(char* doorTargetIdInput);
+	void SetPosition(Vector2 newPos);
 
 private:
 

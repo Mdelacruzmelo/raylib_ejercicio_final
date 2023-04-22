@@ -12,10 +12,11 @@ public:
 	float cursorRadius = cursorSize / 2;
 	float cursorDepth = 2.5f;
 	Vector2 movement = { 0.f, 0.f };
-	Character* character = nullptr;
 
 	void Play();
 
 private:
+
+	Character* character = nullptr;
 
 };

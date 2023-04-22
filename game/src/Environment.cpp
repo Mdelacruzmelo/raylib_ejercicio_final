@@ -11,7 +11,7 @@ Environment::Environment(Color colorInput)
 	color = colorInput;
 }
 
-void Environment::Draw(Character* characterInput)
+void Environment::Draw(Character* characterRef)
 {
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), color);
 
@@ -85,7 +85,7 @@ void Environment::Draw(Character* characterInput)
 	float distanceXTopDoors = (float)GetScreenWidth() / (topDoorsQuantity + 1);
 	for (int i = 1; i <= topDoorsQuantity; i++) {
 		Vector2 posTopDraw = { distanceXTopDoors * i, 0.f };
-		topDoors[i - 1].Draw(posTopDraw, characterInput);
+		topDoors[i - 1].Draw(posTopDraw, characterRef);
 	}
 
 	// Dibujar Bottom doors, Y = ScreenHeight - height
@@ -93,7 +93,7 @@ void Environment::Draw(Character* characterInput)
 	float distanceXBottomDoors = (float)GetScreenWidth() / (bottomDoorsQuantity + 1);
 	for (int i = 1; i <= bottomDoorsQuantity; i++) {
 		Vector2 posBottomDraw = { distanceXBottomDoors * i, (GetScreenHeight() - topDoors[i - 1].GetHeight()) };
-		bottomDoors[i - 1].Draw(posBottomDraw, characterInput);
+		bottomDoors[i - 1].Draw(posBottomDraw, characterRef);
 	}
 
 	// Dibujar Right doors, X = ScreenWidth - width
@@ -101,7 +101,7 @@ void Environment::Draw(Character* characterInput)
 	float distanceYRightDoors = (float)GetScreenHeight() / (rightDoorsQuantity + 1);
 	for (int i = 1; i <= rightDoorsQuantity; i++) {
 		Vector2 posRightDraw = { GetScreenWidth() - rightDoors[i - 1].GetWidth(), distanceYRightDoors * i };
-		rightDoors[i - 1].Draw(posRightDraw, characterInput);
+		rightDoors[i - 1].Draw(posRightDraw, characterRef);
 	}
 
 	// Dibujar Left doors, X = 0.f
@@ -109,7 +109,7 @@ void Environment::Draw(Character* characterInput)
 	float distanceYLeftDoors = (float)GetScreenHeight() / (leftDoorsQuantity + 1);
 	for (int i = 1; i <= leftDoorsQuantity; i++) {
 		Vector2 posLeftDraw = { 0.f, distanceYLeftDoors * i };
-		leftDoors[i - 1].Draw(posLeftDraw, characterInput);
+		leftDoors[i - 1].Draw(posLeftDraw, characterRef);
 	}
 
 
@@ -162,4 +162,14 @@ Door* Environment::GetDoor(char* doorIdInput)
 	}
 
 	return doorFound;
+}
+
+Door* Environment::GetDoors()
+{
+	return doors;
+}
+
+int Environment::GetDoorQuantity()
+{
+	return doorQuantity;
 }

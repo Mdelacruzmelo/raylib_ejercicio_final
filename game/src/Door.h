@@ -17,10 +17,11 @@ public:
 	char* GetId();
 	void Target(char* targetIdInput);
 	char* GetTargetId();
+	Vector2 GetPosition();
 
 private:
 
-	Vector2 pos = Vector2{ 0.f, 0.f };
+	Vector2 pos;
 	float width = 40.f;
 	float height = 70.f;
 	E_Side doorSide;
