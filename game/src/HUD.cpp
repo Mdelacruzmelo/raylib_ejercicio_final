@@ -172,6 +172,44 @@ void HUD::DrawGameWidget()
 
 		}
 
+		// ----- DEBUG ABILITIES DRAW ------
+
+		DrawText(
+			TextFormat("Ataque: %f", character->GetAttack()),
+			800,
+			200,
+			22,
+			WHITE);
+
+		DrawText(
+			TextFormat("Defensa: %f", character->GetDefense()),
+			800,
+			240,
+			22,
+			WHITE);
+
+		DrawText(
+			TextFormat("Velocidad: %f", character->GetSpeed()),
+			800,
+			280,
+			22,
+			WHITE);
+
+		DrawText(
+			TextFormat("Energia: %f", character->GetEnergy()),
+			800,
+			320,
+			22,
+			WHITE);
+
+
+		DrawText(
+			TextFormat("Alcance: %f", character->GetAttackDistance()),
+			800,
+			360,
+			22,
+			WHITE);
+
 	}
 }
 
@@ -290,6 +328,65 @@ void HUD::DrawHabilitiesWidget()
 	DrawAbButtons(ENERGY, 3);
 	DrawAbButtons(ATTACK_DISTANCE, 4);
 
+	// Personaje
+
+	float chaWidth = 200.f;
+	float chaHeight = 200.f;
+	int chaMTop = 30;
+	Vector2 chaPos = {
+		GetScreenWidth() / 4 - 70.f,
+		(GetScreenHeight() / 2) - (chaHeight / 2) + chaMTop
+	};
+	Rectangle rectCharacter = Rectangle{ chaPos.x, chaPos.y, chaWidth, chaHeight };
+	DrawRectangleRec(rectCharacter, WHITE);
+
+	// Puntos de habolidad
+
+	int abFontSize = 30;
+	int abPadding = 10;
+	float abSize = abFontSize + (2 * abPadding);
+	float abX = chaPos.x - 30;
+	float abY = (GetScreenHeight() / 3);
+	Rectangle rectAbPoints = Rectangle{ abX, abY, abSize, abSize };
+	DrawRectangleRec(rectAbPoints, YELLOW);
+	DrawText(
+		TextFormat("%d", character->GetAbPoints()),
+		abX + abPadding,
+		abY + abPadding,
+		30,
+		BLACK
+	);
+	DrawText("Ability points", abX, abY - abSize, abFontSize, YELLOW);
+
+	// Barra de experiencia
+
+	int expMTop = 70;
+	float expWidth = chaWidth + 60.f; // 30 a cada lado
+	float expheight = 30.f;
+	Vector2 expBarPos = { chaPos.x - (30), chaPos.y + chaHeight + expMTop };
+
+	Rectangle rectTotalExp = Rectangle{
+		expBarPos.x,
+		expBarPos.y,
+		expWidth,
+		expheight
+	};
+	DrawRectangleRec(rectTotalExp, GRAY);
+
+	Rectangle rectCurrentExp = Rectangle{
+		expBarPos.x,
+		expBarPos.y,
+		expWidth * character->GetNormalizedExperience(),
+		expheight
+	};
+	DrawRectangleRec(rectCurrentExp, YELLOW);
+	DrawText("Level", expBarPos.x + 10, expBarPos.y + 5, 20, BLACK);
+
+	int shortLevelNumY = expBarPos.y - expheight + 10;
+	int shortLevelFSize = 12;
+	DrawText(TextFormat("%d", character->GetLevel()), expBarPos.x, shortLevelNumY, shortLevelFSize, YELLOW);
+	DrawText(TextFormat("%d", character->GetLevel() + 1), expBarPos.x + expWidth, shortLevelNumY, shortLevelFSize, YELLOW);
+
 }
 
 void HUD::DrawAbButtons(E_AbilityType abType, int order) {
@@ -305,7 +402,12 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 	else if (abType == ENERGY) habilityName = "Energia";
 	else habilityName = "Alcance";
 
-	int y = 300 + (120 * order);
+	// de 300 hasta 900 --> total altura = 600
+
+	int marginTop = 50;
+	int hMax = 600;
+	int centerY = GetScreenHeight() / 2;
+	int y = (centerY - (hMax / 2)) + (120 * order) + marginTop;
 
 	DrawText(
 		habilityName,
@@ -333,21 +435,22 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 		if (abType == ENERGY) abLevel = character->GetEnergy();
 		if (abType == ATTACK_DISTANCE) abLevel = character->GetAttackDistance();
 
-		if (abLevel > i) {
+		if (abLevel > i) DrawRectangleRec(rect, GREEN);
+		else DrawRectangleLinesEx(rect, 1.f, GRAY);
 
-			DrawRectangleRec(rect, GREEN);
-		}
-		else {
-			DrawRectangleLinesEx(rect, 1.f, GRAY);
+		if (CheckCollisionPointRec(GetMousePosition(), rect)) {
 
-			if (CheckCollisionPointRec(GetMousePosition(), rect)) {
+			SetMouseCursor(4);
 
-				SetMouseCursor(4);
-				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
-
-				if (IsMouseButtonPressed(0)) habButtonPressed = abType;
-
+			if (abLevel > i) {
+				DrawRectangleRec(rect, Fade(RED, 1.f));
+				if (IsMouseButtonPressed(0)) habButtonPressed = abType * -1;
 			}
+			else {
+				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
+				if (IsMouseButtonPressed(0)) habButtonPressed = abType;
+			}
+
 		}
 
 		DrawRectangleLines(startX + addedWidth, y, squareSize, squareSize, GRAY);

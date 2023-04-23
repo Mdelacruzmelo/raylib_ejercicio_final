@@ -167,31 +167,16 @@ void PlayerController::Play()
 
 				if (hud->GetHabilityButtonPressed() == 10) typeHUD = H_PAUSE;
 
-
-				// Ataque
-				if (hud->GetHabilityButtonPressed() == ATTACK) {
-					character->IncreaseAttack();
+				if (
+					character->IsAddAbility(hud->GetHabilityButtonPressed()) &&
+					character->GetAbPoints() > 0
+					) {
+					character->IncreaseAbility((E_AbilityType)hud->GetHabilityButtonPressed());
+					character->SubstractAbPoints(1);
 				}
-
-				// Defensa
-				if (hud->GetHabilityButtonPressed() == DEFENSE) {
-					character->IncreaseDefense();
-				}
-
-				// Velocidad
-				if (hud->GetHabilityButtonPressed() == VELOCITY) {
-					character->IncreaseVelocity();
-				}
-
-				// Energía
-				if (hud->GetHabilityButtonPressed() == ENERGY) {
-					character->IncreaseEnergy();
-					character->SubstractHabPoints(1);
-				}
-
-				// Alcance
-				if (hud->GetHabilityButtonPressed() == ATTACK_DISTANCE) {
-					character->IncreaseAttackDistance();
+				else if (character->IsSubstractAbility(hud->GetHabilityButtonPressed())) {
+					character->DecreaseAbility((E_AbilityType)hud->GetHabilityButtonPressed());
+					character->AddAbPoints(1);
 				}
 
 				// else if (hud->GetHabilityButtonPressed() == 2) typeHUD = H_LOAD_DATA;

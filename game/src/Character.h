@@ -41,15 +41,26 @@ public:
 	float GetEnergy();
 	float GetSpeed();
 
+	bool IsAddAbility(int abNumber);
+	bool IsSubstractAbility(int abNumber);
+
+	void IncreaseAbility(E_AbilityType abType);
 	void IncreaseAttack();
 	void IncreaseDefense();
 	void IncreaseVelocity();
 	void IncreaseEnergy();
 	void IncreaseAttackDistance();
-	void IncreaseExperience();
 
+	void DecreaseAbility(E_AbilityType abType);
+	void DecreaseAttack();
+	void DecreaseDefense();
+	void DecreaseVelocity();
+	void DecreaseEnergy();
+	void DecreaseAttackDistance();
+
+	void IncreaseExperience();
 	void AddAbPoints(int add);
-	void SubstractHabPoints(int substract);
+	void SubstractAbPoints(int substract);
 
 	int GetInventorySize();
 	int* GetInventory();
@@ -89,7 +100,7 @@ private:
 	int level = 1;
 	int abilityPoints = 10;
 
-	float experience = 0.f;
+	float experience = 20.f;
 	float maxExperience = 100.f;
 
 	int inventorySize = 5;
