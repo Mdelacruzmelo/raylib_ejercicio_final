@@ -1,6 +1,7 @@
 #include "PlayerController.h"
 #include "raymath.h" // for vectors
 #include <cmath> // for simple math
+#include "InventoryItemsUtils.h"
 
 PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 {
@@ -107,6 +108,14 @@ void PlayerController::Play()
 		}
 		if (IsKeyDown(KEY_FIVE)) {
 			hud->ItemNumberPress(5);
+		}
+
+		// -------------------- TEST INTERACT --------------------
+
+		if (IsKeyPressed(KEY_Q)) {
+			// character->AddHealth(10.f);
+			// character->ApplyDamage(10.f);
+			// character->AddToInventory(I_POTION_SPEED);
 		}
 
 	}

@@ -1,4 +1,5 @@
 #include "HUD.h"
+#include "InventoryItemsUtils.h"
 
 HUD::HUD(Character* characterInput)
 {
@@ -104,20 +105,51 @@ void HUD::Draw()
 
 		// Inventario
 
-		for (int i = 0; i < inventorySize; i++) {
+		for (int i = 0; i < character->GetInventorySize(); i++) {
 
 			int marginTop = 5;
 			int startX = padding + (i * itemSize) + (i * 5);
 
 			// Cuadrado inventario
 
-			DrawRectangleLines(
-				startX,
-				padding + healthBarHeight + marginTop,
-				itemSize,
-				itemSize,
-				GRAY
-			);
+			DrawText(TextFormat("doors quantity %d", character->GetInventory()[i]), 100, 330, 16, WHITE);
+
+			if (character->GetInventory()[i] > 0) {
+
+				// TODO: Dibujar imagen de item
+				Color color;
+				if (character->GetInventory()[i] == I_POTION_HEALTH) {
+					color = GREEN;
+				}
+				else if (character->GetInventory()[i] == I_POTION_STRENGTH) {
+					color = ORANGE;
+				}
+				else if (character->GetInventory()[i] == I_POTION_SPEED) {
+					color = BLUE;
+				}
+				else {
+					color = YELLOW;
+				}
+
+				DrawRectangle(
+					startX,
+					padding + healthBarHeight + marginTop,
+					itemSize,
+					itemSize,
+					color
+				);
+
+			}
+			else {
+
+				DrawRectangleLines(
+					startX,
+					padding + healthBarHeight + marginTop,
+					itemSize,
+					itemSize,
+					GRAY
+				);
+			}
 
 			// Numero tecla para usar inventario
 
@@ -131,14 +163,12 @@ void HUD::Draw()
 
 		}
 
-
-
 	}
 }
 
 void HUD::ItemNumberPress(int num)
 {
-	for (int i = 0; i < inventorySize; i++) {
+	for (int i = 0; i < character->GetInventorySize(); i++) {
 
 		if (num == i + 1) {
 

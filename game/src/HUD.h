@@ -13,15 +13,15 @@ public:
 private:
 
 	Character* character;
+
 	int padding = 20;
+
 	int expBarHeight = 10;
 	int expNumbersSize = 30;
+
 	int healthBarWidth = 200;
 	int healthBarHeight = 20;
 
-	int inventorySize = 5;
-	int* inventory = new int[inventorySize];
 	int itemSize = 30.f;
-
 
 };

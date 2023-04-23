@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "InventoryItemsUtils.h"
 
 class Character
 {
@@ -29,6 +30,13 @@ public:
 	Vector2 GetPosition();
 	void SetPosition(Vector2 newPos);
 
+	void AddHealth(float healthAdded);
+	void ApplyDamage(float damage);
+
+	int GetInventorySize();
+	int* GetInventory();
+	void AddToInventory(E_ItemType item);
+
 private:
 
 	float velocity = 1.f;
@@ -47,6 +55,9 @@ private:
 
 	float experience = 10.f;
 	float maxExperience = 100.f;
+
+	int inventorySize = 5;
+	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
 	Vector2 pos = { 600.f, 540.f };
 

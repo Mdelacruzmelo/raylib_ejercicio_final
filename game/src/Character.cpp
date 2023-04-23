@@ -99,6 +99,40 @@ void Character::SetPosition(Vector2 newPos)
 	pos = newPos;
 }
 
+void Character::AddHealth(float healthAdded)
+{
+	health += healthAdded;
+}
+
+void Character::ApplyDamage(float damage)
+{
+	health -= damage;
+	if (health < 0) health = 0.f;
+}
+
+int Character::GetInventorySize()
+{
+	return inventorySize;
+}
+
+int* Character::GetInventory()
+{
+	return inventory;
+}
+
+void Character::AddToInventory(E_ItemType item)
+{
+	for (int i = 0; i < inventorySize; i++) {
+
+		if (inventory[i] == 0) {
+
+			inventory[i] = item;
+			return;
+
+		}
+	}
+}
+
 Vector2 Character::GetPosition()
 {
 	return pos;
