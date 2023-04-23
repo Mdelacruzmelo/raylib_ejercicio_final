@@ -34,6 +34,26 @@ void Character::Attack(Vector2 endVector) {
 
 }
 
+float Character::GetAttack()
+{
+	return attack;
+}
+
+float Character::GetDefense()
+{
+	return defense;
+}
+
+float Character::GetEnergy()
+{
+	return energy;
+}
+
+float Character::GetSpeed()
+{
+	return velocity;
+}
+
 Rectangle Character::GetRect()
 {
 	return Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
@@ -112,7 +132,7 @@ void Character::ApplyDamage(float damage)
 
 void Character::IncreaseSpeed()
 {
-	acceleration += 2.f;
+	velocity += 0.1f;
 }
 
 void Character::IncreaseStrength()

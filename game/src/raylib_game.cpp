@@ -14,6 +14,7 @@ static const int screenHeight = 1080;
 
 int main(void)
 {
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(screenWidth, screenHeight, "raylib game template");
 	InitAudioDevice();
 
@@ -49,6 +50,8 @@ int main(void)
 	Environment* env3 = new Environment(BLACK);
 	env3->AddDoor(SIDE_TOP, "door_D");
 	envHandler->Append(env3);
+
+	// Connections
 
 	env1->GetDoor("door_A")->Target("door_B");
 	env2->GetDoor("door_B")->Target("door_A");

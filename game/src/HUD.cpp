@@ -178,7 +178,7 @@ void HUD::DrawPauseWidget()
 {
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
 
-	int padding = 20;
+	float padding = 20.f;
 	float h = 55.f;
 	float y = 400.f;
 
@@ -257,6 +257,121 @@ void HUD::DrawPauseWidget()
 
 void HUD::DrawHabilitiesWidget()
 {
+
+	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
+
+	float padding = 20.f;
+	float h = 55.f;
+
+	// Button 1 - Atrás
+
+	float opacity1 = 0.8f;
+	float yBack = 50.f;
+	Rectangle rect1 = Rectangle{ 50.f, yBack, 100.f, h };
+
+	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
+
+		opacity1 = 1.f;
+		SetMouseCursor(4);
+
+		if (IsMouseButtonPressed(0)) habButtonPressed = 1;
+
+	}
+
+	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
+	DrawText("Atras", 50.f + padding, yBack + padding, 20, BLACK);
+
+	// Botones de habilidades
+
+	int marginLeft = 50;
+	int startX = (GetScreenWidth() / 2) + marginLeft;
+	int squareSize = 40;
+
+	for (int hab = 0; hab < 5; hab++) {
+
+		char* habilityName;
+
+		if (hab == 0) habilityName = "Ataque"; // hab = 0
+		if (hab == 1) habilityName = "Defensa";
+		if (hab == 2) habilityName = "Velocidad";
+		if (hab == 3) habilityName = "Energia";
+		if (hab == 4) habilityName = "Alcance";
+
+		int y = 300 + (120 * hab);
+		DrawText(habilityName, startX, y - 40, 20, WHITE);
+
+		for (int i = 0; i < 10; i++) {
+
+			int addedWidth = squareSize * i;
+			Rectangle rect = Rectangle{
+				(float)(startX + addedWidth),
+				(float)y,
+				(float)squareSize,
+				(float)squareSize
+			};
+
+			if (hab == 0) { // Ataque
+
+				if (character->GetAttack() > i) {
+
+					DrawRectangleRec(rect, GREEN);
+				}
+				else {
+					DrawRectangleLinesEx(rect, 1.f, GRAY);
+				}
+			}
+			else if (hab == 1) { // Defensa
+
+				if (character->GetDefense() > i) {
+					DrawRectangleRec(rect, GREEN);
+				}
+				else {
+					DrawRectangleLinesEx(rect, 1.f, GRAY);
+				}
+			}
+			else if (hab == 2) { // Velocidad
+
+				int velocityValue = (character->GetSpeed() * 10) - 10;
+
+				if (velocityValue > i) {
+					DrawRectangleRec(rect, GREEN);
+				}
+				else {
+					DrawRectangleLinesEx(rect, 1.f, GRAY);
+				}
+			}
+			else if (hab == 3) { // Energia
+
+				if (character->GetEnergy() > i) {
+					DrawRectangleRec(rect, GREEN);
+				}
+				else {
+					DrawRectangleLinesEx(rect, 1.f, GRAY);
+				}
+			}
+			else if (hab == 4) { // Alcance
+
+				if ((character->GetAttackDistance() / 10) > i) {
+					DrawRectangleRec(rect, GREEN);
+				}
+				else {
+					DrawRectangleLinesEx(rect, 1.f, GRAY);
+				}
+			}
+
+			if (CheckCollisionPointRec(GetMousePosition(), rect)) {
+
+				SetMouseCursor(4);
+				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
+				// if (IsMouseButtonPressed(0)) habButtonPressed = 1;
+
+			}
+
+			DrawRectangleLines(startX + addedWidth, y, squareSize, squareSize, GRAY);
+
+		}
+	}
+
 }
 
 void HUD::DrawLoadDataWidget()
@@ -298,4 +413,14 @@ int HUD::GetPauseButtonPressed()
 void HUD::RestartPauseButtons()
 {
 	pauseButtonPressed = 0;
+}
+
+int HUD::GetHabilityButtonPressed()
+{
+	return habButtonPressed;
+}
+
+void HUD::RestartHabilityButtons()
+{
+	habButtonPressed = 0;
 }

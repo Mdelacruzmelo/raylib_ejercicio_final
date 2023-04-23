@@ -159,6 +159,15 @@ void PlayerController::Play()
 				24,
 				WHITE);*/
 		}
+
+		else if (typeHUD == H_HABILITIES) {
+
+			if (hud->GetHabilityButtonPressed() == 1) typeHUD = H_PAUSE;
+			// else if (hud->GetHabilityButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+
+			hud->RestartHabilityButtons();
+
+		}
 	}
 }
 

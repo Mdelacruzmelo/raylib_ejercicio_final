@@ -10,6 +10,7 @@ public:
 	Door(E_Side doorSideInput, char* doorIdInput);
 
 	void Draw(Character* character);
+	void Draw(Character* character, Vector2 posInput);
 	E_Side GetDoorSide();
 	float GetHeight();
 	float GetWidth();

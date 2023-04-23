@@ -26,6 +26,9 @@ public:
 	int GetPauseButtonPressed();
 	void RestartPauseButtons();
 
+	int GetHabilityButtonPressed();
+	void RestartHabilityButtons();
+
 private:
 
 	Character* character;
@@ -40,5 +43,6 @@ private:
 
 	int itemSize = 30.f;
 	int pauseButtonPressed = 0;
+	int habButtonPressed = 0;
 
 };
