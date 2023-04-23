@@ -24,6 +24,16 @@ void Character::Draw(Color colorInput) {
 	}
 }
 
+void Character::ReinitializeAttackCircles() {
+
+	// Reinitialize circle attacks
+
+	circle1Center = { 0.f, 0.f };
+	circle1Radius = 0.f;
+	circle2Center = { 0.f, 0.f };
+	circle2Radius = 0.f;
+}
+
 bool Character::GetIsAlive()
 {
 	return alive;
@@ -50,11 +60,14 @@ void Character::Move(Vector2 movement)
 
 void Character::Attack(Vector2 endVector) {
 
-	Vector2 circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
-	DrawCircle(circle1Center.x, circle1Center.y, 30.f, RED);
+	circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
+	circle1Radius = 30.f;
 
-	Vector2 circle2Center = { endVector.x, endVector.y };
-	DrawCircle(circle2Center.x, circle2Center.y, 20.f, RED);
+	DrawCircle(circle1Center.x, circle1Center.y, circle1Radius, RED);
+
+	circle2Center = { endVector.x, endVector.y };
+	circle2Radius = 20.f;
+	DrawCircle(circle2Center.x, circle2Center.y, circle2Radius, RED);
 
 	// Todo, mirar cuando se ataca, con qué intersectan los circulos para afectar al objetivo del ataque
 
@@ -267,7 +280,7 @@ void Character::IncreaseAttackDistance()
 
 void Character::IncreaseExperience()
 {
-	experience += 2.f;
+	experience += 1.f;
 	if (experience >= maxExperience) {
 		experience = 0;
 		level = 2;
@@ -309,6 +322,26 @@ bool Character::IsInventorySpaceAvailable()
 		}
 	}
 	return freeSpace;
+}
+
+float Character::GetAttackCircleRadius1()
+{
+	return circle1Radius;
+}
+
+float Character::GetAttackCircleRadius2()
+{
+	return circle2Radius;
+}
+
+Vector2 Character::GetAttackCircleCenter1()
+{
+	return circle1Center;
+}
+
+Vector2 Character::GetAttackCircleCenter2()
+{
+	return circle2Center;
 }
 
 Vector2 Character::GetPosition()

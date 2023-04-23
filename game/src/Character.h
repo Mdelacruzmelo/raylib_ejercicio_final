@@ -12,6 +12,7 @@ public:
 	void Draw(Color colorInput);
 	bool GetIsAlive();
 	void Die();
+	void ReinitializeAttackCircles();
 
 	void Move(Vector2 movement);
 	void Attack(Vector2 endVector);
@@ -70,6 +71,11 @@ public:
 	void AddToInventory(E_ItemType item);
 	bool IsInventorySpaceAvailable();
 
+	float GetAttackCircleRadius1();
+	float GetAttackCircleRadius2();
+	Vector2 GetAttackCircleCenter1();
+	Vector2 GetAttackCircleCenter2();
+
 protected:
 
 	bool alive = true;
@@ -113,6 +119,12 @@ protected:
 
 	Vector2 pos = { 600.f, 540.f };
 	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+
+	Vector2 circle1Center;
+	float circle1Radius = 0.f;
+
+	Vector2 circle2Center;
+	float circle2Radius = 0.f;
 
 	bool isInteracting = false;
 	bool isTransporting = false;

@@ -15,6 +15,16 @@ void Enemy::Play()
 
 		Draw(RED);
 
+		Rectangle currentRec = Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
+
+		// Obtener radios de ataque y guardarlos para más adelante 
+
+		Vector2 characterCircle1Center = character->GetAttackCircleCenter1();
+		float characterCircle1Radius = character->GetAttackCircleRadius1();
+
+		Vector2 characterCircle2Center = character->GetAttackCircleCenter2();
+		float characterCircle2Radius = character->GetAttackCircleRadius2();
+
 		// rec = Rectangle{ pos.x, pos.y, width, height };
 		// DrawRectangleRec(rec, RED);
 
@@ -22,7 +32,7 @@ void Enemy::Play()
 
 			// MoveTo(character->GetPosition());
 
-			if (!arrivedToLoc) {
+			if (!arrivedToLoc && !isExploding) {
 
 				float movX = 0.f;
 				if (pos.x > character->GetPosition().x) movX = -1.f;
@@ -34,10 +44,7 @@ void Enemy::Play()
 
 				Move(Vector2{ movX ,movY });
 
-				bool collision = CheckCollisionRecs(
-					Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size },
-					character->GetRect()
-				);
+				bool collision = CheckCollisionRecs(currentRec, character->GetRect());
 
 				if (collision) {
 
@@ -48,6 +55,27 @@ void Enemy::Play()
 
 				}
 
+			}
+
+			bool attackCollision1 = CheckCollisionCircleRec(
+				characterCircle1Center,
+				characterCircle1Radius,
+				currentRec
+			);
+
+
+			bool attackCollision2 = CheckCollisionCircleRec(
+				characterCircle2Center,
+				characterCircle2Radius,
+				currentRec
+			);
+
+
+			if (attackCollision1 || attackCollision2) {
+				Explode();
+				character->IncreaseExperience();
+				alive = false;
+				arrivedToLoc = true;
 			}
 
 		}

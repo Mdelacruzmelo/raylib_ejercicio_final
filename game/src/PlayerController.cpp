@@ -97,6 +97,7 @@ void PlayerController::Play()
 			// Atacar
 
 			if (IsMouseButtonPressed(0)) character->Attack(endVector);
+			else character->ReinitializeAttackCircles();
 
 			// Interactuar
 
