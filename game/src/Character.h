@@ -112,6 +112,7 @@ protected:
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
 	Vector2 pos = { 600.f, 540.f };
+	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
 
 	bool isInteracting = false;
 	bool isTransporting = false;

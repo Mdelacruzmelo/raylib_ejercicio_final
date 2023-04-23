@@ -24,9 +24,6 @@ void Enemy::Play()
 
 			if (!arrivedToLoc) {
 
-				DrawText(TextFormat("Moving X %f", 1), 200, 200, 20, RED);
-				DrawText(TextFormat("Moving Y %f", 1), 200, 250, 20, RED);
-
 				float movX = 0.f;
 				if (pos.x > character->GetPosition().x) movX = -1.f;
 				else if (pos.x < character->GetPosition().x) movX = 1.f;
@@ -35,21 +32,53 @@ void Enemy::Play()
 				if (pos.y > character->GetPosition().y) movY = -1.f;
 				else if (pos.y < character->GetPosition().y) movY = 1.f;
 
-				// DrawText(TextFormat("Moving X %f", movX), 200, 200, 20, RED);
-				// DrawText(TextFormat("Moving Y %f", movY), 200, 250, 20, RED);
-
 				Move(Vector2{ movX ,movY });
 
-				// Si ya no hace falta moverte, ya llegaste
+				bool collision = CheckCollisionPointRec(
+					Vector2{ pos.x + (size / 2), pos.y + (size / 2) },
+					character->GetRect()
+				);
 
-				if (movX == 0.f && movY == 0.f) arrivedToLoc = true;
+				if (collision) {
+
+					arrivedToLoc = true;
+					alive = false;
+					Explode();
+					character->ApplyDamage(10.f);
+
+				}
+
 			}
 
 		}
+	}
+	else if (isExploding) {
+
+		static float explosionRadius = size;
+		static float explosionOpacity = 1;
+
+		if (explosionOpacity > 0) {
+
+			explosionRadius += 0.2f;
+			explosionOpacity -= 0.01f;
+
+			DrawCircle(
+				pos.x,
+				pos.y,
+				explosionRadius,
+				Fade(RED, explosionOpacity)
+			);
+		}
+
 	}
 }
 
 void Enemy::SetPosition(Vector2 posInput)
 {
 	this->pos = posInput;
+}
+
+void Enemy::Explode()
+{
+	isExploding = true;
 }

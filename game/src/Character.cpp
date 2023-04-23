@@ -6,15 +6,9 @@ Character::Character()
 
 void Character::Draw() {
 
-	if (alive) {
-		DrawRectangle(
-			pos.x - radius,
-			pos.y - radius,
-			size,
-			size,
-			WHITE
-		);
-	}
+	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+	if (alive) DrawRectangleRec(rec, WHITE);
+
 }
 
 void Character::Draw(Color colorInput) {
@@ -103,7 +97,7 @@ void Character::SubstractAbPoints(int substract)
 
 Rectangle Character::GetRect()
 {
-	return Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
+	return rec;
 }
 
 Vector2 Character::GetSize()

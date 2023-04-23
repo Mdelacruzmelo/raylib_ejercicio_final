@@ -85,7 +85,7 @@ void PlayerController::Play()
 			Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
 			float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 			Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 10));
+			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
 			Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
 
 			DrawLineV(character->GetPosition(), endVector, RED);
@@ -184,7 +184,6 @@ void PlayerController::Play()
 				hud->RestartHabilityButtons(); // back to 0
 
 			}
-
 
 		}
 	}

@@ -10,12 +10,13 @@ public:
 	void Play();
 	void SetTarget(Character* characterInput);
 	void SetPosition(Vector2 posInput);
+	void Explode();
 
 private:
 
-	float width = 40.f;
-	float height = 50.f;
 	bool arrivedToLoc = false;
+	bool isExploding = false;
+	bool destroyed = false;
 	Character* character = nullptr;
 	Vector2 targetLoc = Vector2{ 0.f, 0.f };
 
