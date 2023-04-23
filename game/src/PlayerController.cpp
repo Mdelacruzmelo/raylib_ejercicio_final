@@ -25,119 +25,144 @@ void PlayerController::Play()
 	}
 	else movement.y = 0;
 
-	// Mouse cursor
+	// -------------------- TEST INTERACT --------------------
 
-	mousePosition = GetMousePosition();
+	if (IsKeyPressed(KEY_Q)) {
+		// character->AddHealth(10.f);
+		// character->ApplyDamage(10.f);
+		// character->AddToInventory(I_POTION_SPEED);
+		SetTypeHUD(H_HABILITIES);
+	}
+	if (IsKeyPressed(KEY_E)) {
+		// character->IncreaseExperience();
+		SetTypeHUD(H_PAUSE);
+	}
+	if (IsKeyPressed(KEY_R)) {
+		// character->IncreaseExperience();
+		SetTypeHUD(H_GAME);
+	}
 
-	DrawRectangle(
-		(int)(mousePosition.x - cursorRadius),
-		(int)(mousePosition.y - (cursorDepth / 2)),
-		(int)cursorSize,
-		(int)cursorDepth,
-		WHITE
-	);
-	DrawRectangle(
-		(int)(mousePosition.x - (cursorDepth / 2)),
-		(int)(mousePosition.y - cursorRadius),
-		(int)cursorDepth,
-		(int)cursorSize,
-		WHITE
-	);
+	SetMouseCursor(1);
 
 	if (character) {
 
 		// Draw character
 
 		character->Draw();
-		hud->Draw();
-
-		// Linetrace
-
-		DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
-
-		// Movimiento
-
-		character->Move(movement);
-
-		// Attack aiming and radius
-
-		Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
-		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
-		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-		Vector2 scaledVector = Vector2Scale(normalizedAiming, character->GetAttackDistance());
-		Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
-
-		DrawLineV(character->GetPosition(), endVector, RED);
-
-		// Atacar
-
-		if (IsMouseButtonPressed(0)) character->Attack(endVector);
 
 		// HUD
 
-		float vectorLength = Vector2Length(vDifference);
-		DrawText(
-			TextFormat("Vector length: %f", vectorLength),
-			950,
-			40,
-			24,
-			WHITE);
+		hud->Draw(typeHUD);
 
-		// Interactuar
+		if (typeHUD == H_GAME) {
 
-		if (IsKeyDown(KEY_SPACE) && !character->GetIsInteracting()) {
-			character->SetIsInteracting(true);
-		}
-		else {
-			character->SetIsInteracting(false);
-		}
+			// Mouse cursor
 
-		// Inventario
-		if (
-			IsKeyDown(KEY_ONE) ||
-			IsKeyDown(KEY_TWO) ||
-			IsKeyDown(KEY_THREE) ||
-			IsKeyDown(KEY_FOUR) ||
-			IsKeyDown(KEY_FIVE)
-			) {
+			mousePosition = GetMousePosition();
 
-			int numPressed = 0;
+			DrawRectangle(
+				(int)(mousePosition.x - cursorRadius),
+				(int)(mousePosition.y - (cursorDepth / 2)),
+				(int)cursorSize,
+				(int)cursorDepth,
+				WHITE
+			);
+			DrawRectangle(
+				(int)(mousePosition.x - (cursorDepth / 2)),
+				(int)(mousePosition.y - cursorRadius),
+				(int)cursorDepth,
+				(int)cursorSize,
+				WHITE
+			);
 
-			if (IsKeyDown(KEY_ONE)) numPressed = 1;
-			if (IsKeyDown(KEY_TWO)) numPressed = 2;
-			if (IsKeyDown(KEY_THREE)) numPressed = 3;
-			if (IsKeyDown(KEY_FOUR)) numPressed = 4;
-			if (IsKeyDown(KEY_FIVE)) numPressed = 5;
+			// Linetrace
 
-			hud->ItemNumberPress(numPressed);
-			E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
+			DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
 
-			if (itemSelected == I_POTION_HEALTH) {
-				character->AddHealth(10.f);
+			// Attack aiming and radius
+
+			Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
+			float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+			Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
+			Vector2 scaledVector = Vector2Scale(normalizedAiming, character->GetAttackDistance());
+			Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
+
+			DrawLineV(character->GetPosition(), endVector, RED);
+
+			// Movimiento
+
+			character->Move(movement);
+
+			// Atacar
+
+			if (IsMouseButtonPressed(0)) character->Attack(endVector);
+
+			// Interactuar
+
+			if (IsKeyDown(KEY_SPACE) && !character->GetIsInteracting()) {
+				character->SetIsInteracting(true);
 			}
-			else if (itemSelected == I_POTION_STRENGTH) {
-				character->IncreaseStrength();
+			else {
+				character->SetIsInteracting(false);
 			}
-			else if (itemSelected == I_POTION_SPEED) {
-				character->IncreaseSpeed();
+
+			// Inventario
+			if (
+				IsKeyDown(KEY_ONE) ||
+				IsKeyDown(KEY_TWO) ||
+				IsKeyDown(KEY_THREE) ||
+				IsKeyDown(KEY_FOUR) ||
+				IsKeyDown(KEY_FIVE)
+				) {
+
+				int numPressed = 0;
+
+				if (IsKeyDown(KEY_ONE)) numPressed = 1;
+				if (IsKeyDown(KEY_TWO)) numPressed = 2;
+				if (IsKeyDown(KEY_THREE)) numPressed = 3;
+				if (IsKeyDown(KEY_FOUR)) numPressed = 4;
+				if (IsKeyDown(KEY_FIVE)) numPressed = 5;
+
+				hud->ItemNumberPress(numPressed);
+				E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
+
+				if (itemSelected == I_POTION_HEALTH) {
+					character->AddHealth(10.f);
+				}
+				else if (itemSelected == I_POTION_STRENGTH) {
+					character->IncreaseStrength();
+				}
+				else if (itemSelected == I_POTION_SPEED) {
+					character->IncreaseSpeed();
+				}
+				else if (itemSelected == I_EXPERIENCE) {
+					character->IncreaseExperience();
+				}
 			}
-			else if (itemSelected == I_EXPERIENCE) {
-				character->IncreaseExperience();
-			}
+
 		}
 
-		// -------------------- TEST INTERACT --------------------
+		else if (typeHUD == H_PAUSE) {
 
-		if (IsKeyPressed(KEY_Q)) {
-			// character->AddHealth(10.f);
-			// character->ApplyDamage(10.f);
-			character->AddToInventory(I_POTION_SPEED);
-		}
-		if (IsKeyPressed(KEY_E)) {
-			character->IncreaseExperience();
-		}
+			if (hud->GetPauseButtonPressed() == 1) typeHUD = H_GAME;
+			else if (hud->GetPauseButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+			else if (hud->GetPauseButtonPressed() == 3) typeHUD = H_HABILITIES;
+			else if (hud->GetPauseButtonPressed() == 4) typeHUD = H_MAIN_MENU;
 
+			hud->RestartPauseButtons();
+
+			/*float vectorLength = Vector2Length(vDifference);
+			DrawText(
+				TextFormat("Vector length: %f", vectorLength),
+				950,
+				40,
+				24,
+				WHITE);*/
+		}
 	}
+}
 
-
+void PlayerController::SetTypeHUD(E_TypeHUD typeHUDInput)
+{
+	typeHUD = typeHUDInput;
 }
