@@ -20,7 +20,7 @@ void Environment::Draw(Character* characterRef)
 	float distanceXTopDoors = (float)GetScreenWidth() / (topDoorsQuantity + 1);
 	for (int i = 0; i < topDoorsQuantity; i++) {
 		Vector2 posTopDraw = { distanceXTopDoors * (i + 1), 0.f };
-		topDoors[i].Draw(characterRef);
+		topDoors[i].Draw(characterRef, posTopDraw);
 	}
 
 	// Dibujar Bottom doors, Y = ScreenHeight - height
@@ -28,7 +28,7 @@ void Environment::Draw(Character* characterRef)
 	float distanceXBottomDoors = (float)GetScreenWidth() / (bottomDoorsQuantity + 1);
 	for (int i = 0; i < bottomDoorsQuantity; i++) {
 		Vector2 posBottomDraw = { distanceXBottomDoors * (i + 1), (GetScreenHeight() - bottomDoors[i].GetHeight()) };
-		bottomDoors[i].Draw(characterRef);
+		bottomDoors[i].Draw(characterRef, posBottomDraw);
 	}
 
 	// Dibujar Right doors, X = ScreenWidth - width
@@ -36,7 +36,7 @@ void Environment::Draw(Character* characterRef)
 	float distanceYRightDoors = (float)GetScreenHeight() / (rightDoorsQuantity + 1);
 	for (int i = 0; i < rightDoorsQuantity; i++) {
 		Vector2 posRightDraw = { GetScreenWidth() - rightDoors[i].GetWidth(), distanceYRightDoors * (i + 1) };
-		rightDoors[i].Draw(characterRef);
+		rightDoors[i].Draw(characterRef, posRightDraw);
 	}
 
 	// Dibujar Left doors, X = 0.f
@@ -44,7 +44,7 @@ void Environment::Draw(Character* characterRef)
 	float distanceYLeftDoors = (float)GetScreenHeight() / (leftDoorsQuantity + 1);
 	for (int i = 0; i < leftDoorsQuantity; i++) {
 		Vector2 posLeftDraw = { 0.f, distanceYLeftDoors * (i + 1) };
-		leftDoors[i].Draw(characterRef);
+		leftDoors[i].Draw(characterRef, posLeftDraw);
 	}
 
 	// DrawText(TextFormat("doors quantity %d", doorQuantity), 100, 330, 16, WHITE);

@@ -29,6 +29,22 @@ void Door::Draw(Character* character)
 	}
 }
 
+void Door::Draw(Character* character, Vector2 posInput)
+{
+	pos = posInput;
+	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, ORANGE);
+
+	// Detectar por ubicación del jugador si se intersecta con la puerta
+
+	if (
+		CheckCollisionRecs(character->GetRect(), GetRect()) &&
+		character->GetIsInteracting()
+		) {
+		character->SetDoorTargetId(GetTargetId());
+		character->SetIsTransporting(true);
+	}
+}
+
 E_Side Door::GetDoorSide()
 {
 	return doorSide;

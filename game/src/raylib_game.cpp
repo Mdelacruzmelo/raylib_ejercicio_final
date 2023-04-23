@@ -3,6 +3,7 @@
 #include "PlayerController.h"
 #include "EnvironmentHandler.h"
 #include "Environment.h"
+#include "HUD.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -13,6 +14,7 @@ static const int screenHeight = 1080;
 
 int main(void)
 {
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(screenWidth, screenHeight, "raylib game template");
 	InitAudioDevice();
 
@@ -25,7 +27,8 @@ int main(void)
 	SetTargetFPS(60);
 
 	Character* character = new Character();
-	PlayerController* controller = new PlayerController(character);
+	HUD* hud = new HUD(character);
+	PlayerController* controller = new PlayerController(character, hud);
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 
 	// Environment 1
@@ -47,6 +50,8 @@ int main(void)
 	Environment* env3 = new Environment(BLACK);
 	env3->AddDoor(SIDE_TOP, "door_D");
 	envHandler->Append(env3);
+
+	// Connections
 
 	env1->GetDoor("door_A")->Target("door_B");
 	env2->GetDoor("door_B")->Target("door_A");
