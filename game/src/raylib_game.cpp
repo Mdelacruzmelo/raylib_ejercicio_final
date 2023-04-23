@@ -34,6 +34,10 @@ int main(void)
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 	AIController* aiController = new AIController(character);
 
+	// envHandler Reference to AIController
+
+	envHandler->SetAIController(aiController);
+
 	// Environment 1
 
 	Environment* env1 = new Environment(DARKGRAY);

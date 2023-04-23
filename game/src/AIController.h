@@ -9,6 +9,7 @@ public:
 	AIController(Character* characterInput);
 	void Play();
 	void SpawnEnemy();
+	void DeleteEnemies();
 
 private:
 	int enemyQuantity = 0;

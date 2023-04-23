@@ -34,8 +34,8 @@ void Enemy::Play()
 
 				Move(Vector2{ movX ,movY });
 
-				bool collision = CheckCollisionPointRec(
-					Vector2{ pos.x + (size / 2), pos.y + (size / 2) },
+				bool collision = CheckCollisionRecs(
+					Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size },
 					character->GetRect()
 				);
 
@@ -53,9 +53,6 @@ void Enemy::Play()
 		}
 	}
 	else if (isExploding && !destroyed) {
-
-		static float explosionRadius = size / 1.5f;
-		static float explosionOpacity = 1;
 
 		if (explosionOpacity > 0) {
 
@@ -82,4 +79,10 @@ void Enemy::SetPosition(Vector2 posInput)
 void Enemy::Explode()
 {
 	isExploding = true;
+}
+
+void Enemy::ReinitializeExplode()
+{
+	explosionRadius = size / 1.5f;
+	explosionOpacity = 1;
 }

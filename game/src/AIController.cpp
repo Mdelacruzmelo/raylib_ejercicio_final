@@ -25,8 +25,21 @@ void AIController::SpawnEnemy()
 
 				newEnemies[i].SetTarget(character);
 
+				int randomVal = GetRandomValue(0, 3);
 				float posX = 0.f;
 				float posY = 0.f;
+
+				if (randomVal == 1) {
+					posX = GetScreenWidth();
+				}
+				else if (randomVal == 2) {
+					posY = GetScreenHeight();
+				}
+				else if (randomVal == 3) {
+					posX = GetScreenWidth();
+					posY = GetScreenHeight();
+				}
+
 
 				newEnemies[i].SetPosition(Vector2{ posX,posY });
 			}
@@ -39,15 +52,23 @@ void AIController::SpawnEnemy()
 
 }
 
+void AIController::DeleteEnemies()
+{
+	enemyQuantity = 0;
+	enemies = nullptr;
+}
+
 void AIController::Play()
 {
 
 	// Enemies 
 	counter += 1;
 
-	if (counter >= 30) {
+	if (counter >= GetRandomValue(40, 60)) {
+
 		SpawnEnemy();
 		counter = 0;
+
 	}
 
 	for (int i = 0; i < enemyQuantity; i++) {
