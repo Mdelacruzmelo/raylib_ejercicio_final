@@ -32,14 +32,19 @@ public:
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
+	void IncreaseSpeed();
+	void IncreaseStrength();
+	void IncreaseExperience();
 
 	int GetInventorySize();
 	int* GetInventory();
 	void AddToInventory(E_ItemType item);
+	bool IsInventorySpaceAvailable();
 
 private:
 
 	float velocity = 1.f;
+	float initialAcceleration = 4.f;
 	float acceleration = 4.f;
 	float size = 40.f;
 	float radius = size / 2;
@@ -48,12 +53,13 @@ private:
 	float health = 70.f;
 	float maxHealth = 100.f;
 
-	float attack = 100.f;
+	float initialAttack = 10.f;
+	float attack = 10.f;
 	float maxAttack = 100.f;
 
 	int level = 1;
 
-	float experience = 10.f;
+	float experience = 0.f;
 	float maxExperience = 100.f;
 
 	int inventorySize = 5;

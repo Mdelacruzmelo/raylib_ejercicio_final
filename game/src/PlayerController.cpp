@@ -93,21 +93,37 @@ void PlayerController::Play()
 		}
 
 		// Inventario
+		if (
+			IsKeyDown(KEY_ONE) ||
+			IsKeyDown(KEY_TWO) ||
+			IsKeyDown(KEY_THREE) ||
+			IsKeyDown(KEY_FOUR) ||
+			IsKeyDown(KEY_FIVE)
+			) {
 
-		if (IsKeyDown(KEY_ONE)) {
-			hud->ItemNumberPress(1);
-		}
-		if (IsKeyDown(KEY_TWO)) {
-			hud->ItemNumberPress(2);
-		}
-		if (IsKeyDown(KEY_THREE)) {
-			hud->ItemNumberPress(3);
-		}
-		if (IsKeyDown(KEY_FOUR)) {
-			hud->ItemNumberPress(4);
-		}
-		if (IsKeyDown(KEY_FIVE)) {
-			hud->ItemNumberPress(5);
+			int numPressed = 0;
+
+			if (IsKeyDown(KEY_ONE)) numPressed = 1;
+			if (IsKeyDown(KEY_TWO)) numPressed = 2;
+			if (IsKeyDown(KEY_THREE)) numPressed = 3;
+			if (IsKeyDown(KEY_FOUR)) numPressed = 4;
+			if (IsKeyDown(KEY_FIVE)) numPressed = 5;
+
+			hud->ItemNumberPress(numPressed);
+			E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
+
+			if (itemSelected == I_POTION_HEALTH) {
+				character->AddHealth(10.f);
+			}
+			else if (itemSelected == I_POTION_STRENGTH) {
+				character->IncreaseStrength();
+			}
+			else if (itemSelected == I_POTION_SPEED) {
+				character->IncreaseSpeed();
+			}
+			else if (itemSelected == I_EXPERIENCE) {
+				character->IncreaseExperience();
+			}
 		}
 
 		// -------------------- TEST INTERACT --------------------
@@ -115,7 +131,10 @@ void PlayerController::Play()
 		if (IsKeyPressed(KEY_Q)) {
 			// character->AddHealth(10.f);
 			// character->ApplyDamage(10.f);
-			// character->AddToInventory(I_POTION_SPEED);
+			character->AddToInventory(I_POTION_SPEED);
+		}
+		if (IsKeyPressed(KEY_E)) {
+			character->IncreaseExperience();
 		}
 
 	}

@@ -110,6 +110,25 @@ void Character::ApplyDamage(float damage)
 	if (health < 0) health = 0.f;
 }
 
+void Character::IncreaseSpeed()
+{
+	acceleration += 2.f;
+}
+
+void Character::IncreaseStrength()
+{
+	attack += 2.f;
+}
+
+void Character::IncreaseExperience()
+{
+	experience += 2.f;
+	if (experience >= maxExperience) {
+		experience = 0;
+		level = 2;
+	}
+}
+
 int Character::GetInventorySize()
 {
 	return inventorySize;
@@ -131,6 +150,19 @@ void Character::AddToInventory(E_ItemType item)
 
 		}
 	}
+}
+
+bool Character::IsInventorySpaceAvailable()
+{
+	bool freeSpace = false;
+
+	for (int i = 0; i < inventorySize; i++) {
+
+		if (inventory[i] == 0) {
+			return true;
+		}
+	}
+	return freeSpace;
 }
 
 Vector2 Character::GetPosition()
