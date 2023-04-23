@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "InventoryItemsUtils.h"
+#include "AbilityUtils.h"
 
 class Character
 {
@@ -10,12 +11,6 @@ public:
 	void Draw();
 	void Move(Vector2 movement);
 	void Attack(Vector2 endVector);
-
-	float GetAttack();
-	float GetAttackDistance();
-	float GetDefense();
-	float GetEnergy();
-	float GetSpeed();
 
 	Rectangle GetRect();
 	Vector2 GetSize();
@@ -37,9 +32,24 @@ public:
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
-	void IncreaseSpeed();
-	void IncreaseStrength();
+
+	int GetAbPoints();
+
+	float GetAttack();
+	float GetAttackDistance();
+	float GetDefense();
+	float GetEnergy();
+	float GetSpeed();
+
+	void IncreaseAttack();
+	void IncreaseDefense();
+	void IncreaseVelocity();
+	void IncreaseEnergy();
+	void IncreaseAttackDistance();
 	void IncreaseExperience();
+
+	void AddAbPoints(int add);
+	void SubstractHabPoints(int substract);
 
 	int GetInventorySize();
 	int* GetInventory();
@@ -48,8 +58,8 @@ public:
 
 private:
 
-	float velocity = 1.1f; // increase of 0.1f
-	float maxVelocity = 2.f;
+	float velocity = 1.f;
+	float maxVelocity = 10.f;
 
 	float initialAcceleration = 4.f;
 	float acceleration = 4.f;
@@ -57,9 +67,9 @@ private:
 	float size = 40.f;
 	float radius = size / 2;
 
-	float initialAttackDistance = 50.f;
-	float attackDistance = 50.f;
-	float maxAttackDistance = 100.f;
+	float initialAttackDistance = 5.f;
+	float attackDistance = 5.f;
+	float maxAttackDistance = 10.f;
 
 	float health = 70.f;
 	float maxHealth = 100.f;
@@ -77,7 +87,7 @@ private:
 	float maxDefense = 10.f;
 
 	int level = 1;
-	int habilityPoints = 10;
+	int abilityPoints = 10;
 
 	float experience = 0.f;
 	float maxExperience = 100.f;

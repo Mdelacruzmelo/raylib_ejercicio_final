@@ -2,6 +2,7 @@
 #include "raymath.h" // for vectors
 #include <cmath> // for simple math
 #include "InventoryItemsUtils.h"
+#include "AbilityUtils.h"
 
 PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 {
@@ -84,7 +85,7 @@ void PlayerController::Play()
 			Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
 			float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 			Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-			Vector2 scaledVector = Vector2Scale(normalizedAiming, character->GetAttackDistance());
+			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 10));
 			Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
 
 			DrawLineV(character->GetPosition(), endVector, RED);
@@ -130,10 +131,10 @@ void PlayerController::Play()
 					character->AddHealth(10.f);
 				}
 				else if (itemSelected == I_POTION_STRENGTH) {
-					character->IncreaseStrength();
+					character->IncreaseAttack();
 				}
 				else if (itemSelected == I_POTION_SPEED) {
-					character->IncreaseSpeed();
+					character->IncreaseVelocity();
 				}
 				else if (itemSelected == I_EXPERIENCE) {
 					character->IncreaseExperience();
@@ -162,10 +163,43 @@ void PlayerController::Play()
 
 		else if (typeHUD == H_HABILITIES) {
 
-			if (hud->GetHabilityButtonPressed() == 1) typeHUD = H_PAUSE;
-			// else if (hud->GetHabilityButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+			if (hud->GetHabilityButtonPressed() != 0) {
 
-			hud->RestartHabilityButtons();
+				if (hud->GetHabilityButtonPressed() == 10) typeHUD = H_PAUSE;
+
+
+				// Ataque
+				if (hud->GetHabilityButtonPressed() == ATTACK) {
+					character->IncreaseAttack();
+				}
+
+				// Defensa
+				if (hud->GetHabilityButtonPressed() == DEFENSE) {
+					character->IncreaseDefense();
+				}
+
+				// Velocidad
+				if (hud->GetHabilityButtonPressed() == VELOCITY) {
+					character->IncreaseVelocity();
+				}
+
+				// Energía
+				if (hud->GetHabilityButtonPressed() == ENERGY) {
+					character->IncreaseEnergy();
+					character->SubstractHabPoints(1);
+				}
+
+				// Alcance
+				if (hud->GetHabilityButtonPressed() == ATTACK_DISTANCE) {
+					character->IncreaseAttackDistance();
+				}
+
+				// else if (hud->GetHabilityButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+
+				hud->RestartHabilityButtons(); // back to 0
+
+			}
+
 
 		}
 	}

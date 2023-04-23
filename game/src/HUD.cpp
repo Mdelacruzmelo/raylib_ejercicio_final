@@ -1,5 +1,6 @@
 #include "HUD.h"
 #include "InventoryItemsUtils.h"
+#include "AbilityUtils.h"
 
 HUD::HUD(Character* characterInput)
 {
@@ -274,7 +275,7 @@ void HUD::DrawHabilitiesWidget()
 		opacity1 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) habButtonPressed = 1;
+		if (IsMouseButtonPressed(0)) habButtonPressed = 10;
 
 	}
 
@@ -283,93 +284,74 @@ void HUD::DrawHabilitiesWidget()
 
 	// Botones de habilidades
 
+	DrawAbButtons(ATTACK, 0);
+	DrawAbButtons(DEFENSE, 1);
+	DrawAbButtons(VELOCITY, 2);
+	DrawAbButtons(ENERGY, 3);
+	DrawAbButtons(ATTACK_DISTANCE, 4);
+
+}
+
+void HUD::DrawAbButtons(E_AbilityType abType, int order) {
+
 	int marginLeft = 50;
 	int startX = (GetScreenWidth() / 2) + marginLeft;
 	int squareSize = 40;
+	char* habilityName;
 
-	for (int hab = 0; hab < 5; hab++) {
+	if (abType == ATTACK) habilityName = "Ataque";
+	else if (abType == DEFENSE) habilityName = "Defensa";
+	else if (abType == VELOCITY) habilityName = "Velocidad";
+	else if (abType == ENERGY) habilityName = "Energia";
+	else habilityName = "Alcance";
 
-		char* habilityName;
+	int y = 300 + (120 * order);
 
-		if (hab == 0) habilityName = "Ataque"; // hab = 0
-		if (hab == 1) habilityName = "Defensa";
-		if (hab == 2) habilityName = "Velocidad";
-		if (hab == 3) habilityName = "Energia";
-		if (hab == 4) habilityName = "Alcance";
+	DrawText(
+		habilityName,
+		startX,
+		y - squareSize,
+		20,
+		WHITE
+	);
 
-		int y = 300 + (120 * hab);
-		DrawText(habilityName, startX, y - 40, 20, WHITE);
+	for (int i = 0; i < 10; i++) {
 
-		for (int i = 0; i < 10; i++) {
+		int addedWidth = squareSize * i;
+		Rectangle rect = Rectangle{
+			(float)(startX + addedWidth),
+			(float)y,
+			(float)squareSize,
+			(float)squareSize
+		};
 
-			int addedWidth = squareSize * i;
-			Rectangle rect = Rectangle{
-				(float)(startX + addedWidth),
-				(float)y,
-				(float)squareSize,
-				(float)squareSize
-			};
+		int abLevel = 0;
 
-			if (hab == 0) { // Ataque
+		if (abType == ATTACK) abLevel = character->GetAttack();
+		if (abType == DEFENSE) abLevel = character->GetDefense();
+		if (abType == VELOCITY) abLevel = character->GetSpeed();
+		if (abType == ENERGY) abLevel = character->GetEnergy();
+		if (abType == ATTACK_DISTANCE) abLevel = character->GetAttackDistance();
 
-				if (character->GetAttack() > i) {
+		if (abLevel > i) {
 
-					DrawRectangleRec(rect, GREEN);
-				}
-				else {
-					DrawRectangleLinesEx(rect, 1.f, GRAY);
-				}
-			}
-			else if (hab == 1) { // Defensa
-
-				if (character->GetDefense() > i) {
-					DrawRectangleRec(rect, GREEN);
-				}
-				else {
-					DrawRectangleLinesEx(rect, 1.f, GRAY);
-				}
-			}
-			else if (hab == 2) { // Velocidad
-
-				int velocityValue = (character->GetSpeed() * 10) - 10;
-
-				if (velocityValue > i) {
-					DrawRectangleRec(rect, GREEN);
-				}
-				else {
-					DrawRectangleLinesEx(rect, 1.f, GRAY);
-				}
-			}
-			else if (hab == 3) { // Energia
-
-				if (character->GetEnergy() > i) {
-					DrawRectangleRec(rect, GREEN);
-				}
-				else {
-					DrawRectangleLinesEx(rect, 1.f, GRAY);
-				}
-			}
-			else if (hab == 4) { // Alcance
-
-				if ((character->GetAttackDistance() / 10) > i) {
-					DrawRectangleRec(rect, GREEN);
-				}
-				else {
-					DrawRectangleLinesEx(rect, 1.f, GRAY);
-				}
-			}
+			DrawRectangleRec(rect, GREEN);
+		}
+		else {
+			DrawRectangleLinesEx(rect, 1.f, GRAY);
 
 			if (CheckCollisionPointRec(GetMousePosition(), rect)) {
 
 				SetMouseCursor(4);
 				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
-				// if (IsMouseButtonPressed(0)) habButtonPressed = 1;
+
+				if (IsMouseButtonPressed(0)) habButtonPressed = abType;
 
 			}
-
-			DrawRectangleLines(startX + addedWidth, y, squareSize, squareSize, GRAY);
-
 		}
+
+		DrawRectangleLines(startX + addedWidth, y, squareSize, squareSize, GRAY);
+
 	}
 
 }

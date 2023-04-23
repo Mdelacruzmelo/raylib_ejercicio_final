@@ -16,9 +16,15 @@ void Character::Draw() {
 
 void Character::Move(Vector2 movement)
 {
+	// velocity va del 1 al 10, me interesa dividirlo entre 10 para obtener decimales
+	// al resultado de la division le sumo 1, para que la velocidad
+	// de calculo sea 1 + 0.1 -> 1.1 ---- 1 + 0.2 -> 1.2 ---
+	// Asi sucesivamente hasta el 1 + (10 / 10)  = 1 + 1 = 2 
+	// velocidad maxima es el doble
+
 	pos = Vector2{
-		pos.x + (velocity * acceleration * movement.x),
-		pos.y + (velocity * acceleration * movement.y)
+		pos.x + ((1 + velocity / 10) * acceleration * movement.x),
+		pos.y + ((1 + velocity / 10) * acceleration * movement.y)
 	};
 }
 
@@ -52,6 +58,21 @@ float Character::GetEnergy()
 float Character::GetSpeed()
 {
 	return velocity;
+}
+
+int Character::GetAbPoints()
+{
+	return abilityPoints;
+}
+
+void Character::AddAbPoints(int add)
+{
+	abilityPoints += add;
+}
+
+void Character::SubstractHabPoints(int substract)
+{
+	abilityPoints -= substract;
 }
 
 Rectangle Character::GetRect()
@@ -130,15 +151,34 @@ void Character::ApplyDamage(float damage)
 	if (health < 0) health = 0.f;
 }
 
-void Character::IncreaseSpeed()
+// Increases
+
+void Character::IncreaseAttack()
 {
-	velocity += 0.1f;
+	attack += 1.f;
 }
 
-void Character::IncreaseStrength()
+void Character::IncreaseDefense()
 {
-	attack += 2.f;
+	defense += 1.f;
 }
+
+void Character::IncreaseVelocity()
+{
+	velocity += 1.f;
+}
+
+void Character::IncreaseEnergy()
+{
+	energy += 1.f;
+}
+
+
+void Character::IncreaseAttackDistance()
+{
+	attackDistance += 1.f;
+}
+
 
 void Character::IncreaseExperience()
 {
@@ -146,6 +186,7 @@ void Character::IncreaseExperience()
 	if (experience >= maxExperience) {
 		experience = 0;
 		level = 2;
+		AddAbPoints(1);
 	}
 }
 
