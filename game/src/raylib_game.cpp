@@ -4,6 +4,8 @@
 #include "EnvironmentHandler.h"
 #include "Environment.h"
 #include "HUD.h"
+#include "Enemy.h"
+#include "AIController.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -30,6 +32,11 @@ int main(void)
 	HUD* hud = new HUD(character);
 	PlayerController* controller = new PlayerController(character, hud);
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
+	AIController* aiController = new AIController(character);
+
+	// Enemies 
+
+	aiController->AddEnemy();
 
 	// Environment 1
 
@@ -67,6 +74,7 @@ int main(void)
 		ClearBackground(BLACK);
 
 		envHandler->Draw();
+		aiController->Play();
 		controller->Play();
 
 		EndDrawing();

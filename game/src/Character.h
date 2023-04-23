@@ -9,6 +9,10 @@ public:
 	Character();
 
 	void Draw();
+	void Draw(Color colorInput);
+	bool GetIsAlive();
+	void Die();
+
 	void Move(Vector2 movement);
 	void Attack(Vector2 endVector);
 
@@ -32,7 +36,6 @@ public:
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
-
 	int GetAbPoints();
 
 	float GetAttack();
@@ -67,7 +70,9 @@ public:
 	void AddToInventory(E_ItemType item);
 	bool IsInventorySpaceAvailable();
 
-private:
+protected:
+
+	bool alive = true;
 
 	float velocity = 1.f;
 	float maxVelocity = 10.f;

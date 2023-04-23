@@ -5,13 +5,39 @@ Character::Character()
 }
 
 void Character::Draw() {
-	DrawRectangle(
-		pos.x - radius,
-		pos.y - radius,
-		size,
-		size,
-		WHITE
-	);
+
+	if (alive) {
+		DrawRectangle(
+			pos.x - radius,
+			pos.y - radius,
+			size,
+			size,
+			WHITE
+		);
+	}
+}
+
+void Character::Draw(Color colorInput) {
+
+	if (alive) {
+		DrawRectangle(
+			pos.x - radius,
+			pos.y - radius,
+			size,
+			size,
+			colorInput
+		);
+	}
+}
+
+bool Character::GetIsAlive()
+{
+	return alive;
+}
+
+void Character::Die()
+{
+	alive = false;
 }
 
 void Character::Move(Vector2 movement)
