@@ -52,9 +52,9 @@ void Enemy::Play()
 
 		}
 	}
-	else if (isExploding) {
+	else if (isExploding && !destroyed) {
 
-		static float explosionRadius = size;
+		static float explosionRadius = size / 1.5f;
 		static float explosionOpacity = 1;
 
 		if (explosionOpacity > 0) {
@@ -69,6 +69,7 @@ void Enemy::Play()
 				Fade(RED, explosionOpacity)
 			);
 		}
+		else destroyed = true;
 
 	}
 }

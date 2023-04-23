@@ -5,7 +5,7 @@ AIController::AIController(Character* characterInput)
 	character = characterInput;
 }
 
-void AIController::AddEnemy()
+void AIController::SpawnEnemy()
 {
 	int newEnemyQuantity = enemyQuantity + 1;
 	Enemy* newEnemies = new Enemy[newEnemyQuantity];
@@ -41,6 +41,14 @@ void AIController::AddEnemy()
 
 void AIController::Play()
 {
+
+	// Enemies 
+	counter += 1;
+
+	if (counter >= 30) {
+		SpawnEnemy();
+		counter = 0;
+	}
 
 	for (int i = 0; i < enemyQuantity; i++) {
 

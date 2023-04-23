@@ -34,10 +34,6 @@ int main(void)
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 	AIController* aiController = new AIController(character);
 
-	// Enemies 
-
-	aiController->AddEnemy();
-
 	// Environment 1
 
 	Environment* env1 = new Environment(DARKGRAY);
