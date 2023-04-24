@@ -9,8 +9,8 @@ public:
 	Door();
 	Door(E_Side doorSideInput, char* doorIdInput);
 
-	void Draw(Character* character);
-	void Draw(Character* character, Vector2 posInput);
+	void Draw(Character* characterInput);
+	void Draw(Character* characterInput, Vector2 posInput);
 	E_Side GetDoorSide();
 	float GetHeight();
 	float GetWidth();
@@ -18,6 +18,7 @@ public:
 	Vector2 GetSize();
 	char* GetId();
 	void Lock();
+	void Unlock();
 	void Target(char* targetIdInput);
 	char* GetTargetId();
 	Vector2 GetPosition();
@@ -34,4 +35,5 @@ private:
 	bool locked = false;
 	bool showMessageLocked = false;
 	int counterMessageLocked = 0;
+	Character* character;
 };

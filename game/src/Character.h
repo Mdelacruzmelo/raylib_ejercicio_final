@@ -78,6 +78,8 @@ public:
 	void ShowNoInventorySpace();
 	void DrawMessageNoSpace();
 	bool IsInventorySpaceAvailable();
+	void UseKeyInventory();
+	bool HasKey();
 
 	float GetAttackCircleRadius1();
 	float GetAttackCircleRadius2();

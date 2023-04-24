@@ -391,6 +391,27 @@ bool Character::IsInventorySpaceAvailable()
 	return freeSpace;
 }
 
+void Character::UseKeyInventory()
+{
+	for (int i = 0; i < inventorySize; i++) {
+		if (inventory[i] == I_KEY) {
+			inventory[i] = 0;
+			return;
+		}
+	}
+}
+
+bool Character::HasKey()
+{
+	bool hasKey = false;
+
+	for (int i = 0; i < inventorySize; i++) {
+		if (inventory[i] == I_KEY) hasKey = true;
+	}
+
+	return hasKey;
+}
+
 void Character::ShowNoInventorySpace()
 {
 	showingNoSpaceMessage = true;

@@ -14,8 +14,10 @@ Door::Door(E_Side doorSideInput, char* doorIdInput)
 	doorId = doorIdInput;
 }
 
-void Door::Draw(Character* character)
+void Door::Draw(Character* characterInput)
 {
+	character = characterInput;
+
 	Color color = ORANGE;
 	if (locked) color = RED;
 
@@ -53,7 +55,13 @@ void Door::Draw(Character* character)
 		) {
 
 		if (locked) {
-			showMessageLocked = true;
+
+			if (character->HasKey()) {
+				character->UseKeyInventory();
+				Unlock();
+			}
+			else showMessageLocked = true;
+
 		}
 		else {
 			character->SetDoorTargetId(GetTargetId());
@@ -62,11 +70,11 @@ void Door::Draw(Character* character)
 	}
 }
 
-void Door::Draw(Character* character, Vector2 posInput)
+void Door::Draw(Character* characterInput, Vector2 posInput)
 {
 	pos = posInput;
 
-	Draw(character);
+	Draw(characterInput);
 }
 
 E_Side Door::GetDoorSide()
@@ -102,6 +110,18 @@ char* Door::GetId()
 void Door::Lock()
 {
 	locked = true;
+}
+
+void Door::Unlock()
+{
+	locked = false;
+
+	if (CheckCollisionRecs(character->GetRect(), GetRect())) {
+
+		character->SetDoorTargetId(GetTargetId());
+		character->SetIsTransporting(true);
+
+	}
 }
 
 void Door::Target(char* targetIdInput)
