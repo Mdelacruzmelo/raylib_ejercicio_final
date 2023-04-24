@@ -17,7 +17,7 @@ Interactable::Interactable(Vector2 posInput, E_ItemType typeInput, Character* ch
 	tooth3Part = Rectangle{ pos.x + 20.f, pos.y, 5.f, 12.f };
 	round = Rectangle{
 	   pos.x - squareSize - padding,
-	   pos.y - (squareSize) - padding,
+	   pos.y - (squareSize)-padding,
 	   squareSize + (2 * padding) + longitude,
 	   squareSize + (2 * padding) + longitude
 	};
@@ -48,8 +48,16 @@ void Interactable::DetectGrab()
 			CheckCollisionRecs(character->GetRect(), round) &&
 			character->GetIsInteracting()
 			) {
-			character->AddToInventory(type);
-			grabbed = true;
+
+			if (character->IsInventorySpaceAvailable()) {
+
+				character->AddToInventory(type);
+				grabbed = true;
+
+			}
+			else {
+				character->ShowNoInventorySpace();
+			}
 		}
 	}
 }

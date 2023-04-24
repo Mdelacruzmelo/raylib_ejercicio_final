@@ -29,8 +29,16 @@ void Consumable::DetectGrab()
 			CheckCollisionRecs(character->GetRect(), rec) &&
 			character->GetIsInteracting()
 			) {
-			character->AddToInventory(type);
-			grabbed = true;
+
+			if (character->IsInventorySpaceAvailable()) {
+			
+				character->AddToInventory(type);
+				grabbed = true;
+
+			}
+			else {
+				character->ShowNoInventorySpace();
+			}
 		}
 	}
 }

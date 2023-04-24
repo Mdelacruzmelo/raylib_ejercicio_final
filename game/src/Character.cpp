@@ -20,7 +20,23 @@ void Character::Draw(Color colorInput) {
 
 		if (isVelocityTempIncreased) DrawVelocityTempBar();
 
+		if (showingNoSpaceMessage) DrawMessageNoSpace();
 	}
+}
+
+void Character::DrawMessageNoSpace() {
+
+	counterNoSpaceMessage += 1;
+
+	DrawText("No more space", 250, 20, 24, WHITE);
+
+	if (counterNoSpaceMessage >= 100) {
+
+		showingNoSpaceMessage = false;
+		counterNoSpaceMessage = 0;
+
+	}
+
 }
 
 void Character::DrawVelocityTempBar() {
@@ -374,6 +390,12 @@ bool Character::IsInventorySpaceAvailable()
 	}
 	return freeSpace;
 }
+
+void Character::ShowNoInventorySpace()
+{
+	showingNoSpaceMessage = true;
+}
+
 
 float Character::GetAttackCircleRadius1()
 {

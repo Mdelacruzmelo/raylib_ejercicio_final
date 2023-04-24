@@ -75,6 +75,8 @@ public:
 	int* GetInventory();
 	void AddToInventory(E_ItemType item);
 	void RemoveFromInventory(int numPressed);
+	void ShowNoInventorySpace();
+	void DrawMessageNoSpace();
 	bool IsInventorySpaceAvailable();
 
 	float GetAttackCircleRadius1();
@@ -85,6 +87,8 @@ public:
 protected:
 
 	bool alive = true;
+	bool showingNoSpaceMessage = false;
+	int counterNoSpaceMessage = 0;
 
 	float initialTempVelocityCounter = 300;
 	float tempVelocityCounter = 300;

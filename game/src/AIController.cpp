@@ -172,12 +172,8 @@ void AIController::DeleteInteractable(int indexToDelete)
 
 		for (int i = 0; i < newQuantity; i++) {
 
-			if (i > indexToDelete) {
-				newInteractables[i - 1] = interactables[i];
-			}
-			else if (i < indexToDelete) {
-				newInteractables[i] = interactables[i];
-			}
+			if (i > indexToDelete) newInteractables[i - 1] = interactables[i];
+			else if (i < indexToDelete)	newInteractables[i] = interactables[i];
 
 		}
 
@@ -218,19 +214,24 @@ void AIController::Play()
 
 	interactableCounter += 1;
 
-	if (interactableCounter >= 100) {
+	if (interactableCounter >= GetRandomValue(20, 30)) {
 
-		SpawnInteractable(I_KEY);
-		interactableCounter = 0;
+		// Por cada 10 enemigos tendrás una llave
+		// Y si no hay mas llaves en el campo
 
+		if (enemyQuantity > 0 && enemyQuantity % 10 == 0 && interactableQuantity == 0) {
+
+			SpawnInteractable(I_KEY);
+			interactableCounter = 0;
+
+		}
 	}
-
-	DrawText(TextFormat("Quntity keys %d", interactableQuantity), 200, 200, 40, RED);
 
 	for (int i = 0; i < interactableQuantity; i++) {
 
-		if (!interactables[i].GetGrabbed()) interactables[i].Draw();
-		// else DeleteConsumable(i);
+		interactables[i].Draw();
+
+		if (interactables[i].GetGrabbed()) DeleteInteractable(i);
 
 	}
 
