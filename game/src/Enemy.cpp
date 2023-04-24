@@ -63,13 +63,11 @@ void Enemy::Play()
 				currentRec
 			);
 
-
 			bool attackCollision2 = CheckCollisionCircleRec(
 				characterCircle2Center,
 				characterCircle2Radius,
 				currentRec
 			);
-
 
 			if (attackCollision1 || attackCollision2) {
 				Explode();

@@ -311,6 +311,11 @@ void Character::AddToInventory(E_ItemType item)
 	}
 }
 
+void Character::RemoveFromInventory(int numPressed)
+{
+	inventory[numPressed - 1] = 0;
+}
+
 bool Character::IsInventorySpaceAvailable()
 {
 	bool freeSpace = false;

@@ -69,6 +69,7 @@ public:
 	int GetInventorySize();
 	int* GetInventory();
 	void AddToInventory(E_ItemType item);
+	void RemoveFromInventory(int numPressed);
 	bool IsInventorySpaceAvailable();
 
 	float GetAttackCircleRadius1();
@@ -93,7 +94,7 @@ protected:
 	float attackDistance = 5.f;
 	float maxAttackDistance = 10.f;
 
-	float health = 70.f;
+	float health = 20.f;
 	float maxHealth = 100.f;
 
 	float initialEnergy = 1.f;
