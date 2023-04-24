@@ -16,33 +16,57 @@ Door::Door(E_Side doorSideInput, char* doorIdInput)
 
 void Door::Draw(Character* character)
 {
-	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, ORANGE);
+	Color color = ORANGE;
+	if (locked) color = RED;
+
+	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, color);
+
+	// Si se puede, enseñar mensaje de que la puerta está bloqueada
+
+	if (showMessageLocked) {
+
+		counterMessageLocked += 1;
+
+		Vector2 messagePos;
+		if (doorSide == SIDE_TOP) messagePos = Vector2{ pos.x + width + 10.f, pos.y + height / 2 };
+		if (doorSide == SIDE_BOTTOM) messagePos = Vector2{ pos.x + width + 10.f, pos.y - 20.f };
+		if (doorSide == SIDE_RIGHT) messagePos = Vector2{ pos.x - 100.f, pos.y + height / 2 };
+		if (doorSide == SIDE_LEFT) messagePos = Vector2{ pos.x + width + 10.f, pos.y - height / 2 };
+
+		DrawText("Locked", messagePos.x, messagePos.y, 20, RED);
+
+		if (counterMessageLocked >= 60) {
+
+			showMessageLocked = false;
+			counterMessageLocked = 0;
+
+		}
+
+	}
 
 	// Detectar por ubicación del jugador si se intersecta con la puerta
+	// Y detectar si el jugador está interactuando con la puerta
 
 	if (
 		CheckCollisionRecs(character->GetRect(), GetRect()) &&
 		character->GetIsInteracting()
 		) {
-		character->SetDoorTargetId(GetTargetId());
-		character->SetIsTransporting(true);
+
+		if (locked) {
+			showMessageLocked = true;
+		}
+		else {
+			character->SetDoorTargetId(GetTargetId());
+			character->SetIsTransporting(true);
+		}
 	}
 }
 
 void Door::Draw(Character* character, Vector2 posInput)
 {
 	pos = posInput;
-	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, ORANGE);
 
-	// Detectar por ubicación del jugador si se intersecta con la puerta
-
-	if (
-		CheckCollisionRecs(character->GetRect(), GetRect()) &&
-		character->GetIsInteracting()
-		) {
-		character->SetDoorTargetId(GetTargetId());
-		character->SetIsTransporting(true);
-	}
+	Draw(character);
 }
 
 E_Side Door::GetDoorSide()
@@ -73,6 +97,11 @@ Vector2 Door::GetSize()
 char* Door::GetId()
 {
 	return doorId;
+}
+
+void Door::Lock()
+{
+	locked = true;
 }
 
 void Door::Target(char* targetIdInput)

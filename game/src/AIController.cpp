@@ -41,7 +41,7 @@ void AIController::SpawnEnemy()
 				}
 
 
-				newEnemies[i].SetPosition(Vector2{ posX,posY });
+				newEnemies[i].SetPosition(Vector2{ posX, posY });
 			}
 		}
 
@@ -140,12 +140,31 @@ void AIController::Play()
 
 	if (counter >= GetRandomValue(minRateEnemy, maxRateEnemy)) {
 
-		// SpawnEnemy();
+		SpawnEnemy();
 		counter = 0;
 
 	}
 
 	for (int i = 0; i < enemyQuantity; i++) enemies[i].Play();
+
+	/*keyEnemyCounter += 1;
+
+	if (keyEnemyCounter >= 100) {
+
+		if (!keySetted) {
+
+			static int enemyIndexKey = GetRandomValue(0, enemyQuantity);
+
+			enemies[enemyIndexKey].AppendKey();
+
+			keySetted = true;
+
+		}
+
+		keyEnemyCounter = 0;
+
+	}*/
+
 
 	// Consumibles
 

@@ -24,8 +24,11 @@ private:
 	Enemy* enemies = new Enemy[enemyQuantity];
 
 	int consumableHealthCounter = 0;
+	int keyEnemyCounter = 0;
 	int consumableSpeedCounter = 0;
 	int consumableQuantity = 0;
+
 	Consumable* consumables = new Consumable[consumableQuantity];
+	bool keySetted = false;
 
 };

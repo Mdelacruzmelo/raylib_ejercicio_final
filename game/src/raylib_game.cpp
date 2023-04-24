@@ -61,6 +61,7 @@ int main(void)
 	// Connections
 
 	env1->GetDoor("door_A")->Target("door_B");
+	env1->GetDoor("door_A")->Lock();
 	env2->GetDoor("door_B")->Target("door_A");
 	env3->GetDoor("door_D")->Target("door_C");
 	env2->GetDoor("door_C")->Target("door_D");

@@ -17,6 +17,7 @@ public:
 	Rectangle GetRect();
 	Vector2 GetSize();
 	char* GetId();
+	void Lock();
 	void Target(char* targetIdInput);
 	char* GetTargetId();
 	Vector2 GetPosition();
@@ -30,4 +31,7 @@ private:
 	E_Side doorSide;
 	char* doorId;
 	char* doorTargetId;
+	bool locked = false;
+	bool showMessageLocked = false;
+	int counterMessageLocked = 0;
 };

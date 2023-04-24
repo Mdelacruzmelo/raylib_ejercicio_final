@@ -95,6 +95,16 @@ void Enemy::Play()
 		else destroyed = true;
 
 	}
+
+	if (keySpawned && key != nullptr) {
+		// key->Draw();
+	}
+
+}
+
+void Enemy::AppendKey()
+{
+	hasKey = true;
 }
 
 void Enemy::SetPosition(Vector2 posInput)
@@ -105,6 +115,12 @@ void Enemy::SetPosition(Vector2 posInput)
 void Enemy::Explode()
 {
 	isExploding = true;
+
+	if (hasKey) {
+		key = new Interactable(pos, I_KEY, character);
+		keySpawned = true;
+	}
+
 }
 
 void Enemy::ReinitializeExplode()

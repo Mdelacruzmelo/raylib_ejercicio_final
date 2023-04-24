@@ -10,7 +10,7 @@ void Character::Draw() {
 
 	if (alive) {
 
-		DrawRectangleRec(rec, WHITE);
+		DrawRectangleRec(rec, CLITERAL(Color){ 200, 200, 200, 255 });
 
 		if (isVelocityTempIncreased) DrawVelocityTempBar();
 
