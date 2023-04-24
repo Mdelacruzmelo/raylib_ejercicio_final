@@ -21,6 +21,6 @@ private:
 
 	Character* character = nullptr;
 	HUD* hud = nullptr;
-	E_TypeHUD typeHUD = H_PAUSE;
+	E_TypeHUD typeHUD = H_GAME;
 
 };

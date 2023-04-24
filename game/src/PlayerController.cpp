@@ -85,7 +85,7 @@ void PlayerController::Play()
 			Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
 			float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
 			Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 10));
+			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
 			Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
 
 			DrawLineV(character->GetPosition(), endVector, RED);
@@ -97,10 +97,17 @@ void PlayerController::Play()
 			// Atacar
 
 			if (IsMouseButtonPressed(0)) character->Attack(endVector);
+			else character->ReinitializeAttackCircles();
 
 			// Interactuar
 
-			if (IsKeyDown(KEY_SPACE) && !character->GetIsInteracting()) {
+			/*if (character->GetIsInteracting())
+				DrawText("INTERACTING", 300, 800, 40, WHITE);
+			else
+				DrawText("NOT INTERACTING", 300, 800, 40, WHITE);*/
+
+
+			if (IsKeyPressed(KEY_SPACE)) {
 				character->SetIsInteracting(true);
 			}
 			else {
@@ -109,36 +116,43 @@ void PlayerController::Play()
 
 			// Inventario
 			if (
-				IsKeyDown(KEY_ONE) ||
-				IsKeyDown(KEY_TWO) ||
-				IsKeyDown(KEY_THREE) ||
-				IsKeyDown(KEY_FOUR) ||
-				IsKeyDown(KEY_FIVE)
+				IsKeyPressed(KEY_ONE) ||
+				IsKeyPressed(KEY_TWO) ||
+				IsKeyPressed(KEY_THREE) ||
+				IsKeyPressed(KEY_FOUR) ||
+				IsKeyPressed(KEY_FIVE)
 				) {
 
 				int numPressed = 0;
 
-				if (IsKeyDown(KEY_ONE)) numPressed = 1;
-				if (IsKeyDown(KEY_TWO)) numPressed = 2;
-				if (IsKeyDown(KEY_THREE)) numPressed = 3;
-				if (IsKeyDown(KEY_FOUR)) numPressed = 4;
-				if (IsKeyDown(KEY_FIVE)) numPressed = 5;
+				if (IsKeyPressed(KEY_ONE)) numPressed = 1;
+				if (IsKeyPressed(KEY_TWO)) numPressed = 2;
+				if (IsKeyPressed(KEY_THREE)) numPressed = 3;
+				if (IsKeyPressed(KEY_FOUR)) numPressed = 4;
+				if (IsKeyPressed(KEY_FIVE)) numPressed = 5;
 
 				hud->ItemNumberPress(numPressed);
 				E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
 
 				if (itemSelected == I_POTION_HEALTH) {
 					character->AddHealth(10.f);
+					character->RemoveFromInventory(numPressed);
 				}
 				else if (itemSelected == I_POTION_STRENGTH) {
 					character->IncreaseAttack();
+					character->RemoveFromInventory(numPressed);
 				}
 				else if (itemSelected == I_POTION_SPEED) {
-					character->IncreaseVelocity();
+					if (!character->GetIsTempVelocityIncreased()) {
+						character->IncreaseTempVelocity();
+						character->RemoveFromInventory(numPressed);
+					}
 				}
 				else if (itemSelected == I_EXPERIENCE) {
 					character->IncreaseExperience();
+					character->RemoveFromInventory(numPressed);
 				}
+
 			}
 
 		}
@@ -184,7 +198,6 @@ void PlayerController::Play()
 				hud->RestartHabilityButtons(); // back to 0
 
 			}
-
 
 		}
 	}

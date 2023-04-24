@@ -5,4 +5,5 @@ enum E_ItemType {
 	I_POTION_STRENGTH = 2,
 	I_POTION_SPEED = 3,
 	I_EXPERIENCE = 4,
+	I_KEY = 5,
 };

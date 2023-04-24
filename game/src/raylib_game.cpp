@@ -4,6 +4,8 @@
 #include "EnvironmentHandler.h"
 #include "Environment.h"
 #include "HUD.h"
+#include "Enemy.h"
+#include "AIController.h"
 
 Font font = { 0 };
 Music music = { 0 };
@@ -30,6 +32,11 @@ int main(void)
 	HUD* hud = new HUD(character);
 	PlayerController* controller = new PlayerController(character, hud);
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
+	AIController* aiController = new AIController(character);
+
+	// envHandler Reference to AIController
+
+	envHandler->SetAIController(aiController);
 
 	// Environment 1
 
@@ -54,6 +61,7 @@ int main(void)
 	// Connections
 
 	env1->GetDoor("door_A")->Target("door_B");
+	env1->GetDoor("door_A")->Lock();
 	env2->GetDoor("door_B")->Target("door_A");
 	env3->GetDoor("door_D")->Target("door_C");
 	env2->GetDoor("door_C")->Target("door_D");
@@ -67,6 +75,7 @@ int main(void)
 		ClearBackground(BLACK);
 
 		envHandler->Draw();
+		aiController->Play();
 		controller->Play();
 
 		EndDrawing();

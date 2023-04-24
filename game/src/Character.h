@@ -9,6 +9,12 @@ public:
 	Character();
 
 	void Draw();
+	void Draw(Color colorInput);
+	void DrawVelocityTempBar();
+	bool GetIsAlive();
+	void Die();
+	void ReinitializeAttackCircles();
+
 	void Move(Vector2 movement);
 	void Attack(Vector2 endVector);
 
@@ -16,6 +22,7 @@ public:
 	Vector2 GetSize();
 	int GetLevel();
 	float GetNormalizedHealth();
+	float GetNormalizedIncreasedVelocity();
 	float GetNormalizedExperience();
 
 	void SetIsInteracting(bool isInteractingInput);
@@ -32,7 +39,6 @@ public:
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
-
 	int GetAbPoints();
 
 	float GetAttack();
@@ -47,6 +53,9 @@ public:
 	void IncreaseAbility(E_AbilityType abType);
 	void IncreaseAttack();
 	void IncreaseDefense();
+	void IncreaseTempVelocity();
+	bool GetIsTempVelocityIncreased();
+	void RestoreVelocity();
 	void IncreaseVelocity();
 	void IncreaseEnergy();
 	void IncreaseAttackDistance();
@@ -65,10 +74,28 @@ public:
 	int GetInventorySize();
 	int* GetInventory();
 	void AddToInventory(E_ItemType item);
+	void RemoveFromInventory(int numPressed);
+	void ShowNoInventorySpace();
+	void DrawMessageNoSpace();
 	bool IsInventorySpaceAvailable();
+	void UseKeyInventory();
+	bool HasKey();
 
-private:
+	float GetAttackCircleRadius1();
+	float GetAttackCircleRadius2();
+	Vector2 GetAttackCircleCenter1();
+	Vector2 GetAttackCircleCenter2();
 
+protected:
+
+	bool alive = true;
+	bool showingNoSpaceMessage = false;
+	int counterNoSpaceMessage = 0;
+
+	float initialTempVelocityCounter = 300;
+	float tempVelocityCounter = 300;
+	bool isVelocityTempIncreased = false;
+	float initialVelocity = 1.f;
 	float velocity = 1.f;
 	float maxVelocity = 10.f;
 
@@ -82,7 +109,7 @@ private:
 	float attackDistance = 5.f;
 	float maxAttackDistance = 10.f;
 
-	float health = 70.f;
+	float health = 20.f;
 	float maxHealth = 100.f;
 
 	float initialEnergy = 1.f;
@@ -107,6 +134,13 @@ private:
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
 	Vector2 pos = { 600.f, 540.f };
+	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+
+	Vector2 circle1Center;
+	float circle1Radius = 0.f;
+
+	Vector2 circle2Center;
+	float circle2Radius = 0.f;
 
 	bool isInteracting = false;
 	bool isTransporting = false;

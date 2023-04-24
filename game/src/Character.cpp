@@ -5,13 +5,81 @@ Character::Character()
 }
 
 void Character::Draw() {
-	DrawRectangle(
-		pos.x - radius,
-		pos.y - radius,
-		size,
-		size,
-		WHITE
-	);
+
+	Draw(WHITE);
+
+}
+
+void Character::Draw(Color colorInput) {
+
+	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+
+	if (alive) {
+
+		DrawRectangleRec(rec, colorInput);
+
+		if (isVelocityTempIncreased) DrawVelocityTempBar();
+
+		if (showingNoSpaceMessage) DrawMessageNoSpace();
+	}
+}
+
+void Character::DrawMessageNoSpace() {
+
+	counterNoSpaceMessage += 1;
+
+	DrawText("No more space", 250, 20, 24, WHITE);
+
+	if (counterNoSpaceMessage >= 100) {
+
+		showingNoSpaceMessage = false;
+		counterNoSpaceMessage = 0;
+
+	}
+
+}
+
+void Character::DrawVelocityTempBar() {
+
+	// Dibujar barra de velocidad
+
+	int addedX = 10;
+	int tempVelocityBarWidth = size + (addedX * 2);
+	int velMarginTop = 10;
+	int startX = pos.x - radius - addedX;
+	int startY = pos.y - size + velMarginTop;
+
+	DrawText("SPEED +", startX, startY - 20, 14, BLUE);
+	DrawRectangle(startX, startY, tempVelocityBarWidth, 5, GRAY);
+	DrawRectangle(startX, startY, tempVelocityBarWidth * GetNormalizedIncreasedVelocity(), 5, BLUE);
+
+	tempVelocityCounter -= 1;
+
+	// DrawText(TextFormat("counter: %d", tempVelocityCounter), 400, 300, 50, RED);
+	// DrawText(TextFormat("counter: %d", initialTempVelocityCounter), 400, 350, 50, RED);
+	// DrawText(TextFormat("normalized: %f", GetNormalizedIncreasedVelocity()), 400, 400, 50, RED);
+
+	if (tempVelocityCounter <= 0) RestoreVelocity();
+}
+
+void Character::ReinitializeAttackCircles() {
+
+	// Reinitialize circle attacks
+
+	circle1Center = { 0.f, 0.f };
+	circle1Radius = 0.f;
+	circle2Center = { 0.f, 0.f };
+	circle2Radius = 0.f;
+}
+
+bool Character::GetIsAlive()
+{
+	return alive;
+}
+
+void Character::Die()
+{
+	alive = false;
 }
 
 void Character::Move(Vector2 movement)
@@ -30,11 +98,14 @@ void Character::Move(Vector2 movement)
 
 void Character::Attack(Vector2 endVector) {
 
-	Vector2 circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
-	DrawCircle(circle1Center.x, circle1Center.y, 30.f, RED);
+	circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
+	circle1Radius = 30.f;
 
-	Vector2 circle2Center = { endVector.x, endVector.y };
-	DrawCircle(circle2Center.x, circle2Center.y, 20.f, RED);
+	DrawCircle(circle1Center.x, circle1Center.y, circle1Radius, RED);
+
+	circle2Center = { endVector.x, endVector.y };
+	circle2Radius = 20.f;
+	DrawCircle(circle2Center.x, circle2Center.y, circle2Radius, RED);
 
 	// Todo, mirar cuando se ataca, con qué intersectan los circulos para afectar al objetivo del ataque
 
@@ -77,7 +148,7 @@ void Character::SubstractAbPoints(int substract)
 
 Rectangle Character::GetRect()
 {
-	return Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
+	return rec;
 }
 
 Vector2 Character::GetSize()
@@ -93,6 +164,11 @@ int Character::GetLevel()
 float Character::GetNormalizedHealth()
 {
 	return health / maxHealth;
+}
+
+float Character::GetNormalizedIncreasedVelocity()
+{
+	return tempVelocityCounter / initialTempVelocityCounter;
 }
 
 float Character::GetNormalizedExperience()
@@ -228,6 +304,25 @@ void Character::IncreaseDefense()
 	defense += 1.f;
 }
 
+void Character::IncreaseTempVelocity()
+{
+	isVelocityTempIncreased = true;
+	velocity *= 14.5f;
+}
+
+bool Character::GetIsTempVelocityIncreased()
+{
+	return isVelocityTempIncreased;
+}
+
+
+void Character::RestoreVelocity()
+{
+	tempVelocityCounter = initialTempVelocityCounter;
+	isVelocityTempIncreased = false;
+	velocity = initialVelocity;
+}
+
 void Character::IncreaseVelocity()
 {
 	velocity += 1.f;
@@ -247,7 +342,7 @@ void Character::IncreaseAttackDistance()
 
 void Character::IncreaseExperience()
 {
-	experience += 2.f;
+	experience += 1.f;
 	if (experience >= maxExperience) {
 		experience = 0;
 		level = 2;
@@ -278,6 +373,11 @@ void Character::AddToInventory(E_ItemType item)
 	}
 }
 
+void Character::RemoveFromInventory(int numPressed)
+{
+	inventory[numPressed - 1] = 0;
+}
+
 bool Character::IsInventorySpaceAvailable()
 {
 	bool freeSpace = false;
@@ -289,6 +389,53 @@ bool Character::IsInventorySpaceAvailable()
 		}
 	}
 	return freeSpace;
+}
+
+void Character::UseKeyInventory()
+{
+	for (int i = 0; i < inventorySize; i++) {
+		if (inventory[i] == I_KEY) {
+			inventory[i] = 0;
+			return;
+		}
+	}
+}
+
+bool Character::HasKey()
+{
+	bool hasKey = false;
+
+	for (int i = 0; i < inventorySize; i++) {
+		if (inventory[i] == I_KEY) hasKey = true;
+	}
+
+	return hasKey;
+}
+
+void Character::ShowNoInventorySpace()
+{
+	showingNoSpaceMessage = true;
+}
+
+
+float Character::GetAttackCircleRadius1()
+{
+	return circle1Radius;
+}
+
+float Character::GetAttackCircleRadius2()
+{
+	return circle2Radius;
+}
+
+Vector2 Character::GetAttackCircleCenter1()
+{
+	return circle1Center;
+}
+
+Vector2 Character::GetAttackCircleCenter2()
+{
+	return circle2Center;
 }
 
 Vector2 Character::GetPosition()

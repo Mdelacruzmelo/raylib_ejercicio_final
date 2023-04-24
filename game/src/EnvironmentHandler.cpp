@@ -98,6 +98,7 @@ void EnvironmentHandler::Draw()
 			}
 
 			if (doorFound) {
+				if (aiController != nullptr) aiController->DeleteEnemies();
 				environments[i].Activate();
 				character->SetIsTransporting(false);
 				character->SetIsInteracting(false);
@@ -135,4 +136,10 @@ void EnvironmentHandler::Append(Environment* newEnvironment)
 
 	quantity = newQuantity;
 	environments = newEnvs;
+}
+
+
+void EnvironmentHandler::SetAIController(AIController* aiControllerInput)
+{
+	aiController = aiControllerInput;
 }
