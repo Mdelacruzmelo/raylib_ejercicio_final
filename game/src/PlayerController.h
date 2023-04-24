@@ -10,6 +10,7 @@ public:
 
 	void Play();
 	void SetTypeHUD(E_TypeHUD typeHUDInput);
+	E_TypeHUD GetTypeHUD();
 
 private:
 
@@ -21,6 +22,6 @@ private:
 
 	Character* character = nullptr;
 	HUD* hud = nullptr;
-	E_TypeHUD typeHUD = H_GAME;
+	E_TypeHUD typeHUD = H_MAIN_MENU;
 
 };

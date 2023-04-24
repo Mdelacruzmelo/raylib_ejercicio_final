@@ -74,8 +74,13 @@ int main(void)
 
 		ClearBackground(BLACK);
 
-		envHandler->Draw();
-		aiController->Play();
+		if (controller->GetTypeHUD() == H_GAME) {
+
+			envHandler->Draw();
+			aiController->Play();
+
+		}
+
 		controller->Play();
 
 		EndDrawing();

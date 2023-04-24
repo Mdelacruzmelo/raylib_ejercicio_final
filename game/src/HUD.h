@@ -6,8 +6,11 @@ enum E_TypeHUD {
 	H_GAME,
 	H_PAUSE,
 	H_HABILITIES,
+	H_INIT_HABILITIES,
 	H_LOAD_DATA,
 	H_MAIN_MENU,
+	H_LOOSE_GAME,
+	H_WIN_GAME,
 };
 
 
@@ -17,7 +20,7 @@ public:
 	HUD(Character* characterInput);
 	void Draw(E_TypeHUD typeHUDInput);
 	void DrawPauseWidget();
-	void DrawHabilitiesWidget();
+	void DrawAbilitiesWidget(E_TypeHUD typeHUDInput);
 	void DrawLoadDataWidget();
 	void DrawMainMenuWidget();
 	void DrawGameWidget();
@@ -27,8 +30,12 @@ public:
 	int GetPauseButtonPressed();
 	void RestartPauseButtons();
 
+	int GetMainMenuButtonPressed();
+	void RestartMainMenuButtons();
+
 	int GetHabilityButtonPressed();
 	void RestartHabilityButtons();
+
 
 private:
 
@@ -45,5 +52,6 @@ private:
 	int itemSize = 30.f;
 	int pauseButtonPressed = 0;
 	int habButtonPressed = 0;
+	int mainMenuButtonPressed = 0;
 
 };
