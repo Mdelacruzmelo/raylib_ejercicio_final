@@ -26,8 +26,8 @@ void AIController::SpawnEnemy()
 				newEnemies[i].SetTarget(character);
 
 				int randomVal = GetRandomValue(0, 3);
-				float posX = 0.f;
-				float posY = 0.f;
+				float posX = 100.f;
+				float posY = -100.f;
 
 				if (randomVal == 1) {
 					posX = GetScreenWidth();
@@ -56,6 +56,11 @@ void AIController::DeleteEnemies()
 {
 	enemyQuantity = 0;
 	enemies = nullptr;
+}
+
+void AIController::DeleteEnemy(int numEnemy)
+{
+
 }
 
 void AIController::SpawnConsumable(E_ItemType typeInput)
@@ -109,8 +114,14 @@ void AIController::DeleteConsumable(int indexToDelete)
 
 		for (int i = 0; i < newQuantity; i++) {
 
-			if (i > indexToDelete) newConsumables[i - 1] = consumables[i - 1];
-			else if (i < indexToDelete) newConsumables[i] = consumables[i];
+			if (i > indexToDelete) {
+				newConsumables[i - 1] = consumables[i];
+				newConsumables[i - 1].SetCharacter(character);
+			}
+			else if (i < indexToDelete) {
+				newConsumables[i] = consumables[i];
+				newConsumables[i].SetCharacter(character);
+			}
 
 		}
 
@@ -147,23 +158,24 @@ void AIController::Play()
 
 	for (int i = 0; i < enemyQuantity; i++) enemies[i].Play();
 
-	/*keyEnemyCounter += 1;
+	keyEnemyCounter += 1;
 
 	if (keyEnemyCounter >= 100) {
 
+		DrawText("KEY SPAWNED", 400, 400, 40, RED);
 		if (!keySetted) {
 
-			static int enemyIndexKey = GetRandomValue(0, enemyQuantity);
+			int enemyIndexKey = GetRandomValue(0, enemyQuantity);
 
-			enemies[enemyIndexKey].AppendKey();
+			enemies[enemyQuantity - 1].AppendKey();
 
-			keySetted = true;
+			// keySetted = true;
 
 		}
 
 		keyEnemyCounter = 0;
 
-	}*/
+	}
 
 
 	// Consumibles
@@ -173,7 +185,7 @@ void AIController::Play()
 	if (consumableHealthCounter >= GetRandomValue(240, 360)) {
 
 		// Si el personaje tiene menos de la mitad de vida
-		// Y además no hemos spawneado otra pocion de vida
+		// Y además no hemos spawneado otra pocion
 
 		if (character->GetNormalizedHealth() < 0.5f && consumableQuantity == 0) {
 
@@ -188,8 +200,9 @@ void AIController::Play()
 	if (consumableSpeedCounter >= GetRandomValue(640, 1060)) {
 
 		// Si hay más de 10 enemigos
+		// Y además no hemos spawneado otra pocion
 
-		if (enemyQuantity > 10) {
+		if (enemyQuantity > 10 && consumableQuantity == 0) {
 
 			SpawnConsumable(I_POTION_SPEED);
 			consumableSpeedCounter = 0;
@@ -198,11 +211,14 @@ void AIController::Play()
 	}
 
 	for (int i = 0; i < consumableQuantity; i++) {
+
 		consumables[i].Draw();
 
 		if (consumables[i].GetGrabbed()) {
+			// consumables[i].SetGrabbed(false);
 			DeleteConsumable(i);
 		}
+
 	}
 
 }

@@ -136,18 +136,23 @@ void PlayerController::Play()
 
 				if (itemSelected == I_POTION_HEALTH) {
 					character->AddHealth(10.f);
+					character->RemoveFromInventory(numPressed);
 				}
 				else if (itemSelected == I_POTION_STRENGTH) {
 					character->IncreaseAttack();
+					character->RemoveFromInventory(numPressed);
 				}
 				else if (itemSelected == I_POTION_SPEED) {
-					character->IncreaseTempVelocity();
+					if (!character->GetIsTempVelocityIncreased()) {
+						character->IncreaseTempVelocity();
+						character->RemoveFromInventory(numPressed);
+					}
 				}
 				else if (itemSelected == I_EXPERIENCE) {
 					character->IncreaseExperience();
+					character->RemoveFromInventory(numPressed);
 				}
 
-				character->RemoveFromInventory(numPressed);
 			}
 
 		}

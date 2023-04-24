@@ -23,7 +23,8 @@ Consumable::Consumable(E_ItemType typeInput, Character* characterInput, Vector2 
 
 void Consumable::DetectGrab()
 {
-	if (character && !grabbed) {
+	if (character) {
+
 		if (
 			CheckCollisionRecs(character->GetRect(), rec) &&
 			character->GetIsInteracting()
@@ -37,6 +38,16 @@ void Consumable::DetectGrab()
 bool Consumable::GetGrabbed()
 {
 	return grabbed;
+}
+
+void Consumable::SetGrabbed(bool grabbedInput)
+{
+	grabbed = grabbedInput;
+}
+
+void Consumable::SetCharacter(Character* characterInput)
+{
+	character = characterInput;
 }
 
 E_ItemType Consumable::GetType()

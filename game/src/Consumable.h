@@ -10,6 +10,8 @@ public:
 	Consumable(E_ItemType typeInput, Character* characterInput, Vector2 loc);
 	void DetectGrab();
 	bool GetGrabbed();
+	void SetGrabbed(bool grabbedInput);
+	void SetCharacter(Character* characterInput);
 	void Draw();
 	E_ItemType GetType();
 	Rectangle GetRect();

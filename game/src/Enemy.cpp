@@ -97,7 +97,9 @@ void Enemy::Play()
 	}
 
 	if (keySpawned && key != nullptr) {
-		// key->Draw();
+
+		key->Draw();
+
 	}
 
 }

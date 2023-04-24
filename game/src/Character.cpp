@@ -6,23 +6,19 @@ Character::Character()
 
 void Character::Draw() {
 
-	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
-
-	if (alive) {
-
-		DrawRectangleRec(rec, CLITERAL(Color){ 200, 200, 200, 255 });
-
-		if (isVelocityTempIncreased) DrawVelocityTempBar();
-
-	}
+	Draw(WHITE);
 
 }
 
 void Character::Draw(Color colorInput) {
 
+	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+
 	if (alive) {
 
 		DrawRectangleRec(rec, colorInput);
+
+		if (isVelocityTempIncreased) DrawVelocityTempBar();
 
 	}
 }
@@ -296,6 +292,11 @@ void Character::IncreaseTempVelocity()
 {
 	isVelocityTempIncreased = true;
 	velocity *= 14.5f;
+}
+
+bool Character::GetIsTempVelocityIncreased()
+{
+	return isVelocityTempIncreased;
 }
 
 

@@ -54,6 +54,7 @@ public:
 	void IncreaseAttack();
 	void IncreaseDefense();
 	void IncreaseTempVelocity();
+	bool GetIsTempVelocityIncreased();
 	void RestoreVelocity();
 	void IncreaseVelocity();
 	void IncreaseEnergy();

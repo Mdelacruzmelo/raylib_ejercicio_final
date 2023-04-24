@@ -12,6 +12,7 @@ public:
 	void Play();
 	void SpawnEnemy();
 	void DeleteEnemies();
+	void DeleteEnemy(int numEnemy);
 	void SpawnConsumable(E_ItemType typeInput);
 	void DeleteConsumable(int indexToDelete);
 
