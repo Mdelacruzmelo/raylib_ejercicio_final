@@ -8,16 +8,26 @@ HUD::HUD(Character* characterInput)
 }
 
 void HUD::Draw(E_TypeHUD typeHUDInput) {
-	if (typeHUDInput == H_PAUSE) DrawPauseWidget();
-	else if (typeHUDInput == H_HABILITIES) DrawHabilitiesWidget();
-	else if (typeHUDInput == H_LOAD_DATA) DrawLoadDataWidget();
-	else if (typeHUDInput == H_MAIN_MENU) DrawLoadDataWidget();
+
+	if (typeHUDInput == H_PAUSE)
+		DrawPauseWidget();
+
+	else if (typeHUDInput == H_HABILITIES || typeHUDInput == H_INIT_HABILITIES)
+		DrawAbilitiesWidget(typeHUDInput);
+
+	else if (typeHUDInput == H_LOAD_DATA)
+		DrawLoadDataWidget();
+
+	else if (typeHUDInput == H_MAIN_MENU)
+		DrawMainMenuWidget();
+
 	else DrawGameWidget();
+
 }
 
 void HUD::DrawGameWidget()
 {
-	if (character) {
+	if (character && character->GetIsAlive()) {
 
 		// Nivel actual 
 		DrawRectangle(
@@ -102,6 +112,27 @@ void HUD::DrawGameWidget()
 			GREEN
 		);
 
+		// Barra de escudo fondo
+
+		DrawRectangle(
+			padding,
+			padding + healthBarHeight + 2,
+			healthBarWidth,
+			healthBarHeight / 3,
+			GRAY
+		);
+
+		// Barra de escudo
+
+		DrawRectangle(
+			padding,
+			padding + healthBarHeight + 2,
+			healthBarWidth * character->GetNormalizedShield(),
+			healthBarHeight / 3,
+			BLUE
+		);
+
+
 		// Barra de vida bordes
 
 		DrawRectangleLines(
@@ -116,7 +147,7 @@ void HUD::DrawGameWidget()
 
 		for (int i = 0; i < character->GetInventorySize(); i++) {
 
-			int marginTop = 5;
+			int marginTop = 20;
 			int startX = padding + (i * itemSize) + (i * 5);
 
 			// Cuadrado inventario
@@ -295,7 +326,7 @@ void HUD::DrawPauseWidget()
 
 }
 
-void HUD::DrawHabilitiesWidget()
+void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 {
 
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
@@ -388,6 +419,29 @@ void HUD::DrawHabilitiesWidget()
 	DrawText(TextFormat("%d", character->GetLevel()), expBarPos.x, shortLevelNumY, shortLevelFSize, YELLOW);
 	DrawText(TextFormat("%d", character->GetLevel() + 1), expBarPos.x + expWidth, shortLevelNumY, shortLevelFSize, YELLOW);
 
+
+	if (typeHUDInput == H_INIT_HABILITIES) {
+
+		// Boton empezar partida
+
+		// Button 1 - Atrás
+
+		Rectangle rectStart = Rectangle{ (float)GetScreenWidth() - 200.f, (float)GetScreenHeight() - 100.f, 125.f, 50.f };
+
+		if (CheckCollisionPointRec(GetMousePosition(), rectStart)) {
+
+			opacity1 = 1.f;
+			SetMouseCursor(4);
+
+			if (IsMouseButtonPressed(0)) habButtonPressed = 11;
+
+		}
+
+		DrawRectangleRec(rectStart, Fade(YELLOW, opacity1));
+		DrawText("Empezar", rectStart.x + 20, rectStart.y + 15, 20, BLACK);
+
+	}
+
 }
 
 void HUD::DrawAbButtons(E_AbilityType abType, int order) {
@@ -466,6 +520,30 @@ void HUD::DrawLoadDataWidget()
 
 void HUD::DrawMainMenuWidget()
 {
+	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLACK);
+
+	float padding = 20.f;
+	float h = 55.f;
+	float y = 400.f;
+
+	// Button 1 - Reanudar partida
+
+	float y1 = y + (80 * 0);
+	float opacity1 = 0.8f;
+	Rectangle rect1 = Rectangle{ 200.f, y1, 220.f, h };
+
+	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
+
+		opacity1 = 1.f;
+		SetMouseCursor(4);
+
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 1;
+
+	}
+
+	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
+	DrawText("Nueva partida", 200 + padding, y1 + padding, 20, BLACK);
+
 }
 
 void HUD::ItemNumberPress(int num)
@@ -496,9 +574,19 @@ int HUD::GetPauseButtonPressed()
 	return pauseButtonPressed;
 }
 
+int HUD::GetMainMenuButtonPressed()
+{
+	return mainMenuButtonPressed;
+}
+
 void HUD::RestartPauseButtons()
 {
 	pauseButtonPressed = 0;
+}
+
+void HUD::RestartMainMenuButtons()
+{
+	mainMenuButtonPressed = 0;
 }
 
 int HUD::GetHabilityButtonPressed()

@@ -166,6 +166,16 @@ float Character::GetNormalizedHealth()
 	return health / maxHealth;
 }
 
+float Character::GetNormalizedDefense()
+{
+	return defense / maxDefense;
+}
+
+float Character::GetNormalizedShield()
+{
+	return shield / maxShield;
+}
+
 float Character::GetNormalizedIncreasedVelocity()
 {
 	return tempVelocityCounter / initialTempVelocityCounter;
@@ -223,8 +233,34 @@ void Character::AddHealth(float healthAdded)
 
 void Character::ApplyDamage(float damage)
 {
-	health -= damage;
-	if (health < 0) health = 0.f;
+	// Cuando incrementamos habilidad "defense", nos hacemos más resistentes
+
+	if (shield > 0) {
+
+		float normalizedDefense = GetNormalizedDefense();
+		if (normalizedDefense >= 1.f) normalizedDefense = 0.9f;
+
+		float damageDismised = damage * normalizedDefense;
+
+		float restShield = shield - (damage - damageDismised);
+
+		if (restShield < 0) {
+			shield = 0;
+			health += restShield;
+		}
+		else shield = restShield;
+
+	}
+	else {
+
+		health -= damage;
+
+		if (health <= 0) {
+			health = 0.f;
+			Die();
+		}
+
+	}
 }
 
 // Decrease

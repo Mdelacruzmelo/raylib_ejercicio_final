@@ -15,16 +15,44 @@ void PlayerController::Play()
 	// Movimiento
 
 	if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D)) {
-		if (IsKeyDown(KEY_A)) movement.x = -1.f;
-		if (IsKeyDown(KEY_D)) movement.x = 1.f;
+
+		if (IsKeyDown(KEY_A)) {
+
+			if (character->GetPosition().x > (character->GetSize().x / 2)) movement.x = -1.f;
+			else movement.x = 0.f;
+
+		}
+
+		if (IsKeyDown(KEY_D)) {
+
+			if (character->GetPosition().x < (GetScreenWidth() - character->GetSize().x / 2)) movement.x = 1.f;
+			else movement.x = 0.f;
+
+		}
 	}
 	else movement.x = 0;
 
 	if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S)) {
-		if (IsKeyDown(KEY_W)) movement.y = -1.f;
-		if (IsKeyDown(KEY_S)) movement.y = 1.f;
+
+		if (IsKeyDown(KEY_W)) {
+
+			if (character->GetPosition().y - (character->GetSize().y / 2) > 0.f) movement.y = -1.f;
+			else movement.y = 0.f;
+
+		}
+		if (IsKeyDown(KEY_S)) {
+
+			// Border bottom = 80.f
+
+			if (character->GetPosition().y < (GetScreenHeight() - 80.f)) movement.y = 1.f;
+			else movement.y = 0.f;
+
+		}
 	}
 	else movement.y = 0;
+
+	DrawText(TextFormat("Character x: %f", character->GetPosition().x), 300, 300, 40, GREEN);
+	DrawText(TextFormat("Move x: %f", movement.x), 300, 350, 40, GREEN);
 
 	// -------------------- TEST INTERACT --------------------
 
@@ -49,7 +77,8 @@ void PlayerController::Play()
 
 		// Draw character
 
-		character->Draw();
+		if (character->GetIsAlive()) character->Draw();
+		else typeHUD = H_LOOSE_GAME;
 
 		// HUD
 
@@ -175,11 +204,18 @@ void PlayerController::Play()
 				WHITE);*/
 		}
 
-		else if (typeHUD == H_HABILITIES) {
+		else if (typeHUD == H_HABILITIES || typeHUD == H_INIT_HABILITIES) {
 
 			if (hud->GetHabilityButtonPressed() != 0) {
 
-				if (hud->GetHabilityButtonPressed() == 10) typeHUD = H_PAUSE;
+				if (hud->GetHabilityButtonPressed() == 10) {
+					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_MAIN_MENU;
+					else typeHUD = H_PAUSE;
+				}
+
+				if (hud->GetHabilityButtonPressed() == 11) {
+					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_GAME;
+				}
 
 				if (
 					character->IsAddAbility(hud->GetHabilityButtonPressed()) &&
@@ -200,10 +236,26 @@ void PlayerController::Play()
 			}
 
 		}
+
+		else if (typeHUD == H_MAIN_MENU) {
+
+			if (hud->GetMainMenuButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
+			else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+			else if (hud->GetMainMenuButtonPressed() == 3) typeHUD = H_HABILITIES;
+			else if (hud->GetMainMenuButtonPressed() == 4) typeHUD = H_MAIN_MENU;
+
+			hud->RestartMainMenuButtons();
+
+		}
 	}
 }
 
 void PlayerController::SetTypeHUD(E_TypeHUD typeHUDInput)
 {
 	typeHUD = typeHUDInput;
+}
+
+E_TypeHUD PlayerController::GetTypeHUD()
+{
+	return typeHUD;
 }

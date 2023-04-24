@@ -22,6 +22,8 @@ public:
 	Vector2 GetSize();
 	int GetLevel();
 	float GetNormalizedHealth();
+	float GetNormalizedDefense();
+	float GetNormalizedShield();
 	float GetNormalizedIncreasedVelocity();
 	float GetNormalizedExperience();
 
@@ -124,10 +126,13 @@ protected:
 	float defense = 1.f;
 	float maxDefense = 10.f;
 
-	int level = 1;
-	int abilityPoints = 10;
+	float shield = 50.f;
+	float maxShield = 50.f;
 
-	float experience = 20.f;
+	int level = 1;
+	int abilityPoints = 3;
+
+	float experience = 0.f;
 	float maxExperience = 100.f;
 
 	int inventorySize = 5;
