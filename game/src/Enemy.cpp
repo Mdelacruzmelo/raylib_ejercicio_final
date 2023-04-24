@@ -96,8 +96,9 @@ void Enemy::Play()
 
 	}
 
-	if (keySpawned && key != nullptr) {
+	if (hasKey ) {
 
+		DrawText("KEY SPAWNEDDASDASDFASDF ", 600, 800, 60, GREEN);
 		key->Draw();
 
 	}
@@ -119,6 +120,7 @@ void Enemy::Explode()
 	isExploding = true;
 
 	if (hasKey) {
+		
 		key = new Interactable(pos, I_KEY, character);
 		keySpawned = true;
 	}

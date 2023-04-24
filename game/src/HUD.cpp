@@ -134,8 +134,11 @@ void HUD::DrawGameWidget()
 				else if (character->GetInventory()[i] == I_POTION_SPEED) {
 					color = BLUE;
 				}
-				else {
+				else if (character->GetInventory()[i] == I_KEY) {
 					color = YELLOW;
+				}
+				else {
+					color = PURPLE;
 				}
 
 				DrawRectangle(

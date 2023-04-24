@@ -103,6 +103,46 @@ void AIController::SpawnConsumable(E_ItemType typeInput)
 
 }
 
+void AIController::SpawnInteractable(E_ItemType typeInput)
+{
+	if (character != nullptr) {
+
+		int newQuantity = interactableQuantity + 1;
+		Interactable* newInteractables = new Interactable[newQuantity];
+
+		for (int i = 0; i < newQuantity; i++) {
+
+			if (i < interactableQuantity) newInteractables[i] = interactables[i];
+			else {
+
+				// Si el jugador esta en la mitad izquierda de la pantalla, ponlo en la derecha y viceversa
+
+				float spawmLocX = character->GetPosition().x;
+				if (spawmLocX < GetScreenWidth() / 2) spawmLocX = GetScreenWidth() / 2 + GetRandomValue(10, 50) - GetScreenWidth() / 4;
+				else spawmLocX = GetScreenWidth() / 4 - GetRandomValue(10, 50);
+
+				// Si el jugador esta en la mitad superior de la pantalla, ponlo en la inferior y viceversa
+
+				float spawmLocY = character->GetPosition().y;
+				if (spawmLocY < GetScreenHeight() / 2) spawmLocY = GetScreenHeight() / 2 + GetRandomValue(10, 50) + GetScreenHeight() / 4;
+				else spawmLocY = GetScreenHeight() / 4 - GetRandomValue(10, 50);
+
+				newInteractables[i] = Interactable(
+					Vector2{ spawmLocX, spawmLocY },
+					typeInput,
+					character
+				);
+
+			}
+		}
+
+		interactables = newInteractables;
+		interactableQuantity = newQuantity;
+
+	}
+
+}
+
 void AIController::DeleteConsumable(int indexToDelete)
 {
 	if (character) {
@@ -110,23 +150,39 @@ void AIController::DeleteConsumable(int indexToDelete)
 		int newQuantity = consumableQuantity - 1;
 		Consumable* newConsumables = new Consumable[newQuantity];
 
-		// Isra, el quitar de un array un indice me ha costado eh... exijo 3 puntos por esto xD
-
 		for (int i = 0; i < newQuantity; i++) {
 
-			if (i > indexToDelete) {
-				newConsumables[i - 1] = consumables[i];
-				newConsumables[i - 1].SetCharacter(character);
-			}
-			else if (i < indexToDelete) {
-				newConsumables[i] = consumables[i];
-				newConsumables[i].SetCharacter(character);
-			}
+			if (i > indexToDelete) newConsumables[i - 1] = consumables[i];
+			else if (i < indexToDelete) newConsumables[i] = consumables[i];
 
 		}
 
 		consumables = newConsumables;
 		consumableQuantity = newQuantity;
+
+	}
+}
+
+void AIController::DeleteInteractable(int indexToDelete)
+{
+	if (character) {
+
+		int newQuantity = interactableQuantity - 1;
+		Interactable* newInteractables = new Interactable[newQuantity];
+
+		for (int i = 0; i < newQuantity; i++) {
+
+			if (i > indexToDelete) {
+				newInteractables[i - 1] = interactables[i];
+			}
+			else if (i < indexToDelete) {
+				newInteractables[i] = interactables[i];
+			}
+
+		}
+
+		interactables = newInteractables;
+		interactableQuantity = newQuantity;
 
 	}
 }
@@ -158,25 +214,25 @@ void AIController::Play()
 
 	for (int i = 0; i < enemyQuantity; i++) enemies[i].Play();
 
-	keyEnemyCounter += 1;
+	// Interactables
 
-	if (keyEnemyCounter >= 100) {
+	interactableCounter += 1;
 
-		DrawText("KEY SPAWNED", 400, 400, 40, RED);
-		if (!keySetted) {
+	if (interactableCounter >= 100) {
 
-			int enemyIndexKey = GetRandomValue(0, enemyQuantity);
-
-			enemies[enemyQuantity - 1].AppendKey();
-
-			// keySetted = true;
-
-		}
-
-		keyEnemyCounter = 0;
+		SpawnInteractable(I_KEY);
+		interactableCounter = 0;
 
 	}
 
+	DrawText(TextFormat("Quntity keys %d", interactableQuantity), 200, 200, 40, RED);
+
+	for (int i = 0; i < interactableQuantity; i++) {
+
+		if (!interactables[i].GetGrabbed()) interactables[i].Draw();
+		// else DeleteConsumable(i);
+
+	}
 
 	// Consumibles
 
@@ -214,10 +270,7 @@ void AIController::Play()
 
 		consumables[i].Draw();
 
-		if (consumables[i].GetGrabbed()) {
-			// consumables[i].SetGrabbed(false);
-			DeleteConsumable(i);
-		}
+		if (consumables[i].GetGrabbed()) DeleteConsumable(i);
 
 	}
 

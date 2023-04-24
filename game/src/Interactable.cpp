@@ -9,6 +9,18 @@ Interactable::Interactable(Vector2 posInput, E_ItemType typeInput, Character* ch
 	pos = posInput;
 	type = typeInput;
 	character = characterInput;
+
+	longPart = Rectangle{ pos.x, pos.y, longitude, 8.f };
+	squarePart = Rectangle{ pos.x - squareSize, pos.y - (squareSize / 2), squareSize, squareSize };
+	tooth1Part = Rectangle{ pos.x + 5.f, pos.y, 5.f, 12.f };
+	tooth2Part = Rectangle{ pos.x + 15.f, pos.y, 5.f, 12.f };
+	tooth3Part = Rectangle{ pos.x + 20.f, pos.y, 5.f, 12.f };
+	round = Rectangle{
+	   pos.x - squareSize - padding,
+	   pos.y - (squareSize) - padding,
+	   squareSize + (2 * padding) + longitude,
+	   squareSize + (2 * padding) + longitude
+	};
 }
 
 void Interactable::Draw()
@@ -40,4 +52,9 @@ void Interactable::DetectGrab()
 			grabbed = true;
 		}
 	}
+}
+
+bool Interactable::GetGrabbed()
+{
+	return grabbed;
 }
