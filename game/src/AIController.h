@@ -23,7 +23,8 @@ private:
 	int enemyQuantity = 0;
 	Enemy* enemies = new Enemy[enemyQuantity];
 
-	int consumableCounter = 0;
+	int consumableHealthCounter = 0;
+	int consumableSpeedCounter = 0;
 	int consumableQuantity = 0;
 	Consumable* consumables = new Consumable[consumableQuantity];
 

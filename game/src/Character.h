@@ -10,6 +10,7 @@ public:
 
 	void Draw();
 	void Draw(Color colorInput);
+	void DrawVelocityTempBar();
 	bool GetIsAlive();
 	void Die();
 	void ReinitializeAttackCircles();
@@ -21,6 +22,7 @@ public:
 	Vector2 GetSize();
 	int GetLevel();
 	float GetNormalizedHealth();
+	float GetNormalizedIncreasedVelocity();
 	float GetNormalizedExperience();
 
 	void SetIsInteracting(bool isInteractingInput);
@@ -51,6 +53,8 @@ public:
 	void IncreaseAbility(E_AbilityType abType);
 	void IncreaseAttack();
 	void IncreaseDefense();
+	void IncreaseTempVelocity();
+	void RestoreVelocity();
 	void IncreaseVelocity();
 	void IncreaseEnergy();
 	void IncreaseAttackDistance();
@@ -81,6 +85,10 @@ protected:
 
 	bool alive = true;
 
+	float initialTempVelocityCounter = 300;
+	float tempVelocityCounter = 300;
+	bool isVelocityTempIncreased = false;
+	float initialVelocity = 1.f;
 	float velocity = 1.f;
 	float maxVelocity = 10.f;
 

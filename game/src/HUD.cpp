@@ -121,8 +121,6 @@ void HUD::DrawGameWidget()
 
 			// Cuadrado inventario
 
-			DrawText(TextFormat("doors quantity %d", character->GetInventory()[i]), 100, 330, 16, WHITE);
-
 			if (character->GetInventory()[i] > 0) {
 
 				// TODO: Dibujar imagen de item

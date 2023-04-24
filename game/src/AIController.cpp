@@ -149,9 +149,9 @@ void AIController::Play()
 
 	// Consumibles
 
-	consumableCounter += 1;
+	consumableHealthCounter += 1;
 
-	if (consumableCounter >= GetRandomValue(240, 360)) {
+	if (consumableHealthCounter >= GetRandomValue(240, 360)) {
 
 		// Si el personaje tiene menos de la mitad de vida
 		// Y además no hemos spawneado otra pocion de vida
@@ -159,7 +159,21 @@ void AIController::Play()
 		if (character->GetNormalizedHealth() < 0.5f && consumableQuantity == 0) {
 
 			SpawnConsumable(I_POTION_HEALTH);
-			consumableCounter = 0;
+			consumableHealthCounter = 0;
+
+		}
+	}
+
+	consumableSpeedCounter += 1;
+
+	if (consumableSpeedCounter >= GetRandomValue(640, 1060)) {
+
+		// Si hay más de 10 enemigos
+
+		if (enemyQuantity > 10) {
+
+			SpawnConsumable(I_POTION_SPEED);
+			consumableSpeedCounter = 0;
 
 		}
 	}

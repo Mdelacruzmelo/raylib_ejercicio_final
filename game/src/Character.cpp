@@ -7,21 +7,47 @@ Character::Character()
 void Character::Draw() {
 
 	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
-	if (alive) DrawRectangleRec(rec, WHITE);
+
+	if (alive) {
+
+		DrawRectangleRec(rec, WHITE);
+
+		if (isVelocityTempIncreased) DrawVelocityTempBar();
+
+	}
 
 }
 
 void Character::Draw(Color colorInput) {
 
 	if (alive) {
-		DrawRectangle(
-			pos.x - radius,
-			pos.y - radius,
-			size,
-			size,
-			colorInput
-		);
+
+		DrawRectangleRec(rec, colorInput);
+
 	}
+}
+
+void Character::DrawVelocityTempBar() {
+
+	// Dibujar barra de velocidad
+
+	int addedX = 10;
+	int tempVelocityBarWidth = size + (addedX * 2);
+	int velMarginTop = 10;
+	int startX = pos.x - radius - addedX;
+	int startY = pos.y - size + velMarginTop;
+
+	DrawText("SPEED +", startX, startY - 20, 14, BLUE);
+	DrawRectangle(startX, startY, tempVelocityBarWidth, 5, GRAY);
+	DrawRectangle(startX, startY, tempVelocityBarWidth * GetNormalizedIncreasedVelocity(), 5, BLUE);
+
+	tempVelocityCounter -= 1;
+
+	// DrawText(TextFormat("counter: %d", tempVelocityCounter), 400, 300, 50, RED);
+	// DrawText(TextFormat("counter: %d", initialTempVelocityCounter), 400, 350, 50, RED);
+	// DrawText(TextFormat("normalized: %f", GetNormalizedIncreasedVelocity()), 400, 400, 50, RED);
+
+	if (tempVelocityCounter <= 0) RestoreVelocity();
 }
 
 void Character::ReinitializeAttackCircles() {
@@ -126,6 +152,11 @@ int Character::GetLevel()
 float Character::GetNormalizedHealth()
 {
 	return health / maxHealth;
+}
+
+float Character::GetNormalizedIncreasedVelocity()
+{
+	return tempVelocityCounter / initialTempVelocityCounter;
 }
 
 float Character::GetNormalizedExperience()
@@ -259,6 +290,20 @@ void Character::IncreaseAttack()
 void Character::IncreaseDefense()
 {
 	defense += 1.f;
+}
+
+void Character::IncreaseTempVelocity()
+{
+	isVelocityTempIncreased = true;
+	velocity *= 14.5f;
+}
+
+
+void Character::RestoreVelocity()
+{
+	tempVelocityCounter = initialTempVelocityCounter;
+	isVelocityTempIncreased = false;
+	velocity = initialVelocity;
 }
 
 void Character::IncreaseVelocity()
