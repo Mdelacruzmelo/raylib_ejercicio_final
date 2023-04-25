@@ -38,13 +38,8 @@ void HUD::DrawGameWidget()
 			YELLOW
 		);
 
-		int level = character->GetLevel();
-		int nextLevel = level + 1;
-
 		float left1Padding = expNumbersSize / 4;
-		float left2Padding = expNumbersSize / 4;
-
-		if (level == 1) left1Padding = expNumbersSize / 3;
+		if (character->GetLevel() == 1) left1Padding = expNumbersSize / 3;
 
 		DrawText(
 			TextFormat("%d", character->GetLevel()),
@@ -85,8 +80,10 @@ void HUD::DrawGameWidget()
 			YELLOW
 		);
 
+		float left2Padding = expNumbersSize / 4;
+
 		DrawText(
-			TextFormat("%d", nextLevel),
+			TextFormat("%d", character->GetLevel() + 1),
 			GetScreenWidth() - padding - expNumbersSize + 2 + left2Padding,
 			GetScreenHeight() - padding - expNumbersSize + left2Padding,
 			22,
@@ -514,6 +511,26 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 
 }
 
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText) {
+
+	float padding = 20.f;
+
+	float opacity1 = 0.8f;
+
+	if (CheckCollisionPointRec(GetMousePosition(), buttonRec)) {
+
+		opacity1 = 1.f;
+		SetMouseCursor(4);
+
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = buttonNumber;
+
+	}
+
+	DrawRectangleRec(buttonRec, Fade(WHITE, opacity1));
+	DrawText(buttonText, 200 + padding, buttonRec.y + padding, 20, BLACK);
+
+}
+
 void HUD::DrawLoadDataWidget()
 {
 }
@@ -522,27 +539,78 @@ void HUD::DrawMainMenuWidget()
 {
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLACK);
 
-	float padding = 20.f;
-	float h = 55.f;
-	float y = 400.f;
+	DrawText("The legend of Brenda", 100, GetScreenHeight() / 4, 50, RED);
+	DrawText("- in the Maniac House -", 100, GetScreenHeight() / 4 + 70, 20, RED);
 
-	// Button 1 - Reanudar partida
+	Rectangle buttonRect1 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 80.f, 220.f, 55.f };
+	DrawMenuButton(buttonRect1, 1, "Nueva partida");
 
-	float y1 = y + (80 * 0);
-	float opacity1 = 0.8f;
-	Rectangle rect1 = Rectangle{ 200.f, y1, 220.f, h };
+	Rectangle buttonRect2 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 160.f, 220.f, 55.f };
+	DrawMenuButton(buttonRect2, 2, "Cargar partida");
 
-	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
+	Rectangle buttonRect3 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 240.f, 220.f, 55.f };
+	DrawMenuButton(buttonRect3, 3, "Salir");
 
-		opacity1 = 1.f;
-		SetMouseCursor(4);
+	// Sangre
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 1;
+	static float bloodLength1 = 1.f;
+	bloodLength1 += 1.f;
+	Rectangle bloodRec1 = Rectangle{ 120.f, ((float)GetScreenHeight() / 3.f - 10.f), 4.f, bloodLength1 };
+	DrawRectangleRec(bloodRec1, RED);
 
-	}
+	static float bloodLength2 = 1.f;
+	bloodLength2 += 1.f;
+	Rectangle bloodRec2 = Rectangle{ 375.f, ((float)GetScreenHeight() / 4.f + 20.f), 5.f, bloodLength2 };
+	DrawRectangleRec(bloodRec2, RED);
 
-	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
-	DrawText("Nueva partida", 200 + padding, y1 + padding, 20, BLACK);
+	static float bloodLength3 = 0.f;
+	bloodLength3 += 0.6f;
+	Rectangle bloodRec3 = Rectangle{ 480.f, ((float)GetScreenHeight() / 4.f + 40.f), 10.f, bloodLength3 };
+	DrawRectangleRec(bloodRec3, RED);
+
+
+	static float bloodLength4 = 0.f;
+	bloodLength4 += 0.3f;
+	Rectangle bloodRec4 = Rectangle{ 160.f, ((float)GetScreenHeight() / 3.f - 10.f), 2.f, bloodLength4 };
+	DrawRectangleRec(bloodRec4, RED);
+
+	static float bloodLength5 = 0.f;
+	bloodLength5 += 0.5f;
+	Rectangle bloodRec5 = Rectangle{ 260.f, ((float)GetScreenHeight() / 3.f - 10.f), 2.f, bloodLength5 };
+	DrawRectangleRec(bloodRec5, RED);
+
+	static float bloodLength6 = 0.f;
+	bloodLength6 += 0.2f;
+	Rectangle bloodRec6 = Rectangle{ 560.f, ((float)GetScreenHeight() / 3.f - 10.f), 10.f, bloodLength6 };
+	DrawRectangleRec(bloodRec6, RED);
+
+	// Sangre Colision 1 - gota gruesa por los 3 botones
+
+	Rectangle colRect1 = GetCollisionRec(bloodRec2, buttonRect1);
+	Rectangle colRect1Modified = Rectangle{ colRect1.x - 6.f, colRect1.y, colRect1.width + 4.f, colRect1.height };
+	DrawRectangleRec(colRect1Modified, RED);
+
+	Rectangle colRect2 = GetCollisionRec(bloodRec2, buttonRect2);
+	Rectangle colRect2Modified = Rectangle{ colRect2.x - 5.f, colRect2.y, colRect2.width + 5.f, colRect2.height };
+	DrawRectangleRec(colRect2Modified, RED);
+
+	Rectangle colRect3 = GetCollisionRec(bloodRec2, buttonRect3);
+	Rectangle colRect3Modified = Rectangle{ colRect3.x - 4.f, colRect3.y, colRect3.width + 6.f, colRect3.height };
+	DrawRectangleRec(colRect3Modified, RED);
+
+	// Sangre Colision 2 - gota delgada por los 3 botones
+
+	Rectangle colRect4 = GetCollisionRec(bloodRec5, buttonRect1);
+	Rectangle colRect4Modified = Rectangle{ colRect4.x - 6.f, colRect4.y, colRect4.width + 4.f, colRect4.height };
+	DrawRectangleRec(colRect4Modified, RED);
+
+	Rectangle colRect5 = GetCollisionRec(bloodRec5, buttonRect2);
+	Rectangle colRect5Modified = Rectangle{ colRect5.x - 5.f, colRect5.y, colRect5.width + 5.f, colRect5.height };
+	DrawRectangleRec(colRect5Modified, RED);
+
+	Rectangle colRect6 = GetCollisionRec(bloodRec5, buttonRect3);
+	Rectangle colRect6Modified = Rectangle{ colRect6.x - 4.f, colRect6.y, colRect6.width + 6.f, colRect6.height };
+	DrawRectangleRec(colRect6Modified, RED);
 
 }
 

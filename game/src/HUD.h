@@ -26,6 +26,7 @@ public:
 	void DrawGameWidget();
 	void ItemNumberPress(int num);
 	void DrawAbButtons(E_AbilityType abType, int order);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText);
 
 	int GetPauseButtonPressed();
 	void RestartPauseButtons();

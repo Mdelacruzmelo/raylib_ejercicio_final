@@ -241,8 +241,7 @@ void PlayerController::Play()
 
 			if (hud->GetMainMenuButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
 			else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
-			else if (hud->GetMainMenuButtonPressed() == 3) typeHUD = H_HABILITIES;
-			else if (hud->GetMainMenuButtonPressed() == 4) typeHUD = H_MAIN_MENU;
+			else if (hud->GetMainMenuButtonPressed() == 3) CloseWindow();
 
 			hud->RestartMainMenuButtons();
 
