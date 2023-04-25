@@ -9,17 +9,19 @@ HUD::HUD(Character* characterInput)
 
 void HUD::Draw(E_TypeHUD typeHUDInput) {
 
+	type = typeHUDInput;
+
 	if (typeHUDInput == H_PAUSE)
 		DrawPauseWidget();
 
 	else if (typeHUDInput == H_HABILITIES || typeHUDInput == H_INIT_HABILITIES)
 		DrawAbilitiesWidget(typeHUDInput);
 
-	else if (typeHUDInput == H_LOAD_DATA)
-		DrawLoadDataWidget();
-
 	else if (typeHUDInput == H_MAIN_MENU)
 		DrawMainMenuWidget();
+
+	else if (typeHUDInput == H_LOAD_DATA || typeHUDInput == H_INIT_LOAD_DATA)
+		DrawLoadDataWidget(typeHUDInput);
 
 	else DrawGameWidget();
 
@@ -203,7 +205,7 @@ void HUD::DrawGameWidget()
 
 		// ----- DEBUG ABILITIES DRAW ------
 
-		DrawText(
+		/*DrawText(
 			TextFormat("Ataque: %f", character->GetAttack()),
 			800,
 			200,
@@ -237,7 +239,7 @@ void HUD::DrawGameWidget()
 			800,
 			360,
 			22,
-			WHITE);
+			WHITE);*/
 
 	}
 }
@@ -250,9 +252,6 @@ void HUD::DrawPauseWidget()
 	float h = 55.f;
 	float y = 400.f;
 
-	// TODO: Primero rojo,	luego verde,			luego azul
-	// TODO: Primero mal,	luego que funcione,		luego refactor
-
 	// Button 1 - Reanudar partida
 
 	float y1 = y + (80 * 0);
@@ -263,7 +262,7 @@ void HUD::DrawPauseWidget()
 		opacity1 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) pauseButtonPressed = 1;
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 1;
 
 	}
 
@@ -280,7 +279,7 @@ void HUD::DrawPauseWidget()
 		opacity2 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) pauseButtonPressed = 2;
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 2;
 
 	}
 
@@ -297,7 +296,7 @@ void HUD::DrawPauseWidget()
 		opacity3 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) pauseButtonPressed = 3;
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 3;
 
 	}
 
@@ -314,7 +313,7 @@ void HUD::DrawPauseWidget()
 		opacity4 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) pauseButtonPressed = 4;
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 4;
 
 	}
 
@@ -323,31 +322,35 @@ void HUD::DrawPauseWidget()
 
 }
 
-void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
-{
-
-	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
+void HUD::DrawBackButton(int buttonNumber) {
 
 	float padding = 20.f;
-	float h = 55.f;
-
-	// Button 1 - Atrás
-
 	float opacity1 = 0.8f;
-	float yBack = 50.f;
-	Rectangle rect1 = Rectangle{ 50.f, yBack, 100.f, h };
+
+	Rectangle rect1 = Rectangle{ 50.f, 50.f, 100.f, 55.f };
 
 	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
 
 		opacity1 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) habButtonPressed = 10;
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = buttonNumber;
 
 	}
 
 	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
-	DrawText("Atras", 50.f + padding, yBack + padding, 20, BLACK);
+	DrawText("Atras", 50.f + padding, 50.f + padding, 20, BLACK);
+
+}
+
+void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
+{
+
+	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
+
+	// Button 1 - Atrás
+
+	DrawBackButton(10);
 
 	// Botones de habilidades
 
@@ -421,21 +424,8 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 
 		// Boton empezar partida
 
-		// Button 1 - Atrás
-
 		Rectangle rectStart = Rectangle{ (float)GetScreenWidth() - 200.f, (float)GetScreenHeight() - 100.f, 125.f, 50.f };
-
-		if (CheckCollisionPointRec(GetMousePosition(), rectStart)) {
-
-			opacity1 = 1.f;
-			SetMouseCursor(4);
-
-			if (IsMouseButtonPressed(0)) habButtonPressed = 11;
-
-		}
-
-		DrawRectangleRec(rectStart, Fade(YELLOW, opacity1));
-		DrawText("Empezar", rectStart.x + 20, rectStart.y + 15, 20, BLACK);
+		DrawMenuButton(rectStart, 11, "Empezar");
 
 	}
 
@@ -496,11 +486,11 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 
 			if (abLevel > i) {
 				DrawRectangleRec(rect, Fade(RED, 1.f));
-				if (IsMouseButtonPressed(0)) habButtonPressed = abType * -1;
+				if (IsMouseButtonPressed(0)) mainMenuButtonPressed = abType * -1;
 			}
 			else {
 				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
-				if (IsMouseButtonPressed(0)) habButtonPressed = abType;
+				if (IsMouseButtonPressed(0)) mainMenuButtonPressed = abType;
 			}
 
 		}
@@ -511,10 +501,9 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 
 }
 
-void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText) {
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText) {
 
 	float padding = 20.f;
-
 	float opacity1 = 0.8f;
 
 	if (CheckCollisionPointRec(GetMousePosition(), buttonRec)) {
@@ -527,12 +516,70 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 	}
 
 	DrawRectangleRec(buttonRec, Fade(WHITE, opacity1));
-	DrawText(buttonText, 200 + padding, buttonRec.y + padding, 20, BLACK);
+	DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, BLACK);
 
 }
 
-void HUD::DrawLoadDataWidget()
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText) {
+
+	Color cText = BLACK;
+	Color cButton = WHITE;
+
+	DrawMenuButton(buttonRec, buttonNumber, buttonText, cButton, cText);
+
+}
+
+void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 {
+	// Botón atrás
+
+	// DrawBackButton(10);
+
+	Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
+	DrawMenuButton(rectBackButton, 10, "Atras");
+
+	float buttonWidth = (float)GetScreenWidth() / 3.f;
+	float startX1 = (float)GetScreenWidth() / 3.f - buttonWidth / 1.8;
+
+	float marginLeft = 40.f;
+	float startX2 = (float)startX1 + buttonWidth + marginLeft;
+
+	// Slot 1
+
+	Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
+	DrawMenuButton(buttonRect1, 20, "Slot 1");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect1), -20, BLACK);
+
+	// Slot 2
+
+	Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
+	DrawMenuButton(buttonRect2, 21, "Slot 2");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect2), -21, BLACK);
+
+	// Slot 3
+
+	Rectangle buttonRect3 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
+	DrawMenuButton(buttonRect3, 22, "Slot 3");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect3), -22, BLACK);
+
+	// Slot 3
+
+	Rectangle buttonRect4 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
+	DrawMenuButton(buttonRect4, 23, "Slot 4");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect4), -23, BLACK);
+
+}
+
+Rectangle HUD::GetRectButtonRemove(Rectangle rec) {
+
+	float squareSize = rec.height - 20.f;
+
+	return Rectangle{
+			rec.x + rec.width - squareSize - 10.f,
+			rec.y + 10.f,
+			squareSize,
+			squareSize
+	};
 }
 
 void HUD::DrawMainMenuWidget()
@@ -567,7 +614,6 @@ void HUD::DrawMainMenuWidget()
 	bloodLength3 += 0.6f;
 	Rectangle bloodRec3 = Rectangle{ 480.f, ((float)GetScreenHeight() / 4.f + 40.f), 10.f, bloodLength3 };
 	DrawRectangleRec(bloodRec3, RED);
-
 
 	static float bloodLength4 = 0.f;
 	bloodLength4 += 0.3f;
@@ -637,19 +683,9 @@ void HUD::ItemNumberPress(int num)
 	}
 }
 
-int HUD::GetPauseButtonPressed()
-{
-	return pauseButtonPressed;
-}
-
 int HUD::GetMainMenuButtonPressed()
 {
 	return mainMenuButtonPressed;
-}
-
-void HUD::RestartPauseButtons()
-{
-	pauseButtonPressed = 0;
 }
 
 void HUD::RestartMainMenuButtons()
@@ -657,12 +693,21 @@ void HUD::RestartMainMenuButtons()
 	mainMenuButtonPressed = 0;
 }
 
-int HUD::GetHabilityButtonPressed()
-{
-	return habButtonPressed;
-}
 
-void HUD::RestartHabilityButtons()
+void HUD::DrawRemoveButton(Rectangle rec, int slotNumber, Color color)
 {
-	habButtonPressed = 0;
+	DrawLine(rec.x, rec.y, rec.x + rec.width, rec.y + rec.height, color);
+	DrawLine(rec.x + rec.width, rec.y, rec.x, rec.y + rec.height, color);
+
+	float removeOpacity = 0.2f;
+
+	if (CheckCollisionPointRec(GetMousePosition(), rec)) {
+
+		removeOpacity = 1.f;
+		SetMouseCursor(4);
+
+		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = slotNumber;
+
+	}
+
 }

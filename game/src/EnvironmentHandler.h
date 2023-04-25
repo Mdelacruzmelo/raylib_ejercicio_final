@@ -17,6 +17,7 @@ public:
 	void Draw();
 	void Append(Environment* newEnvironment);
 	void SetAIController(AIController* aiControllerInput);
+	void SetMap();
 
 private:
 

@@ -8,6 +8,7 @@ enum E_TypeHUD {
 	H_HABILITIES,
 	H_INIT_HABILITIES,
 	H_LOAD_DATA,
+	H_INIT_LOAD_DATA,
 	H_MAIN_MENU,
 	H_LOOSE_GAME,
 	H_WIN_GAME,
@@ -19,27 +20,29 @@ class HUD
 public:
 	HUD(Character* characterInput);
 	void Draw(E_TypeHUD typeHUDInput);
+
 	void DrawPauseWidget();
 	void DrawAbilitiesWidget(E_TypeHUD typeHUDInput);
-	void DrawLoadDataWidget();
+	void DrawLoadDataWidget(E_TypeHUD typeHUDInput);
 	void DrawMainMenuWidget();
 	void DrawGameWidget();
+
 	void ItemNumberPress(int num);
+	void DrawBackButton(int buttonNumber);
 	void DrawAbButtons(E_AbilityType abType, int order);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText);
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText);
 
-	int GetPauseButtonPressed();
-	void RestartPauseButtons();
+	void DrawRemoveButton(Rectangle rec, int slotNumber, Color color);
+	Rectangle GetRectButtonRemove(Rectangle rec);
 
 	int GetMainMenuButtonPressed();
 	void RestartMainMenuButtons();
 
-	int GetHabilityButtonPressed();
-	void RestartHabilityButtons();
-
 
 private:
 
+	E_TypeHUD type;
 	Character* character;
 
 	int padding = 20;
@@ -52,7 +55,8 @@ private:
 
 	int itemSize = 30.f;
 	int pauseButtonPressed = 0;
-	int habButtonPressed = 0;
 	int mainMenuButtonPressed = 0;
+
+	int slotQuantity = 4;
 
 };

@@ -34,37 +34,8 @@ int main(void)
 	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 	AIController* aiController = new AIController(character);
 
-	// envHandler Reference to AIController
-
 	envHandler->SetAIController(aiController);
-
-	// Environment 1
-
-	Environment* env1 = new Environment(DARKGRAY);
-	env1->Activate();
-	env1->AddDoor(SIDE_RIGHT, "door_A");
-	envHandler->Append(env1);
-
-	// Environment 2
-
-	Environment* env2 = new Environment(DARKPURPLE);
-	env2->AddDoor(SIDE_LEFT, "door_B");
-	env2->AddDoor(SIDE_BOTTOM, "door_C");
-	envHandler->Append(env2);
-
-	// Environment 3
-
-	Environment* env3 = new Environment(BLACK);
-	env3->AddDoor(SIDE_TOP, "door_D");
-	envHandler->Append(env3);
-
-	// Connections
-
-	env1->GetDoor("door_A")->Target("door_B");
-	env1->GetDoor("door_A")->Lock();
-	env2->GetDoor("door_B")->Target("door_A");
-	env3->GetDoor("door_D")->Target("door_C");
-	env2->GetDoor("door_C")->Target("door_D");
+	envHandler->SetMap();
 
 	while (!WindowShouldClose())
 	{

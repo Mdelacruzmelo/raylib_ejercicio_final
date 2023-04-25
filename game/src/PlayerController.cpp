@@ -12,47 +12,9 @@ PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 
 void PlayerController::Play()
 {
-	// Movimiento
 
-	if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D)) {
-
-		if (IsKeyDown(KEY_A)) {
-
-			if (character->GetPosition().x > (character->GetSize().x / 2)) movement.x = -1.f;
-			else movement.x = 0.f;
-
-		}
-
-		if (IsKeyDown(KEY_D)) {
-
-			if (character->GetPosition().x < (GetScreenWidth() - character->GetSize().x / 2)) movement.x = 1.f;
-			else movement.x = 0.f;
-
-		}
-	}
-	else movement.x = 0;
-
-	if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S)) {
-
-		if (IsKeyDown(KEY_W)) {
-
-			if (character->GetPosition().y - (character->GetSize().y / 2) > 0.f) movement.y = -1.f;
-			else movement.y = 0.f;
-
-		}
-		if (IsKeyDown(KEY_S)) {
-
-			// Border bottom = 80.f
-
-			if (character->GetPosition().y < (GetScreenHeight() - 80.f)) movement.y = 1.f;
-			else movement.y = 0.f;
-
-		}
-	}
-	else movement.y = 0;
-
-	DrawText(TextFormat("Character x: %f", character->GetPosition().x), 300, 300, 40, GREEN);
-	DrawText(TextFormat("Move x: %f", movement.x), 300, 350, 40, GREEN);
+	// DrawText(TextFormat("Character x: %f", character->GetPosition().x), 300, 300, 40, GREEN);
+	// DrawText(TextFormat("Move x: %f", movement.x), 300, 350, 40, GREEN);
 
 	// -------------------- TEST INTERACT --------------------
 
@@ -75,16 +37,56 @@ void PlayerController::Play()
 
 	if (character) {
 
-		// Draw character
-
-		if (character->GetIsAlive()) character->Draw();
-		else typeHUD = H_LOOSE_GAME;
-
 		// HUD
 
 		hud->Draw(typeHUD);
 
 		if (typeHUD == H_GAME) {
+
+			// Movimiento
+
+			if (IsKeyDown(KEY_A) || IsKeyDown(KEY_D)) {
+
+				if (IsKeyDown(KEY_A)) {
+
+					if (character->GetPosition().x > (character->GetSize().x / 2)) movement.x = -1.f;
+					else movement.x = 0.f;
+
+				}
+
+				if (IsKeyDown(KEY_D)) {
+
+					if (character->GetPosition().x < (GetScreenWidth() - character->GetSize().x / 2)) movement.x = 1.f;
+					else movement.x = 0.f;
+
+				}
+			}
+			else movement.x = 0;
+
+			if (IsKeyDown(KEY_W) || IsKeyDown(KEY_S)) {
+
+				if (IsKeyDown(KEY_W)) {
+
+					if (character->GetPosition().y - (character->GetSize().y / 2) > 0.f) movement.y = -1.f;
+					else movement.y = 0.f;
+
+				}
+				if (IsKeyDown(KEY_S)) {
+
+					// Border bottom = 80.f
+
+					if (character->GetPosition().y < (GetScreenHeight() - 80.f)) movement.y = 1.f;
+					else movement.y = 0.f;
+
+				}
+			}
+			else movement.y = 0;
+
+
+			// Draw character
+
+			if (character->GetIsAlive()) character->Draw();
+			else typeHUD = H_LOOSE_GAME;
 
 			// Mouse cursor
 
@@ -188,50 +190,43 @@ void PlayerController::Play()
 
 		else if (typeHUD == H_PAUSE) {
 
-			if (hud->GetPauseButtonPressed() == 1) typeHUD = H_GAME;
-			else if (hud->GetPauseButtonPressed() == 2) typeHUD = H_LOAD_DATA;
-			else if (hud->GetPauseButtonPressed() == 3) typeHUD = H_HABILITIES;
-			else if (hud->GetPauseButtonPressed() == 4) typeHUD = H_MAIN_MENU;
+			if (hud->GetMainMenuButtonPressed() == 1) typeHUD = H_GAME;
+			else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+			else if (hud->GetMainMenuButtonPressed() == 3) typeHUD = H_HABILITIES;
+			else if (hud->GetMainMenuButtonPressed() == 4) typeHUD = H_MAIN_MENU;
 
-			hud->RestartPauseButtons();
+			hud->RestartMainMenuButtons();
 
-			/*float vectorLength = Vector2Length(vDifference);
-			DrawText(
-				TextFormat("Vector length: %f", vectorLength),
-				950,
-				40,
-				24,
-				WHITE);*/
 		}
 
 		else if (typeHUD == H_HABILITIES || typeHUD == H_INIT_HABILITIES) {
 
-			if (hud->GetHabilityButtonPressed() != 0) {
+			if (hud->GetMainMenuButtonPressed() != 0) {
 
-				if (hud->GetHabilityButtonPressed() == 10) {
+				if (hud->GetMainMenuButtonPressed() == 10) {
 					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_MAIN_MENU;
 					else typeHUD = H_PAUSE;
 				}
 
-				if (hud->GetHabilityButtonPressed() == 11) {
+				if (hud->GetMainMenuButtonPressed() == 11) {
 					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_GAME;
 				}
 
 				if (
-					character->IsAddAbility(hud->GetHabilityButtonPressed()) &&
+					character->IsAddAbility(hud->GetMainMenuButtonPressed()) &&
 					character->GetAbPoints() > 0
 					) {
-					character->IncreaseAbility((E_AbilityType)hud->GetHabilityButtonPressed());
+					character->IncreaseAbility((E_AbilityType)hud->GetMainMenuButtonPressed());
 					character->SubstractAbPoints(1);
 				}
-				else if (character->IsSubstractAbility(hud->GetHabilityButtonPressed())) {
-					character->DecreaseAbility((E_AbilityType)hud->GetHabilityButtonPressed());
+				else if (character->IsSubstractAbility(hud->GetMainMenuButtonPressed())) {
+					character->DecreaseAbility((E_AbilityType)hud->GetMainMenuButtonPressed());
 					character->AddAbPoints(1);
 				}
 
-				// else if (hud->GetHabilityButtonPressed() == 2) typeHUD = H_LOAD_DATA;
+				// else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
 
-				hud->RestartHabilityButtons(); // back to 0
+				hud->RestartMainMenuButtons(); // back to 0
 
 			}
 
@@ -239,12 +234,32 @@ void PlayerController::Play()
 
 		else if (typeHUD == H_MAIN_MENU) {
 
-			if (hud->GetMainMenuButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
-			else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
-			else if (hud->GetMainMenuButtonPressed() == 3) CloseWindow();
+			if (hud->GetMainMenuButtonPressed() != 0) {
 
-			hud->RestartMainMenuButtons();
+				if (hud->GetMainMenuButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
+				else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_INIT_LOAD_DATA;
+				else if (hud->GetMainMenuButtonPressed() == 3) CloseWindow();
 
+				hud->RestartMainMenuButtons();
+
+			}
+
+		}
+
+		else if (typeHUD == H_LOAD_DATA || typeHUD == H_INIT_LOAD_DATA) {
+
+			if (hud->GetMainMenuButtonPressed() != 0) {
+
+				if (hud->GetMainMenuButtonPressed() == 10) {
+					if (typeHUD == H_INIT_LOAD_DATA) typeHUD = H_MAIN_MENU;
+					else typeHUD = H_PAUSE;
+				}
+
+				// DrawText(TextFormat("EHLLOOO: %d", hud->GetMainMenuButtonPressed()), 50.f, 200.f, 140, WHITE);
+
+				hud->RestartMainMenuButtons();
+
+			}
 		}
 	}
 }
