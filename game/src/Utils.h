@@ -7,3 +7,10 @@ enum E_AbilityType {
 	ENERGY = 4,
 	ATTACK_DISTANCE = 5,
 };
+
+enum E_GameSlot {
+	SLOT_1 = 1,
+	SLOT_2 = 2,
+	SLOT_3 = 3,
+	SLOT_4 = 4,
+};

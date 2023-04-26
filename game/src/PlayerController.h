@@ -2,6 +2,11 @@
 #include "raylib.h"
 #include "Character.h"
 #include "HUD.h"
+#include "raymath.h" // for vectors
+#include <cmath> // for simple math
+#include "InventoryItemsUtils.h"
+#include "Utils.h"
+#include "SaveData.h"
 
 class PlayerController
 {
@@ -11,9 +16,12 @@ public:
 	void Play();
 	void SetTypeHUD(E_TypeHUD typeHUDInput);
 	E_TypeHUD GetTypeHUD();
+	void SaveGame(int slot);
+	void LoadGame(int slot);
 
 private:
 
+	SaveData* data;
 	Vector2 movement = { 0.f, 0.f };
 	Vector2 mousePosition = { 0.f, 0.f };
 	float cursorSize = 50.f;

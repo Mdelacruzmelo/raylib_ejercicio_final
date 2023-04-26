@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "InventoryItemsUtils.h"
-#include "AbilityUtils.h"
+#include "Utils.h"
 
 class Character
 {

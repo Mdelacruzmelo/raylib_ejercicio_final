@@ -28,7 +28,6 @@ public:
 	void DrawGameWidget();
 
 	void ItemNumberPress(int num);
-	void DrawBackButton(int buttonNumber);
 	void DrawAbButtons(E_AbilityType abType, int order);
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText);
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText);

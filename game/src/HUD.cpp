@@ -1,6 +1,6 @@
 #include "HUD.h"
 #include "InventoryItemsUtils.h"
-#include "AbilityUtils.h"
+#include "Utils.h"
 
 HUD::HUD(Character* characterInput)
 {
@@ -322,27 +322,6 @@ void HUD::DrawPauseWidget()
 
 }
 
-void HUD::DrawBackButton(int buttonNumber) {
-
-	float padding = 20.f;
-	float opacity1 = 0.8f;
-
-	Rectangle rect1 = Rectangle{ 50.f, 50.f, 100.f, 55.f };
-
-	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
-
-		opacity1 = 1.f;
-		SetMouseCursor(4);
-
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = buttonNumber;
-
-	}
-
-	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
-	DrawText("Atras", 50.f + padding, 50.f + padding, 20, BLACK);
-
-}
-
 void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 {
 
@@ -350,7 +329,8 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 
 	// Button 1 - Atrás
 
-	DrawBackButton(10);
+	Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
+	DrawMenuButton(rectBackButton, 10, "Atras");
 
 	// Botones de habilidades
 
@@ -425,7 +405,7 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 		// Boton empezar partida
 
 		Rectangle rectStart = Rectangle{ (float)GetScreenWidth() - 200.f, (float)GetScreenHeight() - 100.f, 125.f, 50.f };
-		DrawMenuButton(rectStart, 11, "Empezar");
+		DrawMenuButton(rectStart, 11, "Empezar", YELLOW, BLACK);
 
 	}
 
@@ -515,8 +495,8 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 
 	}
 
-	DrawRectangleRec(buttonRec, Fade(WHITE, opacity1));
-	DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, BLACK);
+	DrawRectangleRec(buttonRec, Fade(cButton, opacity1));
+	DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cText);
 
 }
 
@@ -531,9 +511,6 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 
 void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 {
-	// Botón atrás
-
-	// DrawBackButton(10);
 
 	Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
 	DrawMenuButton(rectBackButton, 10, "Atras");
@@ -544,29 +521,30 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 	float marginLeft = 40.f;
 	float startX2 = (float)startX1 + buttonWidth + marginLeft;
 
+	// TODO, DESACTIVAR CLICK SI NO HAY NINGUN SLOT DE CARGA
 	// Slot 1
 
 	Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect1, 20, "Slot 1");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect1), -20, BLACK);
+	DrawMenuButton(buttonRect1, SLOT_1, "Slot 1");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect1), -SLOT_1, BLACK);
 
 	// Slot 2
 
 	Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect2, 21, "Slot 2");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect2), -21, BLACK);
+	DrawMenuButton(buttonRect2, SLOT_2, "Slot 2");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect2), -SLOT_2, BLACK);
 
 	// Slot 3
 
 	Rectangle buttonRect3 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect3, 22, "Slot 3");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect3), -22, BLACK);
+	DrawMenuButton(buttonRect3, SLOT_3, "Slot 3");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect3), -SLOT_3, BLACK);
 
 	// Slot 3
 
 	Rectangle buttonRect4 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect4, 23, "Slot 4");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect4), -23, BLACK);
+	DrawMenuButton(buttonRect4, SLOT_4, "Slot 4");
+	DrawRemoveButton(GetRectButtonRemove(buttonRect4), -SLOT_4, BLACK);
 
 }
 
@@ -692,7 +670,6 @@ void HUD::RestartMainMenuButtons()
 {
 	mainMenuButtonPressed = 0;
 }
-
 
 void HUD::DrawRemoveButton(Rectangle rec, int slotNumber, Color color)
 {

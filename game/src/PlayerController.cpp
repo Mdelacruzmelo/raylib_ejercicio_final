@@ -1,8 +1,5 @@
 #include "PlayerController.h"
-#include "raymath.h" // for vectors
-#include <cmath> // for simple math
-#include "InventoryItemsUtils.h"
-#include "AbilityUtils.h"
+#include <string>
 
 PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 {
@@ -132,20 +129,11 @@ void PlayerController::Play()
 
 			// Interactuar
 
-			/*if (character->GetIsInteracting())
-				DrawText("INTERACTING", 300, 800, 40, WHITE);
-			else
-				DrawText("NOT INTERACTING", 300, 800, 40, WHITE);*/
-
-
-			if (IsKeyPressed(KEY_SPACE)) {
-				character->SetIsInteracting(true);
-			}
-			else {
-				character->SetIsInteracting(false);
-			}
+			if (IsKeyPressed(KEY_SPACE)) character->SetIsInteracting(true);
+			else character->SetIsInteracting(false);
 
 			// Inventario
+
 			if (
 				IsKeyPressed(KEY_ONE) ||
 				IsKeyPressed(KEY_TWO) ||
@@ -163,25 +151,44 @@ void PlayerController::Play()
 				if (IsKeyPressed(KEY_FIVE)) numPressed = 5;
 
 				hud->ItemNumberPress(numPressed);
-				E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
 
-				if (itemSelected == I_POTION_HEALTH) {
+				E_ItemType itemSelected = (E_ItemType)character->GetInventory()[numPressed - 1];
+				switch (itemSelected)
+				{
+				case I_POTION_HEALTH:
+
 					character->AddHealth(10.f);
 					character->RemoveFromInventory(numPressed);
-				}
-				else if (itemSelected == I_POTION_STRENGTH) {
+
+					break;
+
+				case I_POTION_STRENGTH:
+
 					character->IncreaseAttack();
 					character->RemoveFromInventory(numPressed);
-				}
-				else if (itemSelected == I_POTION_SPEED) {
+
+					break;
+
+				case I_POTION_SPEED:
+
 					if (!character->GetIsTempVelocityIncreased()) {
 						character->IncreaseTempVelocity();
 						character->RemoveFromInventory(numPressed);
 					}
-				}
-				else if (itemSelected == I_EXPERIENCE) {
+					break;
+
+				case I_EXPERIENCE:
+
 					character->IncreaseExperience();
 					character->RemoveFromInventory(numPressed);
+
+					break;
+
+				case I_KEY:
+					break;
+
+				default:
+					break;
 				}
 
 			}
@@ -224,9 +231,7 @@ void PlayerController::Play()
 					character->AddAbPoints(1);
 				}
 
-				// else if (hud->GetMainMenuButtonPressed() == 2) typeHUD = H_LOAD_DATA;
-
-				hud->RestartMainMenuButtons(); // back to 0
+				hud->RestartMainMenuButtons();
 
 			}
 
@@ -255,7 +260,14 @@ void PlayerController::Play()
 					else typeHUD = H_PAUSE;
 				}
 
-				// DrawText(TextFormat("EHLLOOO: %d", hud->GetMainMenuButtonPressed()), 50.f, 200.f, 140, WHITE);
+				if (
+					hud->GetMainMenuButtonPressed() == SLOT_1 ||
+					hud->GetMainMenuButtonPressed() == SLOT_2 ||
+					hud->GetMainMenuButtonPressed() == SLOT_3 ||
+					hud->GetMainMenuButtonPressed() == SLOT_4
+					) {
+					LoadGame(hud->GetMainMenuButtonPressed());
+				}
 
 				hud->RestartMainMenuButtons();
 
@@ -272,4 +284,30 @@ void PlayerController::SetTypeHUD(E_TypeHUD typeHUDInput)
 E_TypeHUD PlayerController::GetTypeHUD()
 {
 	return typeHUD;
+}
+
+void PlayerController::SaveGame(int slot)
+{
+
+}
+
+void PlayerController::LoadGame(int slot)
+{
+	DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
+
+	char* fileText = LoadFileText(TextFormat("resources/savings/slot%d.txt", slot));
+
+	// DrawText(fileText, 400, 500, 40, WHITE);
+
+	const char* delimiter = "\n";
+	int* count = new int[0];
+
+	const char** resultsPointers = TextSplit(fileText, *delimiter, count);
+
+	std::string str1 = resultsPointers[0];
+
+	// SI FUNCIONA! 
+	// DrawText(str1.c_str(), 400, 500, 40, WHITE);
+	DrawText(TextFormat("Size: %d ", sizeof(resultsPointers)), 400, 500, 40, WHITE);
+
 }
