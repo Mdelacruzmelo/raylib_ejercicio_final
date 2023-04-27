@@ -396,6 +396,16 @@ int* Character::GetInventory()
 	return inventory;
 }
 
+int Character::GetEnvironment()
+{
+	return environment;
+}
+
+void Character::SetEnvironment(int envInput)
+{
+	environment = envInput;
+}
+
 void Character::AddToInventory(E_ItemType item)
 {
 	for (int i = 0; i < inventorySize; i++) {
@@ -472,6 +482,28 @@ Vector2 Character::GetAttackCircleCenter1()
 Vector2 Character::GetAttackCircleCenter2()
 {
 	return circle2Center;
+}
+
+void Character::SetData(SavedData data)
+{
+	attack = data.attack;
+	defense = data.defense;
+	velocity = data.speed;
+	energy = data.energy;
+	attackDistance = data.attackdistance;
+	health = data.health;
+	shield = data.shield;
+	experience = data.experience;
+	level = data.level;
+	inventory[0] = data.inventory1;
+	inventory[1] = data.inventory2;
+	inventory[2] = data.inventory3;
+	inventory[3] = data.inventory4;
+	inventory[4] = data.inventory5;
+	environment = data.environment;
+	pos.x = data.locationx;
+	pos.y = data.locationy;
+	abilityPoints = data.abPoints;
 }
 
 Vector2 Character::GetPosition()

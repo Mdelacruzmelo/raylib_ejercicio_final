@@ -75,6 +75,8 @@ public:
 
 	int GetInventorySize();
 	int* GetInventory();
+	int GetEnvironment();
+	void SetEnvironment(int envInput);
 	void AddToInventory(E_ItemType item);
 	void RemoveFromInventory(int numPressed);
 	void ShowNoInventorySpace();
@@ -88,15 +90,19 @@ public:
 	Vector2 GetAttackCircleCenter1();
 	Vector2 GetAttackCircleCenter2();
 
+	void SetData(SavedData data);
+
 protected:
 
 	bool alive = true;
+
 	bool showingNoSpaceMessage = false;
 	int counterNoSpaceMessage = 0;
 
 	float initialTempVelocityCounter = 300;
 	float tempVelocityCounter = 300;
 	bool isVelocityTempIncreased = false;
+
 	float initialVelocity = 1.f;
 	float velocity = 1.f;
 	float maxVelocity = 10.f;
@@ -137,6 +143,8 @@ protected:
 
 	int inventorySize = 5;
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
+
+	int environment = 0;
 
 	Vector2 pos = { 600.f, 540.f };
 	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };

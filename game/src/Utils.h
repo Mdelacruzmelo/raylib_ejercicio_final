@@ -26,3 +26,45 @@ struct SlotData {
 	int count;
 
 };
+
+struct SavedData {
+	float attack;
+	float defense;
+	float speed;
+	float energy;
+	float attackdistance;
+	float health;
+	float shield;
+	float experience;
+	int level;
+	int inventory1;
+	int inventory2;
+	int inventory3;
+	int inventory4;
+	int inventory5;
+	int environment;
+	float locationx;
+	float locationy;
+	int abPoints;
+};
+
+enum E_SavedDataKey {
+	SAVED_ATTACK,
+	SAVED_DEFENSE,
+	SAVED_SPEED,
+	SAVED_ENERGY,
+	SAVED_ATTACK_DISTANCE,
+	SAVED_HEALTH,
+	SAVED_SHIELD,
+	SAVED_EXPERIENCE,
+	SAVED_LEVEL,
+	SAVED_INVENTORY_1,
+	SAVED_INVENTORY_2,
+	SAVED_INVENTORY_3,
+	SAVED_INVENTORY_4,
+	SAVED_INVENTORY_5,
+	SAVED_ENVIRONMENT,
+	SAVED_LOCATION_X,
+	SAVED_LOCATION_Y,
+	SAVED_AB_POINTS,
+};

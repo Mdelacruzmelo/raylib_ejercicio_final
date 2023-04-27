@@ -272,11 +272,7 @@ void PlayerController::Play()
 						hud->CloseConfirmModal();
 
 					}
-					else if (hud->ButtonPressed() == GO_BACK) {
-
-						hud->CloseConfirmModal();
-
-					}
+					else if (hud->ButtonPressed() == GO_BACK) hud->CloseConfirmModal();
 
 				}
 				else {
@@ -290,7 +286,8 @@ void PlayerController::Play()
 
 					if (hud->IsSelectingSlot()) {
 
-						LoadGame(hud->ButtonPressed());
+						if (LoadGame(hud->ButtonPressed())) typeHUD = H_INIT_HABILITIES;
+						else hud->Notify("Error en la carga de datos");
 
 					}
 
@@ -390,7 +387,7 @@ void PlayerController::SaveGame(int slot)
 
 }
 
-void PlayerController::LoadGame(int slot)
+SavedData PlayerController::GetSlotSavedData(int slot)
 {
 	// DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
 
@@ -400,12 +397,44 @@ void PlayerController::LoadGame(int slot)
 	int* count = new int[0];
 
 	const char** resultsPointers = TextSplit(fileText, *delimiter, count);
+	SavedData data = SavedData{};
 
-	std::string str1 = resultsPointers[0];
+	if (*count == 18) {
 
-	// SI FUNCIONA! 
-	// DrawText(str1.c_str(), 400, 500, 40, WHITE);
+		data.attack = std::stof(std::string(resultsPointers[SAVED_ATTACK]));
+		data.defense = std::stof(std::string(resultsPointers[SAVED_DEFENSE]));
+		data.speed = std::stof(std::string(resultsPointers[SAVED_SPEED]));
+		data.energy = std::stof(std::string(resultsPointers[SAVED_ENERGY]));
+		data.attackdistance = std::stof(std::string(resultsPointers[SAVED_ATTACK_DISTANCE]));
+		data.health = std::stof(std::string(resultsPointers[SAVED_HEALTH]));
+		data.shield = std::stof(std::string(resultsPointers[SAVED_SHIELD]));
+		data.experience = std::stof(std::string(resultsPointers[SAVED_EXPERIENCE]));
+		data.level = std::stoi(std::string(resultsPointers[SAVED_LEVEL]));
+		data.inventory1 = std::stoi(std::string(resultsPointers[SAVED_INVENTORY_1]));
+		data.inventory2 = std::stoi(std::string(resultsPointers[SAVED_INVENTORY_2]));
+		data.inventory3 = std::stoi(std::string(resultsPointers[SAVED_INVENTORY_3]));
+		data.inventory4 = std::stoi(std::string(resultsPointers[SAVED_INVENTORY_4]));
+		data.inventory5 = std::stoi(std::string(resultsPointers[SAVED_INVENTORY_5]));
+		data.environment = std::stoi(std::string(resultsPointers[SAVED_ENVIRONMENT]));
+		data.locationx = std::stof(std::string(resultsPointers[SAVED_LOCATION_X]));
+		data.locationy = std::stof(std::string(resultsPointers[SAVED_LOCATION_Y]));
+		data.abPoints = std::stof(std::string(resultsPointers[SAVED_AB_POINTS]));
 
+	}
+
+	return data;
+}
+
+bool PlayerController::LoadGame(int slot)
+{
+	SavedData data = GetSlotSavedData(slot);
+
+	if (data.health) {
+		character->SetData(data);
+		return true;
+	}
+
+	return false;
 }
 
 void PlayerController::DeleteSlotGame(int slot)
@@ -417,16 +446,20 @@ void PlayerController::DeleteSlotGame(int slot)
 		// Setea la nueva longitud de texto a guardar
 		int newLength = sSlot.count - 1;
 
+		// Si al cargarte 1, almenos quedan slots, procesalos
 		if (newLength > 0) {
 
 			char* dataToSave = new char[(newLength * 2) - 1]; // * 2 - 1 --> para las comas
+
 			int indexToSave = 0;
 			static bool savedTheFirstData = false;
 
 			for (int i = 0; i < newLength; i++) {
 
+				// Si es justo el que estás borrando, dale con el siguiente
 				if (std::stoi(sSlot.slotPointers[i]) == slot) indexToSave++;
 
+				// Si el numero existe en el documento
 				if (sSlot.slotPointers[indexToSave]) {
 
 					// Movida con strcpy para convertir:  const char*  --->  char *
@@ -434,12 +467,12 @@ void PlayerController::DeleteSlotGame(int slot)
 					char* record = new char[1];
 					strcpy(record, str1.c_str());
 
+					// Solo la primera vez me interesa setear bien el srtcat()
 					if (!savedTheFirstData) {
 						dataToSave = strcat(record, "");
 						savedTheFirstData = true;
 					}
 					else dataToSave = strcat(dataToSave, record);
-
 
 					// Si NO es el ultimo, ponle una coma después
 					if (i != newLength - 1) dataToSave = strcat(dataToSave, ",");
@@ -454,6 +487,7 @@ void PlayerController::DeleteSlotGame(int slot)
 			SaveFileText("resources/savings/slots.txt", dataToSave);
 
 		}
+		// si no, setea el documento a vacío
 		else SaveFileText("resources/savings/slots.txt", "");
 
 		slots[slot - 1] = false;

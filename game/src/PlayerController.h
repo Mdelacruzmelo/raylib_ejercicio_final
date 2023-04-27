@@ -17,14 +17,15 @@ public:
 	void SetTypeHUD(E_TypeHUD typeHUDInput);
 	E_TypeHUD GetTypeHUD();
 	void SaveGame(int slot);
-	void LoadGame(int slot);
+	bool LoadGame(int slot);
 	void DeleteSlotGame(int slot);
 	void CheckSlots();
 	bool* GetSlotsAvailable();
 	int GetSlotsQuantity();
 	bool IsSlotAvailable(int slot);
 	void RestartCheckSlots();
-	SlotData PlayerController::GetSlotsMaster();
+	SlotData GetSlotsMaster();
+	SavedData GetSlotSavedData(int slot);
 
 private:
 
@@ -42,5 +43,5 @@ private:
 	bool checkingSlots = true;
 	int slotsQuantity = 4;
 	bool* slots = new bool[slotsQuantity] {false, false, false, false};
-
+	bool loadSlotSuccess;
 };
