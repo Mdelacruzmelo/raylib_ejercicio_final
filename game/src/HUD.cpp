@@ -504,7 +504,30 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 		DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cText);
 	}
 
+}
 
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, Color cButton, Color cText, bool outline) {
+
+	float padding = 20.f;
+	float opacity1 = 0.8f;
+
+	if (CheckCollisionPointRec(GetMousePosition(), buttonRec)) {
+
+		opacity1 = 1.f;
+		SetMouseCursor(4);
+
+		if (IsMouseButtonPressed(0)) buttonPressed = buttonNumber;
+
+	}
+
+	if (outline) {
+		DrawRectangleLinesEx(buttonRec, 2.f, Fade(cButton, opacity1));
+		DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cButton);
+	}
+	else {
+		DrawRectangleRec(buttonRec, Fade(cButton, opacity1));
+		DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cText);
+	}
 
 }
 
@@ -514,7 +537,19 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 
 }
 
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText) {
+
+	DrawMenuButton(buttonRec, buttonNumber, buttonText, WHITE, BLACK, false);
+
+}
+
 void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, bool outline) {
+
+	DrawMenuButton(buttonRec, buttonNumber, buttonText, WHITE, BLACK, outline);
+
+}
+
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, bool outline) {
 
 	DrawMenuButton(buttonRec, buttonNumber, buttonText, WHITE, BLACK, outline);
 
@@ -569,30 +604,53 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 		float marginLeft = 40.f;
 		float startX2 = (float)startX1 + buttonWidth + marginLeft;
 
-		// TODO, DESACTIVAR CLICK SI NO HAY NINGUN SLOT DE CARGA
-		// Slot 1
+		int row = 0;
 
-		Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-		DrawMenuButton(buttonRect1, SLOT_1, "Slot 1");
-		DrawRemoveButton(GetRectButtonRemove(buttonRect1), -SLOT_1, BLACK);
+		for (int nSlot = 1; nSlot <= slotsQuantity; nSlot++) {
 
-		// Slot 2
+			const char* textSlot = TextFormat("Slot %d", nSlot);
 
-		Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-		DrawMenuButton(buttonRect2, SLOT_2, "Slot 2");
-		DrawRemoveButton(GetRectButtonRemove(buttonRect2), -SLOT_2, BLACK);
+			if (nSlot % 2 != 0) {
 
-		// Slot 3
+				// Slots 1, 3
 
-		Rectangle buttonRect3 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-		DrawMenuButton(buttonRect3, SLOT_3, "Slot 3");
-		DrawRemoveButton(GetRectButtonRemove(buttonRect3), -SLOT_3, BLACK);
+				Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + (80.f + 100 * row), buttonWidth, 55.f };
 
-		// Slot 3
+				if (slots[nSlot - 1]) { // Slot exists
 
-		Rectangle buttonRect4 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-		DrawMenuButton(buttonRect4, SLOT_4, "Slot 4");
-		DrawRemoveButton(GetRectButtonRemove(buttonRect4), -SLOT_4, BLACK);
+					DrawMenuButton(buttonRect1, (E_GameSlot)nSlot, textSlot);
+					DrawRemoveButton(GetRectButtonRemove(buttonRect1), -(E_GameSlot)nSlot, BLACK);
+
+				}
+				else { // Slot NOT exists
+
+					DrawMenuButton(buttonRect1, (E_GameSlot)nSlot, textSlot, true);
+
+				}
+			}
+			else {
+
+				// Slots 2, 4
+
+				Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + (80.f + 100 * row), buttonWidth, 55.f };
+
+				if (slots[nSlot - 1]) { // Slot exists
+
+					DrawMenuButton(buttonRect2, (E_GameSlot)nSlot, textSlot);
+					DrawRemoveButton(GetRectButtonRemove(buttonRect2), -(E_GameSlot)nSlot, BLACK);
+
+				}
+				else { // Slot NOT exists
+
+					DrawMenuButton(buttonRect2, (E_GameSlot)nSlot, textSlot, true);
+
+				}
+
+				row++;
+
+			}
+
+		}
 
 	}
 }
@@ -851,5 +909,17 @@ void HUD::HideNotification() {
 
 	notiAnimEnd = true;
 	showingNotification = true;
+
+}
+
+void HUD::SetSlots(bool* slotsInput) {
+
+	slots = slotsInput;
+
+}
+
+void HUD::SetSlotsQuantity(int slotsQuantityInput) {
+
+	slotsQuantity = slotsQuantityInput;
 
 }

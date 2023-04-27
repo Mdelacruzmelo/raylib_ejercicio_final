@@ -151,4 +151,6 @@ protected:
 	bool isTransporting = false;
 	char* doorTargetId;
 
+	bool updatingSlots = false;
+
 };

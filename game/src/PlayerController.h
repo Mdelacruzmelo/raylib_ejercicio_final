@@ -21,6 +21,8 @@ public:
 	void DeleteGame(int slot);
 	void CheckSlots();
 	bool* GetSlotsAvailable();
+	int GetSlotsQuantity();
+	bool IsSlotAvailable(int slot);
 	void RestartCheckSlots();
 
 private:
@@ -38,6 +40,6 @@ private:
 
 	bool checkingSlots = true;
 	int slotsQuantity = 4;
-	bool* slotsAvailable = new bool[slotsQuantity] {false, false, false, false};
+	bool* slots = new bool[slotsQuantity] {false, false, false, false};
 
 };

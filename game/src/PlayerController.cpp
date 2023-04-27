@@ -336,7 +336,7 @@ void PlayerController::CheckSlots()
 	for (int slot = 1; slot <= slotsQuantity; slot++) {
 
 		slotIndex = slot - 1;
-		slotsAvailable[slotIndex] = FileExists(TextFormat("resources/savings/slot%d.txt", slot));
+		slots[slotIndex] = FileExists(TextFormat("resources/savings/slot%d.txt", slot));
 
 	}
 
@@ -344,6 +344,8 @@ void PlayerController::CheckSlots()
 
 		slotIndex = 0;
 		checkingSlots = false;
+		hud->SetSlots(slots);
+		hud->SetSlotsQuantity(slotsQuantity);
 
 	}
 
@@ -351,7 +353,18 @@ void PlayerController::CheckSlots()
 
 bool* PlayerController::GetSlotsAvailable()
 {
-	return slotsAvailable;
+	return slots;
+}
+
+int PlayerController::GetSlotsQuantity()
+{
+	return slotsQuantity;
+}
+
+bool PlayerController::IsSlotAvailable(int slot)
+{
+	if (slot >= 1 && slot <= 4) return slots[slot - 1];
+	return false;
 }
 
 void PlayerController::RestartCheckSlots()

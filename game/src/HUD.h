@@ -29,9 +29,15 @@ public:
 
 	void ItemNumberPress(int num);
 	void DrawAbButtons(E_AbilityType abType, int order);
+
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText, bool outline);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, Color cButton, Color cText, bool outline);
+
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText);
+
 	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, bool outline);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, bool outline);
 
 	void DrawRemoveButton(Rectangle rec, int slotNumber, Color color);
 	Rectangle GetRectButtonRemove(Rectangle rec);
@@ -48,6 +54,9 @@ public:
 	void Notify(char* message);
 	void ShowNotification();
 	void HideNotification();
+
+	void SetSlots(bool* slotsInput);
+	void SetSlotsQuantity(int slotsQuantityInput);
 
 private:
 
@@ -76,4 +85,6 @@ private:
 	float notificationCounterMax = 2.f;
 	char* notificationMessage;
 
+	bool* slots;
+	int slotsQuantity = 0;
 };
