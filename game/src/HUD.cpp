@@ -566,31 +566,11 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 
 	if (isConfirming) {
 
-		float bWidth = (float)GetScreenWidth() / 5;
-		float bHeight = 50.f;
-
-		Rectangle rectNoButton = Rectangle{
-			(float)GetScreenWidth() / 2 - (bWidth),
-			(float)GetScreenHeight() / 2 - (bHeight / 2),
-			bWidth,
-			bHeight
-		};
-		DrawMenuButton(rectNoButton, GO_BACK, "No", true);
-
-		Rectangle rectYesButton = Rectangle{
-			(float)GetScreenWidth() / 2 + 20.f,
-			(float)GetScreenHeight() / 2 - (bHeight / 2),
-			bWidth,
-			bHeight
-		};
-		DrawMenuButton(rectYesButton, yesConfirmButton, "Yes");
-
-		DrawText(
-			(TextFormat("Estas seguro que quieres eliminar el slot %d ?", (yesConfirmButton * -1))),
-			bWidth + 20.f,
-			(float)GetScreenHeight() / 2 - bHeight - 40.f,
-			30,
-			WHITE);
+		ShowConfirmHUD(
+			confirmQuestion,
+			yesConfirmButton,
+			GO_BACK
+		);
 
 	}
 	else {
@@ -624,7 +604,7 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 				}
 				else { // Slot NOT exists
 
-					DrawMenuButton(buttonRect1, (E_GameSlot)nSlot, textSlot, true);
+					DrawMenuButton(buttonRect1, 0, textSlot, true);
 
 				}
 			}
@@ -642,7 +622,7 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 				}
 				else { // Slot NOT exists
 
-					DrawMenuButton(buttonRect2, (E_GameSlot)nSlot, textSlot, true);
+					DrawMenuButton(buttonRect2, 0, textSlot, true);
 
 				}
 
@@ -802,11 +782,11 @@ bool HUD::GetInConfirmingModal() {
 
 }
 
-void HUD::OpenConfirmModal(int buttonPressed) {
+void HUD::OpenConfirmModal(int buttonPressed, char* confirmQuestionInput) {
 
 	isConfirming = true;
 	yesConfirmButton = buttonPressed;
-
+	confirmQuestion = confirmQuestionInput;
 }
 
 void HUD::CloseConfirmModal() {
@@ -921,5 +901,65 @@ void HUD::SetSlots(bool* slotsInput) {
 void HUD::SetSlotsQuantity(int slotsQuantityInput) {
 
 	slotsQuantity = slotsQuantityInput;
+
+}
+
+void HUD::ShowConfirmHUD(char* message, int yesNumber, int noNumber) {
+
+	float bWidth = (float)GetScreenWidth() / 5;
+	float bHeight = 50.f;
+
+	Rectangle rectNoButton = Rectangle{
+		(float)GetScreenWidth() / 2 - (bWidth),
+		(float)GetScreenHeight() / 2 - (bHeight / 2),
+		bWidth,
+		bHeight
+	};
+	DrawMenuButton(rectNoButton, noNumber, "No", true);
+
+	Rectangle rectYesButton = Rectangle{
+		(float)GetScreenWidth() / 2 + 20.f,
+		(float)GetScreenHeight() / 2 - (bHeight / 2),
+		bWidth,
+		bHeight
+	};
+	DrawMenuButton(rectYesButton, yesNumber, "Si");
+
+	DrawText(
+		(message),
+		bWidth + 20.f,
+		(float)GetScreenHeight() / 2 - bHeight - 40.f,
+		30,
+		WHITE);
+
+}
+
+void HUD::ShowConfirmHUD(const char* message, int yesNumber, int noNumber) {
+
+	float bWidth = (float)GetScreenWidth() / 5;
+	float bHeight = 50.f;
+
+	Rectangle rectNoButton = Rectangle{
+		(float)GetScreenWidth() / 2 - (bWidth),
+		(float)GetScreenHeight() / 2 - (bHeight / 2),
+		bWidth,
+		bHeight
+	};
+	DrawMenuButton(rectNoButton, noNumber, "No", true);
+
+	Rectangle rectYesButton = Rectangle{
+		(float)GetScreenWidth() / 2 + 20.f,
+		(float)GetScreenHeight() / 2 - (bHeight / 2),
+		bWidth,
+		bHeight
+	};
+	DrawMenuButton(rectYesButton, yesNumber, "Si");
+
+	DrawText(
+		(message),
+		bWidth + 20.f,
+		(float)GetScreenHeight() / 2 - bHeight - 40.f,
+		30,
+		WHITE);
 
 }

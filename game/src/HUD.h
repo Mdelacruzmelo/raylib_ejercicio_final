@@ -45,7 +45,7 @@ public:
 	int ButtonPressed();
 	void RestartMainMenuButtons();
 	bool GetInConfirmingModal();
-	void OpenConfirmModal(int buttonPressed);
+	void OpenConfirmModal(int buttonPressed, char* confirmQuestionInput);
 	void CloseConfirmModal();
 
 	bool IsSelectingSlot();
@@ -54,6 +54,9 @@ public:
 	void Notify(char* message);
 	void ShowNotification();
 	void HideNotification();
+
+	void ShowConfirmHUD(char* message, int yesNumber, int noNumber);
+	void ShowConfirmHUD(const char* message, int yesNumber, int noNumber);
 
 	void SetSlots(bool* slotsInput);
 	void SetSlotsQuantity(int slotsQuantityInput);
@@ -83,6 +86,7 @@ private:
 	bool notiAnimEnd = false;
 	float notificationCounter = 0;
 	float notificationCounterMax = 2.f;
+	char* confirmQuestion;
 	char* notificationMessage;
 
 	bool* slots;

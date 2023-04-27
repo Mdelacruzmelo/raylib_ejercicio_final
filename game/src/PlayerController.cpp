@@ -267,7 +267,7 @@ void PlayerController::Play()
 
 					if (hud->IsDeletingSlot()) {
 
-						DeleteGame(hud->ButtonPressed());
+						DeleteSlotGame((E_GameSlot)hud->ButtonPressed());
 						hud->Notify("Slot deleted successfully");
 						hud->CloseConfirmModal();
 
@@ -296,16 +296,10 @@ void PlayerController::Play()
 
 					else if (hud->IsDeletingSlot()) {
 
-						if (hud->GetInConfirmingModal()) {
-
-							DeleteGame(hud->ButtonPressed());
-
-						}
-						else {
-
-							hud->OpenConfirmModal(hud->ButtonPressed());
-
-						}
+						hud->OpenConfirmModal(
+							hud->ButtonPressed(),
+							"Estas seguro que quieres eliminar el slot ?"
+						);
 
 					}
 
@@ -331,18 +325,33 @@ E_TypeHUD PlayerController::GetTypeHUD()
 void PlayerController::CheckSlots()
 {
 
+	int slotsWithData = 0;
+	char* slotsData = LoadFileText("resources/savings/slots.txt");
+	char* delimiter = ",";
+	int* count = new int[0];
+	const char** slotPointers = TextSplit(slotsData, *delimiter, count);
 	static int slotIndex = 0;
 
-	for (int slot = 1; slot <= slotsQuantity; slot++) {
+	slots = new bool[4] { false, false, false, false };
 
-		slotIndex = slot - 1;
-		slots[slotIndex] = FileExists(TextFormat("resources/savings/slot%d.txt", slot));
+	for (int i = 0; i < slotsQuantity; i++) {
+
+		if (slotPointers[i]) {
+
+			int existingSlotNumber = std::stoi(slotPointers[i]) - 1;
+			slots[existingSlotNumber] = true;
+
+		}
+
+		slotIndex = i;
 
 	}
 
 	if (slotIndex == slotsQuantity - 1) {
 
+		// porque es static int, necesito resetear slotIndex
 		slotIndex = 0;
+
 		checkingSlots = false;
 		hud->SetSlots(slots);
 		hud->SetSlotsQuantity(slotsQuantity);
@@ -379,11 +388,9 @@ void PlayerController::SaveGame(int slot)
 
 void PlayerController::LoadGame(int slot)
 {
-	DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
+	// DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
 
 	char* fileText = LoadFileText(TextFormat("resources/savings/slot%d.txt", slot));
-
-	// DrawText(fileText, 400, 500, 40, WHITE);
 
 	const char* delimiter = "\n";
 	int* count = new int[0];
@@ -394,12 +401,18 @@ void PlayerController::LoadGame(int slot)
 
 	// SI FUNCIONA! 
 	// DrawText(str1.c_str(), 400, 500, 40, WHITE);
-	DrawText(TextFormat("Size: %d ", sizeof(resultsPointers)), 400, 500, 40, WHITE);
 
 }
 
-void PlayerController::DeleteGame(int slot)
+void PlayerController::DeleteSlotGame(int slot)
 {
+	if (slot >= 1 && slot <= 4) {
+
+		slots[slot - 1] = false;
+		RestartCheckSlots();
+
+	}
+	else return;
 	//DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
 
 	//char* fileText = LoadFileText(TextFormat("resources/savings/slot%d.txt", slot));

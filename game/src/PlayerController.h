@@ -18,7 +18,7 @@ public:
 	E_TypeHUD GetTypeHUD();
 	void SaveGame(int slot);
 	void LoadGame(int slot);
-	void DeleteGame(int slot);
+	void DeleteSlotGame(int slot);
 	void CheckSlots();
 	bool* GetSlotsAvailable();
 	int GetSlotsQuantity();
