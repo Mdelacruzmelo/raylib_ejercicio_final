@@ -18,6 +18,10 @@ public:
 	E_TypeHUD GetTypeHUD();
 	void SaveGame(int slot);
 	void LoadGame(int slot);
+	void DeleteGame(int slot);
+	void CheckSlots();
+	bool* GetSlotsAvailable();
+	void RestartCheckSlots();
 
 private:
 
@@ -31,5 +35,9 @@ private:
 	Character* character = nullptr;
 	HUD* hud = nullptr;
 	E_TypeHUD typeHUD = H_MAIN_MENU;
+
+	bool checkingSlots = true;
+	int slotsQuantity = 4;
+	bool* slotsAvailable = new bool[slotsQuantity] {false, false, false, false};
 
 };

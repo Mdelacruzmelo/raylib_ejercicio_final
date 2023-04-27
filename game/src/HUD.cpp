@@ -262,7 +262,7 @@ void HUD::DrawPauseWidget()
 		opacity1 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 1;
+		if (IsMouseButtonPressed(0)) buttonPressed = 1;
 
 	}
 
@@ -279,7 +279,7 @@ void HUD::DrawPauseWidget()
 		opacity2 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 2;
+		if (IsMouseButtonPressed(0)) buttonPressed = 2;
 
 	}
 
@@ -296,7 +296,7 @@ void HUD::DrawPauseWidget()
 		opacity3 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 3;
+		if (IsMouseButtonPressed(0)) buttonPressed = 3;
 
 	}
 
@@ -313,7 +313,7 @@ void HUD::DrawPauseWidget()
 		opacity4 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = 4;
+		if (IsMouseButtonPressed(0)) buttonPressed = 4;
 
 	}
 
@@ -330,7 +330,7 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 	// Button 1 - Atrás
 
 	Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
-	DrawMenuButton(rectBackButton, 10, "Atras");
+	DrawMenuButton(rectBackButton, GO_BACK, "Atras");
 
 	// Botones de habilidades
 
@@ -368,7 +368,7 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 		30,
 		BLACK
 	);
-	DrawText("Ability points", abX, abY - abSize, abFontSize, YELLOW);
+	DrawText("Puntos de habilidad", abX, abY - abSize, abFontSize, YELLOW);
 
 	// Barra de experiencia
 
@@ -392,7 +392,7 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 		expheight
 	};
 	DrawRectangleRec(rectCurrentExp, YELLOW);
-	DrawText("Level", expBarPos.x + 10, expBarPos.y + 5, 20, BLACK);
+	DrawText("Nivel", expBarPos.x + 10, expBarPos.y + 5, 20, BLACK);
 
 	int shortLevelNumY = expBarPos.y - expheight + 10;
 	int shortLevelFSize = 12;
@@ -405,7 +405,7 @@ void HUD::DrawAbilitiesWidget(E_TypeHUD typeHUDInput)
 		// Boton empezar partida
 
 		Rectangle rectStart = Rectangle{ (float)GetScreenWidth() - 200.f, (float)GetScreenHeight() - 100.f, 125.f, 50.f };
-		DrawMenuButton(rectStart, 11, "Empezar", YELLOW, BLACK);
+		DrawMenuButton(rectStart, GO_FORWARD, "Empezar", YELLOW, BLACK, false);
 
 	}
 
@@ -466,11 +466,11 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 
 			if (abLevel > i) {
 				DrawRectangleRec(rect, Fade(RED, 1.f));
-				if (IsMouseButtonPressed(0)) mainMenuButtonPressed = abType * -1;
+				if (IsMouseButtonPressed(0)) buttonPressed = abType * -1;
 			}
 			else {
 				DrawRectangleRec(rect, Fade(WHITE, 0.5f));
-				if (IsMouseButtonPressed(0)) mainMenuButtonPressed = abType;
+				if (IsMouseButtonPressed(0)) buttonPressed = abType;
 			}
 
 		}
@@ -481,7 +481,7 @@ void HUD::DrawAbButtons(E_AbilityType abType, int order) {
 
 }
 
-void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText) {
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText, bool outline) {
 
 	float padding = 20.f;
 	float opacity1 = 0.8f;
@@ -491,61 +491,110 @@ void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText
 		opacity1 = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = buttonNumber;
+		if (IsMouseButtonPressed(0)) buttonPressed = buttonNumber;
 
 	}
 
-	DrawRectangleRec(buttonRec, Fade(cButton, opacity1));
-	DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cText);
+	if (outline) {
+		DrawRectangleLinesEx(buttonRec, 2.f, Fade(cButton, opacity1));
+		DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cButton);
+	}
+	else {
+		DrawRectangleRec(buttonRec, Fade(cButton, opacity1));
+		DrawText(buttonText, buttonRec.x + padding, buttonRec.y + padding, 20, cText);
+	}
+
+
 
 }
 
 void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText) {
 
-	Color cText = BLACK;
-	Color cButton = WHITE;
+	DrawMenuButton(buttonRec, buttonNumber, buttonText, WHITE, BLACK, false);
 
-	DrawMenuButton(buttonRec, buttonNumber, buttonText, cButton, cText);
+}
+
+void HUD::DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, bool outline) {
+
+	DrawMenuButton(buttonRec, buttonNumber, buttonText, WHITE, BLACK, outline);
 
 }
 
 void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 {
 
-	Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
-	DrawMenuButton(rectBackButton, 10, "Atras");
+	if (showingNotification) {
 
-	float buttonWidth = (float)GetScreenWidth() / 3.f;
-	float startX1 = (float)GetScreenWidth() / 3.f - buttonWidth / 1.8;
+		ShowNotification();
 
-	float marginLeft = 40.f;
-	float startX2 = (float)startX1 + buttonWidth + marginLeft;
+	}
 
-	// TODO, DESACTIVAR CLICK SI NO HAY NINGUN SLOT DE CARGA
-	// Slot 1
+	if (isConfirming) {
 
-	Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect1, SLOT_1, "Slot 1");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect1), -SLOT_1, BLACK);
+		float bWidth = (float)GetScreenWidth() / 5;
+		float bHeight = 50.f;
 
-	// Slot 2
+		Rectangle rectNoButton = Rectangle{
+			(float)GetScreenWidth() / 2 - (bWidth),
+			(float)GetScreenHeight() / 2 - (bHeight / 2),
+			bWidth,
+			bHeight
+		};
+		DrawMenuButton(rectNoButton, GO_BACK, "No", true);
 
-	Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect2, SLOT_2, "Slot 2");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect2), -SLOT_2, BLACK);
+		Rectangle rectYesButton = Rectangle{
+			(float)GetScreenWidth() / 2 + 20.f,
+			(float)GetScreenHeight() / 2 - (bHeight / 2),
+			bWidth,
+			bHeight
+		};
+		DrawMenuButton(rectYesButton, yesConfirmButton, "Yes");
 
-	// Slot 3
+		DrawText(
+			(TextFormat("Estas seguro que quieres eliminar el slot %d ?", (yesConfirmButton * -1))),
+			bWidth + 20.f,
+			(float)GetScreenHeight() / 2 - bHeight - 40.f,
+			30,
+			WHITE);
 
-	Rectangle buttonRect3 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect3, SLOT_3, "Slot 3");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect3), -SLOT_3, BLACK);
+	}
+	else {
 
-	// Slot 3
+		Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
+		DrawMenuButton(rectBackButton, GO_BACK, "Atras");
 
-	Rectangle buttonRect4 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
-	DrawMenuButton(buttonRect4, SLOT_4, "Slot 4");
-	DrawRemoveButton(GetRectButtonRemove(buttonRect4), -SLOT_4, BLACK);
+		float buttonWidth = (float)GetScreenWidth() / 3.f;
+		float startX1 = (float)GetScreenWidth() / 3.f - buttonWidth / 1.8;
 
+		float marginLeft = 40.f;
+		float startX2 = (float)startX1 + buttonWidth + marginLeft;
+
+		// TODO, DESACTIVAR CLICK SI NO HAY NINGUN SLOT DE CARGA
+		// Slot 1
+
+		Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
+		DrawMenuButton(buttonRect1, SLOT_1, "Slot 1");
+		DrawRemoveButton(GetRectButtonRemove(buttonRect1), -SLOT_1, BLACK);
+
+		// Slot 2
+
+		Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 80.f, buttonWidth, 55.f };
+		DrawMenuButton(buttonRect2, SLOT_2, "Slot 2");
+		DrawRemoveButton(GetRectButtonRemove(buttonRect2), -SLOT_2, BLACK);
+
+		// Slot 3
+
+		Rectangle buttonRect3 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
+		DrawMenuButton(buttonRect3, SLOT_3, "Slot 3");
+		DrawRemoveButton(GetRectButtonRemove(buttonRect3), -SLOT_3, BLACK);
+
+		// Slot 3
+
+		Rectangle buttonRect4 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + 180.f, buttonWidth, 55.f };
+		DrawMenuButton(buttonRect4, SLOT_4, "Slot 4");
+		DrawRemoveButton(GetRectButtonRemove(buttonRect4), -SLOT_4, BLACK);
+
+	}
 }
 
 Rectangle HUD::GetRectButtonRemove(Rectangle rec) {
@@ -661,14 +710,14 @@ void HUD::ItemNumberPress(int num)
 	}
 }
 
-int HUD::GetMainMenuButtonPressed()
+int HUD::ButtonPressed()
 {
-	return mainMenuButtonPressed;
+	return buttonPressed;
 }
 
 void HUD::RestartMainMenuButtons()
 {
-	mainMenuButtonPressed = 0;
+	buttonPressed = 0;
 }
 
 void HUD::DrawRemoveButton(Rectangle rec, int slotNumber, Color color)
@@ -683,8 +732,124 @@ void HUD::DrawRemoveButton(Rectangle rec, int slotNumber, Color color)
 		removeOpacity = 1.f;
 		SetMouseCursor(4);
 
-		if (IsMouseButtonPressed(0)) mainMenuButtonPressed = slotNumber;
+		if (IsMouseButtonPressed(0)) buttonPressed = slotNumber;
 
 	}
+
+}
+
+bool HUD::GetInConfirmingModal() {
+
+	return isConfirming;
+
+}
+
+void HUD::OpenConfirmModal(int buttonPressed) {
+
+	isConfirming = true;
+	yesConfirmButton = buttonPressed;
+
+}
+
+void HUD::CloseConfirmModal() {
+
+	isConfirming = false;
+	yesConfirmButton = 0;
+
+}
+
+bool HUD::IsSelectingSlot() {
+
+	return ButtonPressed() == SLOT_1 ||
+		ButtonPressed() == SLOT_2 ||
+		ButtonPressed() == SLOT_3 ||
+		ButtonPressed() == SLOT_4;
+
+}
+
+bool HUD::IsDeletingSlot() {
+
+	return ButtonPressed() == -SLOT_1 ||
+		ButtonPressed() == -SLOT_2 ||
+		ButtonPressed() == -SLOT_3 ||
+		ButtonPressed() == -SLOT_4;
+
+}
+
+void HUD::Notify(char* message) {
+
+	notiAnimStart = true;
+	showingNotification = true;
+	notificationMessage = message;
+
+}
+
+void HUD::ShowNotification() {
+
+	float notiWidth = (float)GetScreenWidth() / 2.f;
+	float notiHeight = 110.f;
+	float notiStartY = -10.f;
+	static float notiY = notiStartY - notiHeight;
+	float notiX = (float)GetScreenWidth() / 2.f - (notiWidth / 2.f);
+	static float notiOpacity = 0.f;
+
+	notificationCounter += (float)GetFrameTime();
+
+	if (notiAnimStart) {
+
+		notiY += ((float)GetFrameTime() * 300.f);
+		notiOpacity += ((float)GetFrameTime() * 3.f);
+
+		if (notiY >= notiStartY) {
+
+			notiAnimStart = false;
+			notificationCounter = 0.f;
+		}
+
+	}
+	else if (notiAnimEnd) {
+
+		notiY -= ((float)GetFrameTime() * 300.f);
+		notiOpacity -= ((float)GetFrameTime() * 3.f);
+
+		if (notiY <= notiStartY - notiHeight) {
+
+			notificationCounter = 0.f;
+			notiY = -10.f - notiHeight;
+			notiOpacity = 0.f;
+			notiAnimEnd = false;
+			showingNotification = false;
+		}
+
+	}
+	else if (showingNotification) {
+
+		if (notificationCounter >= notificationCounterMax) {
+
+			notificationCounter = 0.f;
+			notiAnimEnd = true;
+
+		}
+
+	}
+
+	Rectangle notiRec = { notiX, notiY, notiWidth, notiHeight };
+	DrawRectangleRec(notiRec, Fade(CLITERAL(Color) { 30, 30, 30, 255 }, notiOpacity)); // BLACK
+
+	if (!notiAnimStart && showingNotification && !notiAnimEnd) {
+
+		float notiProgress = notiRec.width * (notificationCounter / notificationCounterMax);
+		Rectangle notiRecBar = { notiRec.x, notiRec.y + 10.f, notiProgress, 5.f };
+		DrawRectangleRec(notiRecBar, Fade(GRAY, notiOpacity));
+
+		DrawText(notificationMessage, (int)notiRec.x + notiWidth / 10, (int)notiRec.y + notiHeight / 2, 24, Fade(WHITE, notiOpacity));
+	}
+
+}
+
+void HUD::HideNotification() {
+
+	notiAnimEnd = true;
+	showingNotification = true;
 
 }

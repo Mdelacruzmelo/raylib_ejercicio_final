@@ -14,3 +14,8 @@ enum E_GameSlot {
 	SLOT_3 = 3,
 	SLOT_4 = 4,
 };
+
+enum E_Button {
+	GO_BACK = 10,
+	GO_FORWARD = 11,
+};
