@@ -24,6 +24,7 @@ public:
 	int GetSlotsQuantity();
 	bool IsSlotAvailable(int slot);
 	void RestartCheckSlots();
+	SlotData PlayerController::GetSlotsMaster();
 
 private:
 

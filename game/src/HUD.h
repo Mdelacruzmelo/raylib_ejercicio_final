@@ -60,6 +60,7 @@ public:
 
 	void SetSlots(bool* slotsInput);
 	void SetSlotsQuantity(int slotsQuantityInput);
+	bool SlotAvailable();
 
 private:
 

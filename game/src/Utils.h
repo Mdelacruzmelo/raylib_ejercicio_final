@@ -19,3 +19,10 @@ enum E_Button {
 	GO_BACK = 10,
 	GO_FORWARD = 11,
 };
+
+struct SlotData {
+
+	const char** slotPointers;
+	int count;
+
+};

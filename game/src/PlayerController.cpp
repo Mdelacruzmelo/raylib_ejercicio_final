@@ -267,8 +267,8 @@ void PlayerController::Play()
 
 					if (hud->IsDeletingSlot()) {
 
-						DeleteSlotGame((E_GameSlot)hud->ButtonPressed());
-						hud->Notify("Slot deleted successfully");
+						DeleteSlotGame((E_GameSlot)hud->ButtonPressed() * -1);
+						hud->Notify("Slot eliminado correctamente");
 						hud->CloseConfirmModal();
 
 					}
@@ -322,41 +322,45 @@ E_TypeHUD PlayerController::GetTypeHUD()
 	return typeHUD;
 }
 
-void PlayerController::CheckSlots()
-{
+SlotData PlayerController::GetSlotsMaster() {
 
-	int slotsWithData = 0;
+	// Fichero maestro que nos dice que slots hay
 	char* slotsData = LoadFileText("resources/savings/slots.txt");
 	char* delimiter = ",";
 	int* count = new int[0];
-	const char** slotPointers = TextSplit(slotsData, *delimiter, count);
-	static int slotIndex = 0;
 
+	// Slot pointers es un array tal que ["1","2","3","4"]
+	const char** slotPointers = TextSplit(slotsData, *delimiter, count);
+
+	return SlotData{ slotPointers , *count };
+}
+
+void PlayerController::CheckSlots()
+{
+	SlotData sSlot = GetSlotsMaster();
+
+	// Seteamos todo a falso
 	slots = new bool[4] { false, false, false, false };
 
-	for (int i = 0; i < slotsQuantity; i++) {
+	if (sSlot.count > 0) {
 
-		if (slotPointers[i]) {
+		// Recorremos de 0 a 3
+		for (int i = 0; i < slotsQuantity; i++) {
 
-			int existingSlotNumber = std::stoi(slotPointers[i]) - 1;
-			slots[existingSlotNumber] = true;
+			if (sSlot.slotPointers[i]) { // Si existe el index en el array de textos "slotPointers"
+
+				int existingSlotNumber = std::stoi(sSlot.slotPointers[i]) - 1; // Convertimos el texto en numero y le restamos 1 de indice
+				slots[existingSlotNumber] = true; // Setea el elemento del array de boleanos a true basando en el indice que me haya tocado
+
+			}
 
 		}
 
-		slotIndex = i;
-
 	}
 
-	if (slotIndex == slotsQuantity - 1) {
-
-		// porque es static int, necesito resetear slotIndex
-		slotIndex = 0;
-
-		checkingSlots = false;
-		hud->SetSlots(slots);
-		hud->SetSlotsQuantity(slotsQuantity);
-
-	}
+	checkingSlots = false;
+	hud->SetSlots(slots);
+	hud->SetSlotsQuantity(slotsQuantity);
 
 }
 
@@ -406,28 +410,56 @@ void PlayerController::LoadGame(int slot)
 
 void PlayerController::DeleteSlotGame(int slot)
 {
-	if (slot >= 1 && slot <= 4) {
+	if (slot > 0 && slot <= slotsQuantity) {
+
+		SlotData sSlot = GetSlotsMaster();
+
+		// Setea la nueva longitud de texto a guardar
+		int newLength = sSlot.count - 1;
+
+		if (newLength > 0) {
+
+			char* dataToSave = new char[(newLength * 2) - 1]; // * 2 - 1 --> para las comas
+			int indexToSave = 0;
+			static bool savedTheFirstData = false;
+
+			for (int i = 0; i < newLength; i++) {
+
+				if (std::stoi(sSlot.slotPointers[i]) == slot) indexToSave++;
+
+				if (sSlot.slotPointers[indexToSave]) {
+
+					// Movida con strcpy para convertir:  const char*  --->  char *
+					std::string str1 = sSlot.slotPointers[indexToSave];
+					char* record = new char[1];
+					strcpy(record, str1.c_str());
+
+					if (!savedTheFirstData) {
+						dataToSave = strcat(record, "");
+						savedTheFirstData = true;
+					}
+					else dataToSave = strcat(dataToSave, record);
+
+
+					// Si NO es el ultimo, ponle una coma después
+					if (i != newLength - 1) dataToSave = strcat(dataToSave, ",");
+
+					indexToSave++;
+				}
+
+			}
+
+			savedTheFirstData = false;
+
+			SaveFileText("resources/savings/slots.txt", dataToSave);
+
+		}
+		else SaveFileText("resources/savings/slots.txt", "");
 
 		slots[slot - 1] = false;
-		RestartCheckSlots();
+
+		// RestartCheckSlots();
 
 	}
-	else return;
-	//DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
-
-	//char* fileText = LoadFileText(TextFormat("resources/savings/slot%d.txt", slot));
-
-	//// DrawText(fileText, 400, 500, 40, WHITE);
-
-	//const char* delimiter = "\n";
-	//int* count = new int[0];
-
-	//const char** resultsPointers = TextSplit(fileText, *delimiter, count);
-
-	//std::string str1 = resultsPointers[0];
-
-	//// SI FUNCIONA! 
-	//// DrawText(str1.c_str(), 400, 500, 40, WHITE);
-	//DrawText(TextFormat("Size: %d ", sizeof(resultsPointers)), 400, 500, 40, WHITE);
 
 }
