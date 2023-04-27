@@ -20,7 +20,11 @@ public:
 	void SetAIController(AIController* aiControllerInput);
 	void SetMap();
 	void ActivateEnvironment(int envIndex);
+	void UpdateDoors(char* doorsData);
+	void ToggleLockDoorById(char* doorId, bool lock);
 
 private:
+
+	bool isSettingEnvs = true;
 
 };

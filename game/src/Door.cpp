@@ -116,12 +116,18 @@ void Door::Unlock()
 {
 	locked = false;
 
-	if (CheckCollisionRecs(character->GetRect(), GetRect())) {
+	DrawText("UNLOCKING", 100, 150, 30, WHITE);
 
-		character->SetDoorTargetId(GetTargetId());
-		character->SetIsTransporting(true);
+	/*if (character) {
 
-	}
+		if (CheckCollisionRecs(character->GetRect(), GetRect())) {
+
+			character->SetDoorTargetId(GetTargetId());
+			character->SetIsTransporting(true);
+
+		}
+
+	}*/
 }
 
 void Door::Target(char* targetIdInput)

@@ -43,6 +43,7 @@ struct SavedData {
 	int inventory4;
 	int inventory5;
 	int environment;
+	char* doorsData;
 	float locationx;
 	float locationy;
 	int abPoints;
@@ -64,6 +65,7 @@ enum E_SavedDataKey {
 	SAVED_INVENTORY_4,
 	SAVED_INVENTORY_5,
 	SAVED_ENVIRONMENT,
+	SAVED_DOORS_DATA,
 	SAVED_LOCATION_X,
 	SAVED_LOCATION_Y,
 	SAVED_AB_POINTS,

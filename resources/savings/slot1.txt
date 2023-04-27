@@ -13,6 +13,7 @@
 0
 0
 1
+door_A,0,door_B,0,door_C,0,door_D,0
 600.0
 540.0
 2

@@ -411,7 +411,6 @@ void PlayerController::SaveGame(int slot)
 
 SavedData PlayerController::GetSlotSavedData(int slot)
 {
-	// DrawText(TextFormat("resources/savings/slot%d.txt", slot), 400, 400, 40, WHITE);
 
 	char* fileText = LoadFileText(TextFormat("resources/savings/slot%d.txt", slot));
 
@@ -421,7 +420,7 @@ SavedData PlayerController::GetSlotSavedData(int slot)
 	const char** resultsPointers = TextSplit(fileText, *delimiter, count);
 	SavedData data = SavedData{};
 
-	if (*count == 18) {
+	if (*count == 19) {
 
 		data.attack = std::stof(std::string(resultsPointers[SAVED_ATTACK]));
 		data.defense = std::stof(std::string(resultsPointers[SAVED_DEFENSE]));
@@ -441,6 +440,14 @@ SavedData PlayerController::GetSlotSavedData(int slot)
 		data.locationx = std::stof(std::string(resultsPointers[SAVED_LOCATION_X]));
 		data.locationy = std::stof(std::string(resultsPointers[SAVED_LOCATION_Y]));
 		data.abPoints = std::stof(std::string(resultsPointers[SAVED_AB_POINTS]));
+
+		// Doors data
+
+		std::string doorsCharPointer = resultsPointers[SAVED_DOORS_DATA];
+		char* doorsChar = new char[doorsCharPointer.length()];
+		strcpy(doorsChar, doorsCharPointer.c_str());
+
+		data.doorsData = doorsChar;
 
 	}
 

@@ -1,4 +1,5 @@
 #include "EnvironmentHandler.h"
+#include <string>
 
 EnvironmentHandler::EnvironmentHandler(Character* characterInput)
 {
@@ -13,8 +14,9 @@ void EnvironmentHandler::Draw()
 
 	if (character->GetIsLoadingEnvironment()) {
 
-		ActivateEnvironment(character->GetEnvironment());
+		ActivateEnvironment(character->GetLoadedEnvironment());
 		character->SetIsLoadingEnvironment(false);
+
 	}
 
 	else {
@@ -150,7 +152,6 @@ void EnvironmentHandler::Draw()
 
 	}
 
-
 }
 
 void EnvironmentHandler::Append(Environment* newEnvironment)
@@ -178,35 +179,101 @@ void EnvironmentHandler::SetAIController(AIController* aiControllerInput)
 
 void EnvironmentHandler::SetMap()
 {
-	// TODO: Si me alcanza el tiempo, me encantaría hacer esto procedural
+	if (isSettingEnvs || character->GetIsLoadingDoors()) {
 
-	// Environment 1
+		// Environment 1
 
-	Environment* env1 = new Environment(DARKGRAY);
-	env1->Activate();
-	env1->AddDoor(SIDE_RIGHT, "door_A");
-	Append(env1);
+		Environment* env1 = new Environment(DARKGRAY);
+		// env1->Activate();
+		env1->AddDoor(SIDE_RIGHT, "door_A");
+		Append(env1);
 
-	// Environment 2
+		// Environment 2
 
-	Environment* env2 = new Environment(DARKPURPLE);
-	env2->AddDoor(SIDE_LEFT, "door_B");
-	env2->AddDoor(SIDE_BOTTOM, "door_C");
-	Append(env2);
+		Environment* env2 = new Environment(DARKPURPLE);
+		env2->AddDoor(SIDE_LEFT, "door_B");
+		env2->AddDoor(SIDE_BOTTOM, "door_C");
+		Append(env2);
 
-	// Environment 3
+		// Environment 3
 
-	Environment* env3 = new Environment(BLACK);
-	env3->AddDoor(SIDE_TOP, "door_D");
-	Append(env3);
+		Environment* env3 = new Environment(BLACK);
+		env3->AddDoor(SIDE_TOP, "door_D");
+		Append(env3);
 
-	// Connections
+		// Connections
 
-	env1->GetDoor("door_A")->Target("door_B");
-	env1->GetDoor("door_A")->Lock();
-	env2->GetDoor("door_B")->Target("door_A");
-	env3->GetDoor("door_D")->Target("door_C");
-	env2->GetDoor("door_C")->Target("door_D");
+		env1->GetDoor("door_A")->Target("door_B");
+		env2->GetDoor("door_B")->Target("door_A");
+		env3->GetDoor("door_D")->Target("door_C");
+		env2->GetDoor("door_C")->Target("door_D");
+
+		// Doors locked
+
+		if (character->GetIsLoadingDoors()) {
+
+			const char* delimiter = ",";
+			int* count = new int[0];
+			const char** resultsPointers = TextSplit(character->GetLoadedDoorsData(), *delimiter, count);
+
+			for (int i = 0; i < *count; i++) {
+
+				// DrawText(resultsPointers[0], 100, 150, 30, WHITE);
+
+				if (i == 0 || i % 2 == 0) { // Solo vamos de par en par
+
+					int lock = std::stoi(std::string(resultsPointers[i + 1]));
+					std::string doorA = "door_A";
+					std::string doorB = "door_B";
+					std::string doorC = "door_C";
+					std::string doorD = "door_D";
+					std::string doorData = resultsPointers[i];
+
+					if (doorA.compare(doorData) == 0) {
+
+						if (lock == 1) env1->GetDoor("door_A")->Lock();
+						else env1->GetDoor("door_A")->Unlock();
+
+					}
+
+					if (doorB.compare(doorData) == 0) {
+
+						if (lock == 1) env2->GetDoor("door_B")->Lock();
+						else env2->GetDoor("door_B")->Unlock();
+
+					}
+
+					if (doorC.compare(doorData) == 0) {
+
+						if (lock == 1) env2->GetDoor("door_C")->Lock();
+						else env2->GetDoor("door_C")->Unlock();
+
+					}
+
+					if (doorD.compare(doorData) == 0) {
+
+						if (lock == 1) env3->GetDoor("door_D")->Lock();
+						else env3->GetDoor("door_D")->Unlock();
+
+					}
+				}
+
+			}
+
+			character->SetIsLoadingDoors(false);
+			isSettingEnvs = false;
+
+		}
+		else {
+
+			env1->GetDoor("door_A")->Lock();
+			isSettingEnvs = false;
+
+		}
+
+
+
+	}
 }
 
 void EnvironmentHandler::ActivateEnvironment(int envIndex)
@@ -228,6 +295,57 @@ void EnvironmentHandler::ActivateEnvironment(int envIndex)
 
 		}
 
+	}
+
+}
+
+void EnvironmentHandler::UpdateDoors(char* doorsData) {
+
+	const char* delimiter = ",";
+	int* count = new int[0];
+	const char** resultsPointers = TextSplit(doorsData, *delimiter, count);
+
+	// DrawText(TextFormat("COUNT %d", *count), 100, 100, 30, WHITE);
+
+	if (*count > 0) {
+
+		for (int i = 0; i < *count; i++) {
+
+			if (i == 0 || i % 2 == 0) { // Solo vamos de par en par
+
+				// Me di una fumada con strcpy para convertir: const char*  --->  char *
+				std::string doorIdStr = resultsPointers[i];
+				char* doorId = new char[doorIdStr.length()]; // 6 --> "door_A"
+				strcpy(doorId, doorIdStr.c_str());
+
+				bool lock = std::stoi(std::string(resultsPointers[i + 1])) == 1;
+
+				ToggleLockDoorById(doorId, lock);
+
+			}
+
+		}
+
+	}
+
+}
+
+void EnvironmentHandler::ToggleLockDoorById(char* doorId, bool lock) {
+
+	if (quantity > 0) {
+
+		DrawText(doorId, 400, 400, 50, WHITE);
+
+		for (int i = 0; i < quantity; i++) {
+
+			if (environments[i].HasDoor(doorId)) {
+
+				if (lock) environments[i].GetDoor(doorId)->Lock();
+				else environments[i].GetDoor(doorId)->Unlock();
+
+			}
+
+		}
 	}
 
 }

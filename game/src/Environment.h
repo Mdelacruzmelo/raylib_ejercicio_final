@@ -18,6 +18,7 @@ public:
 	void Deactivate();
 	void AddDoor(E_Side doorSide, char* doorIdInput);
 	Door* GetDoor(char* doorIdInput);
+	bool HasDoor(char* doorIdInput);
 	Door* GetDoors();
 
 	int GetDoorQuantity();

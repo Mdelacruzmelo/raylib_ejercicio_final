@@ -75,7 +75,6 @@ public:
 
 	int GetInventorySize();
 	int* GetInventory();
-	int GetLoadedEnvironment();
 	void SetEnvironment(int envInput);
 	void AddToInventory(E_ItemType item);
 	void RemoveFromInventory(int numPressed);
@@ -92,9 +91,15 @@ public:
 
 	void SetData(SavedData data);
 	void SetInitialData();
+
 	void SetIsLoadingEnvironment(bool loadingInput);
 	bool GetIsLoadingEnvironment();
-	bool GetEnvironment();
+
+	void SetIsLoadingDoors(bool loadingInput);
+	bool GetIsLoadingDoors();
+
+	int GetLoadedEnvironment();
+	char* GetLoadedDoorsData();
 
 protected:
 
@@ -154,8 +159,10 @@ protected:
 	int inventorySize = 5;
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
+	char* loadedDoorsData;
 	int loadedEnvironment = 0;
 	bool isLoadingEnvironment = false;
+	bool isLoadingDoors = false;
 
 	Vector2 initialPos = { 600.f, 540.f };
 	Vector2 pos = initialPos;

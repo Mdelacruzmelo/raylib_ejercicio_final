@@ -396,6 +396,16 @@ int* Character::GetInventory()
 	return inventory;
 }
 
+void Character::SetIsLoadingDoors(bool loadingInput)
+{
+	isLoadingDoors = loadingInput;
+}
+
+bool Character::GetIsLoadingDoors()
+{
+	return isLoadingDoors;
+}
+
 int Character::GetLoadedEnvironment()
 {
 	return loadedEnvironment;
@@ -501,11 +511,13 @@ void Character::SetData(SavedData data)
 	inventory[3] = data.inventory4;
 	inventory[4] = data.inventory5;
 	loadedEnvironment = data.environment;
+	loadedDoorsData = data.doorsData;
 	pos.x = data.locationx;
 	pos.y = data.locationy;
 	abilityPoints = data.abPoints;
 
 	SetIsLoadingEnvironment(true); // Listened by EnvironmentHandler
+	SetIsLoadingDoors(true); // Listened by EnvironmentHandler
 }
 
 void Character::SetInitialData()
@@ -525,6 +537,7 @@ void Character::SetInitialData()
 	inventory[3] = 0;
 	inventory[4] = 0;
 	loadedEnvironment = 0;
+	loadedDoorsData = "";
 	pos.x = initialPos.x;
 	pos.y = initialPos.y;
 	abilityPoints = initialAbilityPoints;
@@ -536,16 +549,15 @@ bool Character::GetIsLoadingEnvironment()
 	return isLoadingEnvironment;
 }
 
-bool Character::GetEnvironment()
+char* Character::GetLoadedDoorsData()
 {
-	return loadedEnvironment;
+	return loadedDoorsData;
 }
 
 void Character::SetIsLoadingEnvironment(bool loadingInput)
 {
 	isLoadingEnvironment = loadingInput;
 }
-
 
 Vector2 Character::GetPosition()
 {

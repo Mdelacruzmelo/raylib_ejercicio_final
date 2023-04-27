@@ -35,25 +35,23 @@ int main(void)
 	AIController* aiController = new AIController(character);
 
 	envHandler->SetAIController(aiController);
-	envHandler->SetMap();
 
 	while (!WindowShouldClose())
 	{
 		// UpdateMusicStream(music);
 
 		BeginDrawing();
-
 		ClearBackground(BLACK);
 
 		if (controller->GetTypeHUD() == H_GAME) {
 
+			envHandler->SetMap();
 			envHandler->Draw();
 			aiController->Play();
 
 		}
 
 		controller->Play();
-
 		EndDrawing();
 	}
 
