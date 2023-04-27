@@ -40,7 +40,40 @@ void PlayerController::Play()
 
 		hud->Draw(typeHUD);
 
-		if (typeHUD == H_GAME) {
+		// Attack aiming and radius
+
+		Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
+		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
+		Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
+		Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
+
+		switch (typeHUD)
+		{
+		case H_GAME:
+
+			// Mouse cursor
+
+			mousePosition = GetMousePosition();
+
+			DrawRectangle(
+				(int)(mousePosition.x - cursorRadius),
+				(int)(mousePosition.y - (cursorDepth / 2)),
+				(int)cursorSize,
+				(int)cursorDepth,
+				WHITE
+			);
+			DrawRectangle(
+				(int)(mousePosition.x - (cursorDepth / 2)),
+				(int)(mousePosition.y - cursorRadius),
+				(int)cursorDepth,
+				(int)cursorSize,
+				WHITE
+			);
+
+			// Linetrace
+
+			DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
 
 			// Movimiento
 
@@ -87,36 +120,6 @@ void PlayerController::Play()
 			if (character->GetIsAlive()) character->Draw();
 			else typeHUD = H_LOOSE_GAME;
 
-			// Mouse cursor
-
-			mousePosition = GetMousePosition();
-
-			DrawRectangle(
-				(int)(mousePosition.x - cursorRadius),
-				(int)(mousePosition.y - (cursorDepth / 2)),
-				(int)cursorSize,
-				(int)cursorDepth,
-				WHITE
-			);
-			DrawRectangle(
-				(int)(mousePosition.x - (cursorDepth / 2)),
-				(int)(mousePosition.y - cursorRadius),
-				(int)cursorDepth,
-				(int)cursorSize,
-				WHITE
-			);
-
-			// Linetrace
-
-			DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
-
-			// Attack aiming and radius
-
-			Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
-			float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
-			Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-			Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
-			Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
 
 			DrawLineV(character->GetPosition(), endVector, RED);
 
@@ -195,9 +198,9 @@ void PlayerController::Play()
 
 			}
 
-		}
+			break;
 
-		else if (typeHUD == H_PAUSE) {
+		case H_PAUSE:
 
 			if (hud->ButtonPressed() == 1) typeHUD = H_GAME;
 			else if (hud->ButtonPressed() == 2) typeHUD = H_LOAD_DATA;
@@ -206,9 +209,10 @@ void PlayerController::Play()
 
 			hud->RestartMainMenuButtons();
 
-		}
+			break;
 
-		else if (typeHUD == H_HABILITIES || typeHUD == H_INIT_HABILITIES) {
+		case H_HABILITIES:
+		case H_INIT_HABILITIES:
 
 			if (hud->ButtonPressed()) {
 
@@ -242,24 +246,10 @@ void PlayerController::Play()
 				hud->RestartMainMenuButtons();
 
 			}
+			break;
 
-		}
-
-		else if (typeHUD == H_MAIN_MENU) {
-
-			if (hud->ButtonPressed()) {
-
-				if (hud->ButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
-				else if (hud->ButtonPressed() == 2) typeHUD = H_INIT_LOAD_DATA;
-				else if (hud->ButtonPressed() == 3) CloseWindow();
-
-				hud->RestartMainMenuButtons();
-
-			}
-
-		}
-
-		else if (typeHUD == H_LOAD_DATA || typeHUD == H_INIT_LOAD_DATA) {
+		case H_LOAD_DATA:
+		case H_INIT_LOAD_DATA:
 
 			if (hud->ButtonPressed()) {
 
@@ -286,7 +276,12 @@ void PlayerController::Play()
 
 					if (hud->IsSelectingSlot()) {
 
-						if (LoadGame(hud->ButtonPressed())) typeHUD = H_INIT_HABILITIES;
+						if (LoadGame(hud->ButtonPressed())) {
+
+							if (typeHUD == H_INIT_LOAD_DATA) typeHUD = H_INIT_HABILITIES;
+							else typeHUD = H_PAUSE;
+
+						}
 						else hud->Notify("Error en la carga de datos");
 
 					}
@@ -305,6 +300,33 @@ void PlayerController::Play()
 				hud->RestartMainMenuButtons();
 
 			}
+
+			break;
+
+		case H_MAIN_MENU:
+
+			character->SetInitialData();
+
+			if (hud->ButtonPressed()) {
+
+				if (hud->ButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
+				else if (hud->ButtonPressed() == 2) typeHUD = H_INIT_LOAD_DATA;
+				else if (hud->ButtonPressed() == 3) CloseWindow();
+
+				hud->RestartMainMenuButtons();
+
+			}
+
+			break;
+
+		case H_LOOSE_GAME:
+			break;
+
+		case H_WIN_GAME:
+			break;
+
+		default:
+			break;
 		}
 	}
 }

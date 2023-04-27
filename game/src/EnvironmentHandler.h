@@ -13,11 +13,13 @@ public:
 	Environment* environments;
 	Character* character;
 	AIController* aiController = nullptr;
+	int envActivated = 0;
 
 	void Draw();
 	void Append(Environment* newEnvironment);
 	void SetAIController(AIController* aiControllerInput);
 	void SetMap();
+	void ActivateEnvironment(int envIndex);
 
 private:
 

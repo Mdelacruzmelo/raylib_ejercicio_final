@@ -396,14 +396,14 @@ int* Character::GetInventory()
 	return inventory;
 }
 
-int Character::GetEnvironment()
+int Character::GetLoadedEnvironment()
 {
-	return environment;
+	return loadedEnvironment;
 }
 
 void Character::SetEnvironment(int envInput)
 {
-	environment = envInput;
+	loadedEnvironment = envInput;
 }
 
 void Character::AddToInventory(E_ItemType item)
@@ -500,11 +500,52 @@ void Character::SetData(SavedData data)
 	inventory[2] = data.inventory3;
 	inventory[3] = data.inventory4;
 	inventory[4] = data.inventory5;
-	environment = data.environment;
+	loadedEnvironment = data.environment;
 	pos.x = data.locationx;
 	pos.y = data.locationy;
 	abilityPoints = data.abPoints;
+
+	SetIsLoadingEnvironment(true); // Listened by EnvironmentHandler
 }
+
+void Character::SetInitialData()
+{
+	attack = initialAttack;
+	defense = initialDefense;
+	velocity = initialVelocity;
+	energy = initialEnergy;
+	attackDistance = initialAttackDistance;
+	health = initialHealth;
+	shield = initialShield;
+	experience = initialExperience;
+	level = initialLevel;
+	inventory[0] = 0;
+	inventory[1] = 0;
+	inventory[2] = 0;
+	inventory[3] = 0;
+	inventory[4] = 0;
+	loadedEnvironment = 0;
+	pos.x = initialPos.x;
+	pos.y = initialPos.y;
+	abilityPoints = initialAbilityPoints;
+
+}
+
+bool Character::GetIsLoadingEnvironment()
+{
+	return isLoadingEnvironment;
+}
+
+bool Character::GetEnvironment()
+{
+	return loadedEnvironment;
+}
+
+void Character::SetIsLoadingEnvironment(bool loadingInput)
+{
+	isLoadingEnvironment = loadingInput;
+}
+
 
 Vector2 Character::GetPosition()
 {
