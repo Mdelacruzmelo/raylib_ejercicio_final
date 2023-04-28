@@ -194,35 +194,6 @@ Door* Environment::GetDoor(char* doorIdInput)
 	}
 }
 
-bool Environment::HasDoor(char* doorIdInput)
-{
-
-	for (int i = 0; i < topDoorsQuantity; i++) {
-		if (topDoors[i].GetId() == doorIdInput) {
-			return true;
-		}
-	}
-
-	for (int i = 0; i < bottomDoorsQuantity; i++) {
-		if (bottomDoors[i].GetId() == doorIdInput) {
-			return true;
-		}
-	}
-
-	for (int i = 0; i < rightDoorsQuantity; i++) {
-		if (rightDoors[i].GetId() == doorIdInput) {
-			return true;
-		}
-	}
-
-	for (int i = 0; i < leftDoorsQuantity; i++) {
-		if (leftDoors[i].GetId() == doorIdInput) {
-			return true;
-		}
-	}
-
-	return false;
-}
 
 Door* Environment::GetDoors()
 {

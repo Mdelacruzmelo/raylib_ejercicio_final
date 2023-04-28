@@ -1,19 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "raylib.h"
-
-enum E_TypeHUD {
-	H_GAME,
-	H_PAUSE,
-	H_HABILITIES,
-	H_INIT_HABILITIES,
-	H_LOAD_DATA,
-	H_INIT_LOAD_DATA,
-	H_MAIN_MENU,
-	H_LOOSE_GAME,
-	H_WIN_GAME,
-};
-
+#include "Utils.h"
 
 class HUD
 {

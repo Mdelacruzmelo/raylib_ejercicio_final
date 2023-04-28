@@ -35,6 +35,7 @@ int main(void)
 	AIController* aiController = new AIController(character);
 
 	envHandler->SetAIController(aiController);
+	envHandler->SetMap();
 
 	while (!WindowShouldClose())
 	{
@@ -45,10 +46,13 @@ int main(void)
 
 		if (controller->GetTypeHUD() == H_GAME) {
 
-			envHandler->SetMap();
 			envHandler->Draw();
 			aiController->Play();
 
+		}
+		else if (character->GetIsLoadingData()) {
+
+			envHandler->LoadDataFromCharacter();
 		}
 
 		controller->Play();

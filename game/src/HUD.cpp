@@ -1,6 +1,4 @@
 #include "HUD.h"
-#include "InventoryItemsUtils.h"
-#include "Utils.h"
 
 HUD::HUD(Character* characterInput)
 {
@@ -443,13 +441,13 @@ void HUD::DrawMainMenuWidget()
 	DrawText("- in the Maniac House -", 100, GetScreenHeight() / 4 + 70, 20, RED);
 
 	Rectangle buttonRect1 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 80.f, 220.f, 55.f };
-	DrawMenuButton(buttonRect1, 1, "Nueva partida");
+	DrawMenuButton(buttonRect1, NEW, "Nueva partida");
 
 	Rectangle buttonRect2 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 160.f, 220.f, 55.f };
-	DrawMenuButton(buttonRect2, SlotAvailable() ? 2 : 0, "Cargar partida", SlotAvailable() ? false : true);
+	DrawMenuButton(buttonRect2, SlotAvailable() ? LOAD : 0, "Cargar partida", SlotAvailable() ? false : true);
 
 	Rectangle buttonRect3 = Rectangle{ 200.f, (float)GetScreenHeight() / 3.f + 240.f, 220.f, 55.f };
-	DrawMenuButton(buttonRect3, 3, "Salir");
+	DrawMenuButton(buttonRect3, QUIT, "Salir");
 
 	// Sangre
 
@@ -776,77 +774,17 @@ void HUD::DrawPauseWidget()
 {
 	DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.9f));
 
-	float padding = 20.f;
-	float h = 55.f;
-	float y = 400.f;
+	for (int i = 1; i <= 5; i++) {
 
-	// Button 1 - Reanudar partida
+		Rectangle rect1 = Rectangle{ 200.f, 400.f + (80 * i), 220.f, 55.f };
 
-	float y1 = y + (80 * 0);
-	float opacity1 = 0.8f;
-	Rectangle rect1 = Rectangle{ 200.f, y1, 220.f, h };
-	if (CheckCollisionPointRec(GetMousePosition(), rect1)) {
-
-		opacity1 = 1.f;
-		SetMouseCursor(4);
-
-		if (IsMouseButtonPressed(0)) buttonPressed = 1;
+		if (i == RESUME) DrawMenuButton(rect1, RESUME, "Reanudar partida");
+		if (i == HABILITIES) DrawMenuButton(rect1, HABILITIES, "Habilidades");
+		if (i == SAVE) DrawMenuButton(rect1, SAVE, "Guardar partida");
+		if (i == LOAD) DrawMenuButton(rect1, LOAD, "Cargar partida");
+		if (i == QUIT) DrawMenuButton(rect1, QUIT, "Salir");
 
 	}
-
-	DrawRectangleRec(rect1, Fade(WHITE, opacity1));
-	DrawText("Reanudar partida", 200 + padding, y1 + padding, 20, BLACK);
-
-	// Button 2 - Cargar Partida
-
-	float y2 = y + (80 * 1);
-	float opacity2 = 0.8f;
-	Rectangle rect2 = Rectangle{ 200.f, y2, 200.f, h };
-	if (CheckCollisionPointRec(GetMousePosition(), rect2)) {
-
-		opacity2 = 1.f;
-		SetMouseCursor(4);
-
-		if (IsMouseButtonPressed(0)) buttonPressed = 2;
-
-	}
-
-	DrawRectangleRec(rect2, Fade(WHITE, opacity2));
-	DrawText("Cargar Partida", 200 + padding, y2 + padding, 20, BLACK);
-
-	// Button 3 - Habilidades
-
-	float y3 = y + (80 * 2);
-	float opacity3 = 0.8f;
-	Rectangle rect3 = Rectangle{ 200.f, y3, 150.f, h };
-	if (CheckCollisionPointRec(GetMousePosition(), rect3)) {
-
-		opacity3 = 1.f;
-		SetMouseCursor(4);
-
-		if (IsMouseButtonPressed(0)) buttonPressed = 3;
-
-	}
-
-	DrawRectangleRec(rect3, Fade(WHITE, opacity3));
-	DrawText("Habilidades", 200 + padding, y3 + padding, 20, BLACK);
-
-	// Button 4 - Salir
-
-	float y4 = y + (80 * 3);
-	float opacity4 = 0.8f;
-	Rectangle rect4 = Rectangle{ 200.f, y4, 90.f, h };
-	if (CheckCollisionPointRec(GetMousePosition(), rect4)) {
-
-		opacity4 = 1.f;
-		SetMouseCursor(4);
-
-		if (IsMouseButtonPressed(0)) buttonPressed = 4;
-
-	}
-
-	DrawRectangleRec(rect4, Fade(WHITE, opacity4));
-	DrawText("Salir", 200 + padding, y4 + padding, 20, BLACK);
 
 }
 

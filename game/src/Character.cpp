@@ -28,7 +28,7 @@ void Character::DrawMessageNoSpace() {
 
 	counterNoSpaceMessage += 1;
 
-	DrawText("No more space", 250, 20, 24, WHITE);
+	DrawText("No hay espacio", 250, 20, 24, WHITE);
 
 	if (counterNoSpaceMessage >= 100) {
 
@@ -516,8 +516,9 @@ void Character::SetData(SavedData data)
 	pos.y = data.locationy;
 	abilityPoints = data.abPoints;
 
-	SetIsLoadingEnvironment(true); // Listened by EnvironmentHandler
-	SetIsLoadingDoors(true); // Listened by EnvironmentHandler
+	SetIsLoadingData(true); // Listened by EnvironmentHandler
+	// SetIsLoadingEnvironment(true); // Listened by EnvironmentHandler
+	// SetIsLoadingDoors(true); // Listened by EnvironmentHandler
 }
 
 void Character::SetInitialData()
@@ -552,6 +553,16 @@ bool Character::GetIsLoadingEnvironment()
 char* Character::GetLoadedDoorsData()
 {
 	return loadedDoorsData;
+}
+
+void Character::SetIsLoadingData(bool loadingInput)
+{
+	isLoadingData = loadingInput;
+}
+
+bool Character::GetIsLoadingData()
+{
+	return isLoadingData;
 }
 
 void Character::SetIsLoadingEnvironment(bool loadingInput)

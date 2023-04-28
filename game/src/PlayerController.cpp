@@ -202,10 +202,11 @@ void PlayerController::Play()
 
 		case H_PAUSE:
 
-			if (hud->ButtonPressed() == 1) typeHUD = H_GAME;
-			else if (hud->ButtonPressed() == 2) typeHUD = H_LOAD_DATA;
-			else if (hud->ButtonPressed() == 3) typeHUD = H_HABILITIES;
-			else if (hud->ButtonPressed() == 4) typeHUD = H_MAIN_MENU;
+			if (hud->ButtonPressed() == RESUME) typeHUD = H_GAME;
+			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_HABILITIES;
+			else if (hud->ButtonPressed() == SAVE) typeHUD = H_LOAD_DATA;
+			else if (hud->ButtonPressed() == LOAD) typeHUD = H_LOAD_DATA;
+			else if (hud->ButtonPressed() == QUIT) typeHUD = H_MAIN_MENU;
 
 			hud->RestartMainMenuButtons();
 
@@ -309,9 +310,9 @@ void PlayerController::Play()
 
 			if (hud->ButtonPressed()) {
 
-				if (hud->ButtonPressed() == 1) typeHUD = H_INIT_HABILITIES;
-				else if (hud->ButtonPressed() == 2) typeHUD = H_INIT_LOAD_DATA;
-				else if (hud->ButtonPressed() == 3) CloseWindow();
+				if (hud->ButtonPressed() == NEW) typeHUD = H_INIT_HABILITIES;
+				else if (hud->ButtonPressed() == LOAD) typeHUD = H_INIT_LOAD_DATA;
+				else if (hud->ButtonPressed() == QUIT) CloseWindow();
 
 				hud->RestartMainMenuButtons();
 

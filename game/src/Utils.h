@@ -20,6 +20,36 @@ enum E_Button {
 	GO_FORWARD = 11,
 };
 
+enum E_PauseButton {
+	RESUME = 1,
+	HABILITIES = 2,
+	SAVE = 3,
+	LOAD = 4,
+	QUIT = 5,
+	NEW = 6,
+};
+
+enum E_TypeHUD {
+	H_GAME,
+	H_PAUSE,
+	H_HABILITIES,
+	H_INIT_HABILITIES,
+	H_LOAD_DATA,
+	H_INIT_LOAD_DATA,
+	H_MAIN_MENU,
+	H_LOOSE_GAME,
+	H_WIN_GAME,
+};
+
+enum E_ItemType {
+	I_POTION_HEALTH = 1,
+	I_POTION_STRENGTH = 2,
+	I_POTION_SPEED = 3,
+	I_EXPERIENCE = 4,
+	I_KEY = 5,
+};
+
+
 struct SlotData {
 
 	const char** slotPointers;

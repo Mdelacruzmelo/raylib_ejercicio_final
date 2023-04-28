@@ -16,6 +16,7 @@ public:
 	int envActivated = 0;
 
 	void Draw();
+	void LoadDataFromCharacter();
 	void Append(Environment* newEnvironment);
 	void SetAIController(AIController* aiControllerInput);
 	void SetMap();
@@ -24,7 +25,5 @@ public:
 	void ToggleLockDoorById(char* doorId, bool lock);
 
 private:
-
-	bool isSettingEnvs = true;
 
 };

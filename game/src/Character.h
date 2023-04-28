@@ -92,6 +92,9 @@ public:
 	void SetData(SavedData data);
 	void SetInitialData();
 
+	void SetIsLoadingData(bool loadingInput);
+	bool GetIsLoadingData();
+
 	void SetIsLoadingEnvironment(bool loadingInput);
 	bool GetIsLoadingEnvironment();
 
@@ -163,6 +166,7 @@ protected:
 	int loadedEnvironment = 0;
 	bool isLoadingEnvironment = false;
 	bool isLoadingDoors = false;
+	bool isLoadingData = false;
 
 	Vector2 initialPos = { 600.f, 540.f };
 	Vector2 pos = initialPos;

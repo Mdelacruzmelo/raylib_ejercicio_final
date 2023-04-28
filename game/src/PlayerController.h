@@ -38,7 +38,7 @@ private:
 
 	Character* character = nullptr;
 	HUD* hud = nullptr;
-	E_TypeHUD typeHUD = H_MAIN_MENU;
+	E_TypeHUD typeHUD = H_PAUSE;
 
 	bool checkingSlots = true;
 	int slotsQuantity = 4;
