@@ -21,10 +21,10 @@ public:
 	Rectangle GetRect();
 	Vector2 GetSize();
 	int GetLevel();
-	float GetNormalizedHealth();
-	float GetNormalizedDefense();
-	float GetNormalizedShield();
+
 	float GetNormalizedIncreasedVelocity();
+
+	float GetExperience();
 	float GetNormalizedExperience();
 
 	void SetIsInteracting(bool isInteractingInput);
@@ -45,9 +45,19 @@ public:
 
 	float GetAttack();
 	float GetAttackDistance();
+
 	float GetDefense();
-	float GetEnergy();
+	float GetNormalizedDefense();
+
 	float GetSpeed();
+
+	float GetEnergy();
+
+	float GetHealth();
+	float GetNormalizedHealth();
+
+	float GetShield();
+	float GetNormalizedShield();
 
 	bool IsAddAbility(int abNumber);
 	bool IsSubstractAbility(int abNumber);
@@ -75,7 +85,10 @@ public:
 
 	int GetInventorySize();
 	int* GetInventory();
+
 	void SetEnvironment(int envInput);
+	int GetEnvironment();
+
 	void AddToInventory(E_ItemType item);
 	void RemoveFromInventory(int numPressed);
 	void ShowNoInventorySpace();
@@ -95,14 +108,12 @@ public:
 	void SetIsLoadingData(bool loadingInput);
 	bool GetIsLoadingData();
 
-	void SetIsLoadingEnvironment(bool loadingInput);
-	bool GetIsLoadingEnvironment();
-
-	void SetIsLoadingDoors(bool loadingInput);
-	bool GetIsLoadingDoors();
-
 	int GetLoadedEnvironment();
 	char* GetLoadedDoorsData();
+	void SetLoadedDoorsData(char* doorsData);
+
+	bool GetIsInNewGame();
+	void SetIsInNewGame(bool isNewGameInput);
 
 protected:
 
@@ -183,5 +194,6 @@ protected:
 	char* doorTargetId;
 
 	bool updatingSlots = false;
+	bool inNewGame = false;
 
 };

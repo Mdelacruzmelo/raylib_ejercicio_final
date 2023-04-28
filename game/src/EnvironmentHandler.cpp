@@ -1,15 +1,18 @@
 #include "EnvironmentHandler.h"
 #include <string>
 
-EnvironmentHandler::EnvironmentHandler(Character* characterInput)
+EnvironmentHandler::EnvironmentHandler(Character* characterInput, AIController* aiControllerInput)
 {
 	character = characterInput;
+	aiController = aiControllerInput;
 }
 
 void EnvironmentHandler::LoadDataFromCharacter() {
 
 	ActivateEnvironment(character->GetLoadedEnvironment());
 	UpdateDoors(character->GetLoadedDoorsData());
+
+	aiController->ClearAll();
 
 	character->SetIsLoadingData(false);
 
@@ -44,10 +47,17 @@ void EnvironmentHandler::Draw()
 
 	if (envActivated != 0) envActivated = 0;
 
+	// Set data for save
+
 	character->SetEnvironment(envNumber);
+	character->SetLoadedDoorsData(GetDoorsData());
+
+	// Dibujar entorno
 
 	if (envToDraw) envToDraw->Draw(character);
 	else environments[0].Draw(character);
+
+	// Dibujar puertas
 
 	if (character->GetIsTransporting()) {
 
@@ -170,7 +180,7 @@ void EnvironmentHandler::SetAIController(AIController* aiControllerInput)
 	aiController = aiControllerInput;
 }
 
-void EnvironmentHandler::SetMap() // 1 Time executed, before BeginDrawing();
+void EnvironmentHandler::InitializeMap() // 1 Time executed, before BeginDrawing();
 {
 	// Environment 1
 
@@ -238,12 +248,13 @@ void EnvironmentHandler::UpdateDoors(char* doorsData) {
 
 		for (int i = 0; i < *count; i++) {
 
+			// Solo vamos de par en par, door_A,1,door_B,0,door_C,1... etc
 			if (i == 0 || i % 2 == 0) {
 
-				// Solo vamos de par en par, door_A,1,door_B,0,door_C,1... etc
 				std::string doorIdStr = resultsPointers[i];
 				char* doorId = new char[doorIdStr.length()];
 				strcpy(doorId, doorIdStr.c_str());
+
 				bool lock = std::stoi(std::string(resultsPointers[i + 1])) == 1;
 
 				ToggleLockDoorById(doorId, lock);
@@ -253,6 +264,72 @@ void EnvironmentHandler::UpdateDoors(char* doorsData) {
 		}
 
 	}
+
+}
+
+void EnvironmentHandler::Restart() {
+
+	InitializeMap();
+	character->SetIsInNewGame(false);
+
+}
+
+char* EnvironmentHandler::GetDoorsData()
+{
+	char* charDoorA = "door_A";
+	std::string doorA = charDoorA;
+	std::string lockedA = environments[0].GetDoor(charDoorA)->GetIsLocked() ? "1" : "0";
+	char* charLockedA = new char[1];
+	strcpy(charLockedA, lockedA.c_str());
+
+	char* charDoorB = "door_B";
+	std::string doorB = charDoorB;
+	std::string lockedB = environments[1].GetDoor(charDoorB)->GetIsLocked() ? "1" : "0";
+	char* charLockedB = new char[1];
+	strcpy(charLockedB, lockedB.c_str());
+
+	char* charDoorC = "door_C";
+	std::string doorC = charDoorC;
+	std::string lockedC = environments[1].GetDoor(charDoorC)->GetIsLocked() ? "1" : "0";
+	char* charLockedC = new char[1];
+	strcpy(charLockedC, lockedC.c_str());
+
+	char* charDoorD = "door_D";
+	std::string doorD = charDoorD;
+	std::string lockedD = environments[2].GetDoor(charDoorD)->GetIsLocked() ? "1" : "0";
+	char* charLockedD = new char[1];
+	strcpy(charLockedD, lockedD.c_str());
+
+	int totalDataLength =
+		doorA.length() +
+		doorB.length() +
+		doorC.length() +
+		doorD.length() +
+		lockedA.length() +
+		lockedB.length() +
+		lockedC.length() +
+		lockedD.length();
+
+	int comasLength = totalDataLength - 1;
+	char* dataToSave = new char[totalDataLength + comasLength];
+
+	strcpy(dataToSave, charDoorA);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charLockedA);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charDoorB);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charLockedB);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charDoorC);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charLockedC);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charDoorD);
+	strcat(dataToSave, ",");
+	strcat(dataToSave, charLockedD);
+
+	return dataToSave;
 
 }
 
@@ -271,22 +348,19 @@ void EnvironmentHandler::ToggleLockDoorById(char* doorId, bool lock) {
 			else environments[0].GetDoor("door_A")->Unlock();
 
 		}
-
-		if (doorB.compare(doorId) == 0) {
+		else if (doorB.compare(doorId) == 0) {
 
 			if (lock) environments[1].GetDoor("door_B")->Lock();
 			else environments[1].GetDoor("door_B")->Unlock();
 
 		}
-
-		if (doorC.compare(doorId) == 0) {
+		else if (doorC.compare(doorId) == 0) {
 
 			if (lock) environments[1].GetDoor("door_C")->Lock();
 			else environments[1].GetDoor("door_C")->Unlock();
 
 		}
-
-		if (doorD.compare(doorId) == 0) {
+		else if (doorD.compare(doorId) == 0) {
 
 			if (lock) environments[2].GetDoor("door_D")->Lock();
 			else environments[2].GetDoor("door_D")->Unlock();

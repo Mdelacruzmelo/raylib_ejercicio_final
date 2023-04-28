@@ -130,6 +130,11 @@ void Door::Unlock()
 	}*/
 }
 
+bool Door::GetIsLocked()
+{
+	return locked;
+}
+
 void Door::Target(char* targetIdInput)
 {
 	doorTargetId = targetIdInput;

@@ -595,6 +595,16 @@ void HUD::DrawGameWidget()
 {
 	if (character && character->GetIsAlive()) {
 
+		// Barra de experiencia Fondo negro
+
+		DrawRectangle(
+			0,
+			GetScreenHeight() - 60,
+			GetScreenWidth(),
+			60,
+			BLACK
+		);
+
 		// Nivel actual 
 		DrawRectangle(
 			padding,
@@ -614,7 +624,7 @@ void HUD::DrawGameWidget()
 			22,
 			BLACK);
 
-		// Barra de experiencia fondo
+		// Barra de experiencia
 
 		int experienceWidth = GetScreenWidth() - (padding * 2) - (expNumbersSize * 2);
 
@@ -623,7 +633,7 @@ void HUD::DrawGameWidget()
 			GetScreenHeight() - padding - expBarHeight,
 			experienceWidth,
 			expBarHeight,
-			GRAY
+			Fade(YELLOW, 0.5f)
 		);
 
 		// Barra de experiencia

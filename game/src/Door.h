@@ -19,6 +19,7 @@ public:
 	char* GetId();
 	void Lock();
 	void Unlock();
+	bool GetIsLocked();
 	void Target(char* targetIdInput);
 	char* GetTargetId();
 	Vector2 GetPosition();

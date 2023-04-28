@@ -26,7 +26,7 @@ void Environment::Draw(Character* characterRef)
 
 	float distanceXBottomDoors = (float)GetScreenWidth() / (bottomDoorsQuantity + 1);
 	for (int i = 0; i < bottomDoorsQuantity; i++) {
-		Vector2 posBottomDraw = { distanceXBottomDoors * (i + 1), (GetScreenHeight() - bottomDoors[i].GetHeight()) };
+		Vector2 posBottomDraw = { distanceXBottomDoors * (i + 1), (GetScreenHeight() - bottomDoors[i].GetHeight()) - 60.f };
 		bottomDoors[i].Draw(characterRef, posBottomDraw);
 	}
 
@@ -46,7 +46,6 @@ void Environment::Draw(Character* characterRef)
 		leftDoors[i].Draw(characterRef, posLeftDraw);
 	}
 
-	// DrawText(TextFormat("doors quantity %d", doorQuantity), 100, 330, 16, WHITE);
 
 }
 

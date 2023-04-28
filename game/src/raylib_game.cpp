@@ -31,11 +31,11 @@ int main(void)
 	Character* character = new Character();
 	HUD* hud = new HUD(character);
 	PlayerController* controller = new PlayerController(character, hud);
-	EnvironmentHandler* envHandler = new EnvironmentHandler(character);
 	AIController* aiController = new AIController(character);
+	EnvironmentHandler* envHandler = new EnvironmentHandler(character, aiController);
 
 	envHandler->SetAIController(aiController);
-	envHandler->SetMap();
+	envHandler->InitializeMap();
 
 	while (!WindowShouldClose())
 	{
@@ -50,10 +50,9 @@ int main(void)
 			aiController->Play();
 
 		}
-		else if (character->GetIsLoadingData()) {
 
-			envHandler->LoadDataFromCharacter();
-		}
+		if (character->GetIsLoadingData()) envHandler->LoadDataFromCharacter();
+		if (character->GetIsInNewGame()) envHandler->Restart();
 
 		controller->Play();
 		EndDrawing();

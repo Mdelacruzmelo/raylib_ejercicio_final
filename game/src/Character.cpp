@@ -161,6 +161,11 @@ int Character::GetLevel()
 	return level;
 }
 
+float Character::GetHealth()
+{
+	return health;
+}
+
 float Character::GetNormalizedHealth()
 {
 	return health / maxHealth;
@@ -171,6 +176,11 @@ float Character::GetNormalizedDefense()
 	return defense / maxDefense;
 }
 
+float Character::GetShield()
+{
+	return shield;
+}
+
 float Character::GetNormalizedShield()
 {
 	return shield / maxShield;
@@ -179,6 +189,11 @@ float Character::GetNormalizedShield()
 float Character::GetNormalizedIncreasedVelocity()
 {
 	return tempVelocityCounter / initialTempVelocityCounter;
+}
+
+float Character::GetExperience()
+{
+	return experience;
 }
 
 float Character::GetNormalizedExperience()
@@ -396,16 +411,6 @@ int* Character::GetInventory()
 	return inventory;
 }
 
-void Character::SetIsLoadingDoors(bool loadingInput)
-{
-	isLoadingDoors = loadingInput;
-}
-
-bool Character::GetIsLoadingDoors()
-{
-	return isLoadingDoors;
-}
-
 int Character::GetLoadedEnvironment()
 {
 	return loadedEnvironment;
@@ -414,6 +419,11 @@ int Character::GetLoadedEnvironment()
 void Character::SetEnvironment(int envInput)
 {
 	loadedEnvironment = envInput;
+}
+
+int Character::GetEnvironment()
+{
+	return loadedEnvironment;
 }
 
 void Character::AddToInventory(E_ItemType item)
@@ -517,8 +527,6 @@ void Character::SetData(SavedData data)
 	abilityPoints = data.abPoints;
 
 	SetIsLoadingData(true); // Listened by EnvironmentHandler
-	// SetIsLoadingEnvironment(true); // Listened by EnvironmentHandler
-	// SetIsLoadingDoors(true); // Listened by EnvironmentHandler
 }
 
 void Character::SetInitialData()
@@ -545,9 +553,19 @@ void Character::SetInitialData()
 
 }
 
-bool Character::GetIsLoadingEnvironment()
+void Character::SetLoadedDoorsData(char* doorsData)
 {
-	return isLoadingEnvironment;
+	loadedDoorsData = doorsData;
+}
+
+bool Character::GetIsInNewGame()
+{
+	return inNewGame;
+}
+
+void Character::SetIsInNewGame(bool isNewGameInput)
+{
+	inNewGame = isNewGameInput;
 }
 
 char* Character::GetLoadedDoorsData()
@@ -563,11 +581,6 @@ void Character::SetIsLoadingData(bool loadingInput)
 bool Character::GetIsLoadingData()
 {
 	return isLoadingData;
-}
-
-void Character::SetIsLoadingEnvironment(bool loadingInput)
-{
-	isLoadingEnvironment = loadingInput;
 }
 
 Vector2 Character::GetPosition()

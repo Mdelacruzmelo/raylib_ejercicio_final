@@ -7,7 +7,7 @@
 class EnvironmentHandler
 {
 public:
-	EnvironmentHandler(Character* characterInput);
+	EnvironmentHandler(Character* characterInput, AIController* aiControllerInput);
 
 	int quantity = 0;
 	Environment* environments;
@@ -19,10 +19,12 @@ public:
 	void LoadDataFromCharacter();
 	void Append(Environment* newEnvironment);
 	void SetAIController(AIController* aiControllerInput);
-	void SetMap();
+	void InitializeMap();
 	void ActivateEnvironment(int envIndex);
 	void UpdateDoors(char* doorsData);
 	void ToggleLockDoorById(char* doorId, bool lock);
+	char* GetDoorsData();
+	void Restart();
 
 private:
 

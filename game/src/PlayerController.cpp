@@ -307,6 +307,7 @@ void PlayerController::Play()
 		case H_MAIN_MENU:
 
 			character->SetInitialData();
+			character->SetIsInNewGame(true); // Escuchado por EnvironmentHandler
 
 			if (hud->ButtonPressed()) {
 
@@ -407,6 +408,28 @@ void PlayerController::RestartCheckSlots()
 
 void PlayerController::SaveGame(int slot)
 {
+	SavedData data = SavedData{};
+
+	data.attack = character->GetAttack();
+	data.defense = character->GetDefense();
+	data.speed = character->GetSpeed();
+	data.energy = character->GetEnergy();
+	data.attackdistance = character->GetAttackDistance();
+	data.health = character->GetHealth();
+	data.shield = character->GetShield();
+	data.experience = character->GetExperience();
+	data.level = character->GetLevel();
+	data.inventory1 = character->GetInventory()[0];
+	data.inventory2 = character->GetInventory()[1];
+	data.inventory3 = character->GetInventory()[2];
+	data.inventory4 = character->GetInventory()[3];
+	data.inventory5 = character->GetInventory()[4];
+	data.environment = character->GetEnvironment();
+	data.locationx = character->GetPosition().x;
+	data.locationy = character->GetPosition().y;
+	data.abPoints = character->GetAbPoints();
+
+	data.doorsData = character->GetLoadedDoorsData();
 
 }
 
