@@ -218,11 +218,7 @@ void EnvironmentHandler::InitializeMap() // 1 Time executed, before BeginDrawing
 void EnvironmentHandler::ActivateEnvironment(int envIndex)
 {
 
-	if (
-		envIndex > 0 &&
-		envIndex < quantity &&
-		envIndex != 0
-		) {
+	if (envIndex < quantity) {
 
 		for (int i = 0; i < quantity; i++) {
 

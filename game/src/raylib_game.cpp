@@ -28,6 +28,8 @@ int main(void)
 	PlayMusicStream(music);
 	SetTargetFPS(60);
 
+	SetMouseCursor(1);
+
 	Character* character = new Character();
 	HUD* hud = new HUD(character);
 	PlayerController* controller = new PlayerController(character, hud);

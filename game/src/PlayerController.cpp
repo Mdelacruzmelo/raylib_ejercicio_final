@@ -10,27 +10,7 @@ PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 void PlayerController::Play()
 {
 
-	// DrawText(TextFormat("Character x: %f", character->GetPosition().x), 300, 300, 40, GREEN);
-	// DrawText(TextFormat("Move x: %f", movement.x), 300, 350, 40, GREEN);
-
-	// -------------------- TEST INTERACT --------------------
-
-	if (IsKeyPressed(KEY_Q)) {
-		// character->AddHealth(10.f);
-		// character->ApplyDamage(10.f);
-		// character->AddToInventory(I_POTION_SPEED);
-		SetTypeHUD(H_HABILITIES);
-	}
-	if (IsKeyPressed(KEY_E)) {
-		// character->IncreaseExperience();
-		SetTypeHUD(H_PAUSE);
-	}
-	if (IsKeyPressed(KEY_R)) {
-		// character->IncreaseExperience();
-		SetTypeHUD(H_GAME);
-	}
-
-	SetMouseCursor(1);
+	if (IsKeyPressed(KEY_E)) SetTypeHUD(H_PAUSE);
 
 	if (checkingSlots) CheckSlots();
 
@@ -204,7 +184,7 @@ void PlayerController::Play()
 
 			if (hud->ButtonPressed() == RESUME) typeHUD = H_GAME;
 			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_HABILITIES;
-			else if (hud->ButtonPressed() == SAVE) typeHUD = H_LOAD_DATA;
+			else if (hud->ButtonPressed() == SAVE) typeHUD = H_SAVE_DATA;
 			else if (hud->ButtonPressed() == LOAD) typeHUD = H_LOAD_DATA;
 			else if (hud->ButtonPressed() == QUIT) typeHUD = H_MAIN_MENU;
 
@@ -304,6 +284,86 @@ void PlayerController::Play()
 
 			break;
 
+		case H_SAVE_DATA:
+
+			if (hud->ButtonPressed()) {
+
+				if (hud->GetInConfirmingModal()) {
+
+					if (hud->IsDeletingSlot()) {
+
+						DeleteSlotGame((E_GameSlot)hud->ButtonPressed() * -1);
+						hud->Notify("Slot eliminado correctamente");
+						hud->CloseConfirmModal();
+
+					}
+					else if (hud->ButtonPressed() == GO_BACK) {
+
+						hud->CloseConfirmModal();
+
+					}
+					else if (IsSlotOverwrite(hud->ButtonPressed())) {
+
+						SaveGame(hud->ButtonPressed());
+						// SaveSlotGame(hud->ButtonPressed());
+						checkingSlots = true;
+						hud->Notify("Partida guardada");
+						hud->CloseConfirmModal();
+
+						typeHUD = H_PAUSE;
+
+					}
+
+				}
+				else {
+
+					if (hud->ButtonPressed() == GO_BACK) {
+
+						if (typeHUD == H_INIT_LOAD_DATA) typeHUD = H_MAIN_MENU;
+						else typeHUD = H_PAUSE;
+
+					}
+
+					if (hud->IsSelectingSlot()) {
+
+						if (IsSlotOverwrite(hud->ButtonPressed())) {
+
+							hud->OpenConfirmModal(
+								hud->ButtonPressed(),
+								"Estas seguro que quieres sobreescribir el slot ?"
+							);
+
+						}
+						else {
+
+							SaveGame(hud->ButtonPressed());
+							SaveSlotGame(hud->ButtonPressed());
+							checkingSlots = true;
+							hud->Notify("Partida guardada");
+
+							typeHUD = H_PAUSE;
+
+						}
+
+					}
+
+					else if (hud->IsDeletingSlot()) {
+
+						hud->OpenConfirmModal(
+							hud->ButtonPressed(),
+							"Estas seguro que quieres eliminar el slot ?"
+						);
+
+					}
+
+				}
+
+				hud->RestartMainMenuButtons();
+
+			}
+
+			break;
+
 		case H_MAIN_MENU:
 
 			character->SetInitialData();
@@ -361,7 +421,7 @@ void PlayerController::CheckSlots()
 	SlotData sSlot = GetSlotsMaster();
 
 	// Seteamos todo a falso
-	slots = new bool[4] { false, false, false, false };
+	slots = new bool[slotsQuantity] { false, false, false, false };
 
 	if (sSlot.count > 0) {
 
@@ -382,6 +442,14 @@ void PlayerController::CheckSlots()
 	checkingSlots = false;
 	hud->SetSlots(slots);
 	hud->SetSlotsQuantity(slotsQuantity);
+
+}
+
+bool PlayerController::IsSlotOverwrite(int slot) {
+
+	if (slot > 0 && slot <= slotsQuantity) return slots[slot - 1];
+
+	return false;
 
 }
 
@@ -425,11 +493,43 @@ void PlayerController::SaveGame(int slot)
 	data.inventory4 = character->GetInventory()[3];
 	data.inventory5 = character->GetInventory()[4];
 	data.environment = character->GetEnvironment();
+	data.doorsData = character->GetLoadedDoorsData();
 	data.locationx = character->GetPosition().x;
 	data.locationy = character->GetPosition().y;
 	data.abPoints = character->GetAbPoints();
 
-	data.doorsData = character->GetLoadedDoorsData();
+	SetSlotWithSavedData(slot, data);
+
+}
+
+void PlayerController::SetSlotWithSavedData(int slot, SavedData data)
+{
+
+	std::string result =
+		std::string(Converter::FloatToChar(data.attack)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.defense)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.speed)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.energy)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.attackdistance)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.health)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.shield)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.experience)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.level)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.inventory1)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.inventory2)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.inventory3)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.inventory4)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.inventory5)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.environment)) + std::string("\n") +
+		std::string(data.doorsData) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.locationy)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.locationy)) + std::string("\n") +
+		std::string(Converter::IntToChar(data.abPoints));
+
+	char* resultChar = new char[strlen(result.c_str()) + 1];
+	strcpy(resultChar, result.c_str());
+
+	SaveFileText(TextFormat("resources/savings/slot%d.txt", slot), resultChar);
 
 }
 
@@ -544,6 +644,40 @@ void PlayerController::DeleteSlotGame(int slot)
 		else SaveFileText("resources/savings/slots.txt", "");
 
 		slots[slot - 1] = false;
+
+		// RestartCheckSlots();
+
+	}
+
+}
+
+void PlayerController::SaveSlotGame(int slot)
+{
+	if (slot > 0 && slot <= slotsQuantity) {
+
+		SlotData sSlot = GetSlotsMaster();
+
+		if (sSlot.count > 0) {
+
+			int newLength = sSlot.count + 2; // + el numero y la coma
+			char* dataToSave = new char[newLength];
+
+			char* slotsData = LoadFileText("resources/savings/slots.txt");
+
+			std::string result = std::string(slotsData) + std::string(",") + std::string(Converter::IntToChar(slot));
+			char* charResult = new char[strlen(result.c_str()) + 1];
+			strcpy(charResult, result.c_str());
+
+			SaveFileText("resources/savings/slots.txt", charResult);
+
+		}
+		else {
+
+			SaveFileText("resources/savings/slots.txt", Converter::IntToChar(slot));
+
+		}
+
+		slots[slot - 1] = true;
 
 		// RestartCheckSlots();
 

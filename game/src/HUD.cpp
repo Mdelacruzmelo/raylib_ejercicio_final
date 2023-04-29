@@ -417,20 +417,14 @@ void HUD::Draw(E_TypeHUD typeHUDInput) {
 
 	type = typeHUDInput;
 
-	if (typeHUDInput == H_PAUSE)
-		DrawPauseWidget();
-
-	else if (typeHUDInput == H_HABILITIES || typeHUDInput == H_INIT_HABILITIES)
-		DrawAbilitiesWidget(typeHUDInput);
-
-	else if (typeHUDInput == H_MAIN_MENU)
-		DrawMainMenuWidget();
-
-	else if (typeHUDInput == H_LOAD_DATA || typeHUDInput == H_INIT_LOAD_DATA)
-		DrawLoadDataWidget(typeHUDInput);
-
+	if (typeHUDInput == H_PAUSE) DrawPauseWidget();
+	else if (typeHUDInput == H_HABILITIES || typeHUDInput == H_INIT_HABILITIES) DrawAbilitiesWidget(typeHUDInput);
+	else if (typeHUDInput == H_MAIN_MENU) DrawMainMenuWidget();
+	else if (typeHUDInput == H_SAVE_DATA) DrawSaveDataWidget();
+	else if (typeHUDInput == H_LOAD_DATA || typeHUDInput == H_INIT_LOAD_DATA) DrawLoadDataWidget(typeHUDInput);
 	else DrawGameWidget();
 
+	if (showingNotification) ShowNotification();
 }
 
 void HUD::DrawMainMenuWidget()
@@ -511,24 +505,76 @@ void HUD::DrawMainMenuWidget()
 
 }
 
+void HUD::DrawSaveDataWidget() {
+
+	if (isConfirming) ShowConfirmHUD(confirmQuestion, yesConfirmButton, GO_BACK);
+	else {
+
+		Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };
+		DrawMenuButton(rectBackButton, GO_BACK, "Atras");
+
+		float buttonWidth = (float)GetScreenWidth() / 3.f;
+		float startX1 = (float)GetScreenWidth() / 3.f - buttonWidth / 1.8;
+
+		float marginLeft = 40.f;
+		float startX2 = (float)startX1 + buttonWidth + marginLeft;
+
+		int row = 0;
+
+		for (int nSlot = 1; nSlot <= slotsQuantity; nSlot++) {
+
+			const char* textSlot = TextFormat("Slot %d", nSlot);
+
+			if (nSlot % 2 != 0) {
+
+				// Slots 1, 3
+
+				Rectangle buttonRect1 = Rectangle{ startX1, (float)GetScreenHeight() / 4.f + (80.f + 100 * row), buttonWidth, 55.f };
+
+				if (slots[nSlot - 1]) { // Slot exists
+
+					DrawMenuButton(buttonRect1, (E_GameSlot)nSlot, textSlot);
+					DrawRemoveButton(GetRectButtonRemove(buttonRect1), -(E_GameSlot)nSlot, BLACK);
+
+				}
+				else { // Slot NOT exists
+
+					DrawMenuButton(buttonRect1, (E_GameSlot)nSlot, textSlot, true);
+
+				}
+			}
+			else {
+
+				// Slots 2, 4
+
+				Rectangle buttonRect2 = Rectangle{ startX2, (float)GetScreenHeight() / 4.f + (80.f + 100 * row), buttonWidth, 55.f };
+
+				if (slots[nSlot - 1]) { // Slot exists
+
+					DrawMenuButton(buttonRect2, (E_GameSlot)nSlot, textSlot);
+					DrawRemoveButton(GetRectButtonRemove(buttonRect2), -(E_GameSlot)nSlot, BLACK);
+
+				}
+				else { // Slot NOT exists
+
+					DrawMenuButton(buttonRect2, (E_GameSlot)nSlot, textSlot, true);
+
+				}
+
+				row++;
+
+			}
+
+		}
+
+	}
+
+}
+
 void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 {
-
-	if (showingNotification) {
-
-		ShowNotification();
-
-	}
-
-	if (isConfirming) {
-
-		ShowConfirmHUD(
-			confirmQuestion,
-			yesConfirmButton,
-			GO_BACK
-		);
-
-	}
+	if (showingNotification) ShowNotification();
+	if (isConfirming) ShowConfirmHUD(confirmQuestion, yesConfirmButton, GO_BACK);
 	else {
 
 		Rectangle rectBackButton = Rectangle{ 50.f, 50.f, 100.f, 55.f };

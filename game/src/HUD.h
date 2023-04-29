@@ -11,6 +11,7 @@ public:
 
 	void DrawPauseWidget();
 	void DrawAbilitiesWidget(E_TypeHUD typeHUDInput);
+	void DrawSaveDataWidget();
 	void DrawLoadDataWidget(E_TypeHUD typeHUDInput);
 	void DrawMainMenuWidget();
 	void DrawGameWidget();

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 enum E_AbilityType {
 	ATTACK = 1,
@@ -34,6 +35,7 @@ enum E_TypeHUD {
 	H_PAUSE,
 	H_HABILITIES,
 	H_INIT_HABILITIES,
+	H_SAVE_DATA,
 	H_LOAD_DATA,
 	H_INIT_LOAD_DATA,
 	H_MAIN_MENU,
@@ -99,4 +101,33 @@ enum E_SavedDataKey {
 	SAVED_LOCATION_X,
 	SAVED_LOCATION_Y,
 	SAVED_AB_POINTS,
+};
+
+struct Converter {
+
+	static char* FloatToChar(float dataValue) {
+
+		std::string dataStr = std::to_string(dataValue);
+		const char* constChar = dataStr.c_str();
+
+		char* simpleChar = new char[strlen(constChar) + 1];
+		strcpy(simpleChar, constChar);
+
+		return simpleChar;
+
+	}
+
+	static char* IntToChar(int dataValue) {
+
+		std::string dataStr = std::to_string(dataValue);
+		const char* constChar = dataStr.c_str();
+
+		char* simpleChar = new char[strlen(constChar) + 1];
+		strcpy(simpleChar, constChar);
+
+		return simpleChar;
+
+	}
+
+
 };
