@@ -28,7 +28,7 @@ void Character::DrawMessageNoSpace() {
 
 	counterNoSpaceMessage += 1;
 
-	DrawText("No more space", 250, 20, 24, WHITE);
+	DrawText("No hay espacio", 250, 20, 24, WHITE);
 
 	if (counterNoSpaceMessage >= 100) {
 
@@ -161,6 +161,11 @@ int Character::GetLevel()
 	return level;
 }
 
+float Character::GetHealth()
+{
+	return health;
+}
+
 float Character::GetNormalizedHealth()
 {
 	return health / maxHealth;
@@ -171,6 +176,11 @@ float Character::GetNormalizedDefense()
 	return defense / maxDefense;
 }
 
+float Character::GetShield()
+{
+	return shield;
+}
+
 float Character::GetNormalizedShield()
 {
 	return shield / maxShield;
@@ -179,6 +189,11 @@ float Character::GetNormalizedShield()
 float Character::GetNormalizedIncreasedVelocity()
 {
 	return tempVelocityCounter / initialTempVelocityCounter;
+}
+
+float Character::GetExperience()
+{
+	return experience;
 }
 
 float Character::GetNormalizedExperience()
@@ -396,6 +411,21 @@ int* Character::GetInventory()
 	return inventory;
 }
 
+int Character::GetLoadedEnvironment()
+{
+	return loadedEnvironment;
+}
+
+void Character::SetEnvironment(int envInput)
+{
+	loadedEnvironment = envInput;
+}
+
+int Character::GetEnvironment()
+{
+	return loadedEnvironment;
+}
+
 void Character::AddToInventory(E_ItemType item)
 {
 	for (int i = 0; i < inventorySize; i++) {
@@ -472,6 +502,85 @@ Vector2 Character::GetAttackCircleCenter1()
 Vector2 Character::GetAttackCircleCenter2()
 {
 	return circle2Center;
+}
+
+void Character::SetData(SavedData data)
+{
+	attack = data.attack;
+	defense = data.defense;
+	velocity = data.speed;
+	energy = data.energy;
+	attackDistance = data.attackdistance;
+	health = data.health;
+	shield = data.shield;
+	experience = data.experience;
+	level = data.level;
+	inventory[0] = data.inventory1;
+	inventory[1] = data.inventory2;
+	inventory[2] = data.inventory3;
+	inventory[3] = data.inventory4;
+	inventory[4] = data.inventory5;
+	loadedEnvironment = data.environment;
+	loadedDoorsData = data.doorsData;
+	pos.x = data.locationx;
+	pos.y = data.locationy;
+	abilityPoints = data.abPoints;
+
+	SetIsLoadingData(true); // Listened by EnvironmentHandler
+}
+
+void Character::SetInitialData()
+{
+	attack = initialAttack;
+	defense = initialDefense;
+	velocity = initialVelocity;
+	energy = initialEnergy;
+	attackDistance = initialAttackDistance;
+	health = initialHealth;
+	shield = initialShield;
+	experience = initialExperience;
+	level = initialLevel;
+	inventory[0] = 0;
+	inventory[1] = 0;
+	inventory[2] = 0;
+	inventory[3] = 0;
+	inventory[4] = 0;
+	loadedEnvironment = 0;
+	loadedDoorsData = "";
+	pos.x = initialPos.x;
+	pos.y = initialPos.y;
+	abilityPoints = initialAbilityPoints;
+
+}
+
+void Character::SetLoadedDoorsData(char* doorsData)
+{
+	loadedDoorsData = doorsData;
+}
+
+bool Character::GetIsInNewGame()
+{
+	return inNewGame;
+}
+
+void Character::SetIsInNewGame(bool isNewGameInput)
+{
+	inNewGame = isNewGameInput;
+}
+
+char* Character::GetLoadedDoorsData()
+{
+	return loadedDoorsData;
+}
+
+void Character::SetIsLoadingData(bool loadingInput)
+{
+	isLoadingData = loadingInput;
+}
+
+bool Character::GetIsLoadingData()
+{
+	return isLoadingData;
 }
 
 Vector2 Character::GetPosition()

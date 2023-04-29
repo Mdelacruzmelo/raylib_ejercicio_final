@@ -12,12 +12,17 @@ public:
 	AIController(Character* characterInput);
 	void Play();
 	void SpawnEnemy();
-	void DeleteEnemies();
-	void DeleteEnemy(int numEnemy);
+
 	void SpawnConsumable(E_ItemType typeInput);
 	void SpawnInteractable(E_ItemType typeInput);
+
+	void ClearAll();
+	void DeleteEnemies();
 	void DeleteConsumable(int indexToDelete);
+	void DeleteConsumables();
 	void DeleteInteractable(int indexToDelete);
+	void DeleteInteractables();
+
 
 private:
 

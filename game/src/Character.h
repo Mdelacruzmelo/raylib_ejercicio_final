@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "InventoryItemsUtils.h"
-#include "AbilityUtils.h"
+#include "Utils.h"
 
 class Character
 {
@@ -21,10 +21,10 @@ public:
 	Rectangle GetRect();
 	Vector2 GetSize();
 	int GetLevel();
-	float GetNormalizedHealth();
-	float GetNormalizedDefense();
-	float GetNormalizedShield();
+
 	float GetNormalizedIncreasedVelocity();
+
+	float GetExperience();
 	float GetNormalizedExperience();
 
 	void SetIsInteracting(bool isInteractingInput);
@@ -45,9 +45,19 @@ public:
 
 	float GetAttack();
 	float GetAttackDistance();
+
 	float GetDefense();
-	float GetEnergy();
+	float GetNormalizedDefense();
+
 	float GetSpeed();
+
+	float GetEnergy();
+
+	float GetHealth();
+	float GetNormalizedHealth();
+
+	float GetShield();
+	float GetNormalizedShield();
 
 	bool IsAddAbility(int abNumber);
 	bool IsSubstractAbility(int abNumber);
@@ -75,6 +85,10 @@ public:
 
 	int GetInventorySize();
 	int* GetInventory();
+
+	void SetEnvironment(int envInput);
+	int GetEnvironment();
+
 	void AddToInventory(E_ItemType item);
 	void RemoveFromInventory(int numPressed);
 	void ShowNoInventorySpace();
@@ -88,17 +102,32 @@ public:
 	Vector2 GetAttackCircleCenter1();
 	Vector2 GetAttackCircleCenter2();
 
+	void SetData(SavedData data);
+	void SetInitialData();
+
+	void SetIsLoadingData(bool loadingInput);
+	bool GetIsLoadingData();
+
+	int GetLoadedEnvironment();
+	char* GetLoadedDoorsData();
+	void SetLoadedDoorsData(char* doorsData);
+
+	bool GetIsInNewGame();
+	void SetIsInNewGame(bool isNewGameInput);
+
 protected:
 
 	bool alive = true;
+
 	bool showingNoSpaceMessage = false;
 	int counterNoSpaceMessage = 0;
 
 	float initialTempVelocityCounter = 300;
 	float tempVelocityCounter = 300;
 	bool isVelocityTempIncreased = false;
+
 	float initialVelocity = 1.f;
-	float velocity = 1.f;
+	float velocity = initialVelocity;
 	float maxVelocity = 10.f;
 
 	float initialAcceleration = 4.f;
@@ -108,37 +137,50 @@ protected:
 	float radius = size / 2;
 
 	float initialAttackDistance = 5.f;
-	float attackDistance = 5.f;
+	float attackDistance = initialAttackDistance;
 	float maxAttackDistance = 10.f;
 
-	float health = 20.f;
+	float initialHealth = 20.f;
+	float health = initialHealth;
 	float maxHealth = 100.f;
 
 	float initialEnergy = 1.f;
-	float energy = 1.f;
+	float energy = initialEnergy;
 	float maxEnergy = 10.f;
 
 	float initialAttack = 1.f;
-	float attack = 1.f;
+	float attack = initialAttack;
 	float maxAttack = 10.f;
 
 	float initialDefense = 1.f;
-	float defense = 1.f;
+	float defense = initialDefense;
 	float maxDefense = 10.f;
 
-	float shield = 50.f;
+	float initialShield = 50.f;
+	float shield = initialShield;
 	float maxShield = 50.f;
 
-	int level = 1;
-	int abilityPoints = 3;
+	int initialLevel = 1;
+	int level = initialLevel;
 
-	float experience = 0.f;
+	int initialAbilityPoints = 3;
+	int abilityPoints = initialAbilityPoints;
+
+	float initialExperience = 0.f;
+	float experience = initialExperience;
 	float maxExperience = 100.f;
 
 	int inventorySize = 5;
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
-	Vector2 pos = { 600.f, 540.f };
+	char* loadedDoorsData;
+	int loadedEnvironment = 0;
+	bool isLoadingEnvironment = false;
+	bool isLoadingDoors = false;
+	bool isLoadingData = false;
+
+	Vector2 initialPos = { 600.f, 540.f };
+	Vector2 pos = initialPos;
 	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
 
 	Vector2 circle1Center;
@@ -150,5 +192,8 @@ protected:
 	bool isInteracting = false;
 	bool isTransporting = false;
 	char* doorTargetId;
+
+	bool updatingSlots = false;
+	bool inNewGame = false;
 
 };

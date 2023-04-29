@@ -1,44 +1,59 @@
 #pragma once
 #include "Character.h"
 #include "raylib.h"
-
-enum E_TypeHUD {
-	H_GAME,
-	H_PAUSE,
-	H_HABILITIES,
-	H_INIT_HABILITIES,
-	H_LOAD_DATA,
-	H_MAIN_MENU,
-	H_LOOSE_GAME,
-	H_WIN_GAME,
-};
-
+#include "Utils.h"
 
 class HUD
 {
 public:
 	HUD(Character* characterInput);
 	void Draw(E_TypeHUD typeHUDInput);
+
 	void DrawPauseWidget();
 	void DrawAbilitiesWidget(E_TypeHUD typeHUDInput);
-	void DrawLoadDataWidget();
+	void DrawSaveDataWidget();
+	void DrawLoadDataWidget(E_TypeHUD typeHUDInput);
 	void DrawMainMenuWidget();
 	void DrawGameWidget();
+
 	void ItemNumberPress(int num);
 	void DrawAbButtons(E_AbilityType abType, int order);
 
-	int GetPauseButtonPressed();
-	void RestartPauseButtons();
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, Color cButton, Color cText, bool outline);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, Color cButton, Color cText, bool outline);
 
-	int GetMainMenuButtonPressed();
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText);
+
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, char* buttonText, bool outline);
+	void DrawMenuButton(Rectangle buttonRec, int buttonNumber, const char* buttonText, bool outline);
+
+	void DrawRemoveButton(Rectangle rec, int slotNumber, Color color);
+	Rectangle GetRectButtonRemove(Rectangle rec);
+
+	int ButtonPressed();
 	void RestartMainMenuButtons();
+	bool GetInConfirmingModal();
+	void OpenConfirmModal(int buttonPressed, char* confirmQuestionInput);
+	void CloseConfirmModal();
 
-	int GetHabilityButtonPressed();
-	void RestartHabilityButtons();
+	bool IsSelectingSlot();
+	bool IsDeletingSlot();
 
+	void Notify(char* message);
+	void ShowNotification();
+	void HideNotification();
+
+	void ShowConfirmHUD(char* message, int yesNumber, int noNumber);
+	void ShowConfirmHUD(const char* message, int yesNumber, int noNumber);
+
+	void SetSlots(bool* slotsInput);
+	void SetSlotsQuantity(int slotsQuantityInput);
+	bool SlotAvailable();
 
 private:
 
+	E_TypeHUD type;
 	Character* character;
 
 	int padding = 20;
@@ -50,8 +65,20 @@ private:
 	int healthBarHeight = 20;
 
 	int itemSize = 30.f;
-	int pauseButtonPressed = 0;
-	int habButtonPressed = 0;
-	int mainMenuButtonPressed = 0;
+	int buttonPressed = 0;
 
+	int slotQuantity = 4;
+	bool isConfirming = false;
+	int yesConfirmButton = 0;
+
+	bool showingNotification = false;
+	bool notiAnimStart = false;
+	bool notiAnimEnd = false;
+	float notificationCounter = 0;
+	float notificationCounterMax = 2.f;
+	char* confirmQuestion;
+	char* notificationMessage;
+
+	bool* slots;
+	int slotsQuantity = 0;
 };

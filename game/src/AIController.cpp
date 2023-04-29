@@ -58,11 +58,6 @@ void AIController::DeleteEnemies()
 	enemies = nullptr;
 }
 
-void AIController::DeleteEnemy(int numEnemy)
-{
-
-}
-
 void AIController::SpawnConsumable(E_ItemType typeInput)
 {
 	if (character != nullptr) {
@@ -143,45 +138,65 @@ void AIController::SpawnInteractable(E_ItemType typeInput)
 
 }
 
+void AIController::ClearAll() {
+
+	DeleteEnemies();
+	DeleteConsumables();
+	DeleteInteractables();
+
+}
+
+
+void AIController::DeleteConsumables() {
+
+	consumables = nullptr;
+	consumableQuantity = 0;
+
+}
+
 void AIController::DeleteConsumable(int indexToDelete)
 {
-	if (character) {
 
-		int newQuantity = consumableQuantity - 1;
-		Consumable* newConsumables = new Consumable[newQuantity];
+	int newQuantity = consumableQuantity - 1;
+	Consumable* newConsumables = new Consumable[newQuantity];
 
-		for (int i = 0; i < newQuantity; i++) {
+	for (int i = 0; i < newQuantity; i++) {
 
-			if (i > indexToDelete) newConsumables[i - 1] = consumables[i];
-			else if (i < indexToDelete) newConsumables[i] = consumables[i];
-
-		}
-
-		consumables = newConsumables;
-		consumableQuantity = newQuantity;
+		if (i > indexToDelete) newConsumables[i - 1] = consumables[i];
+		else if (i < indexToDelete) newConsumables[i] = consumables[i];
 
 	}
+
+	consumables = newConsumables;
+	consumableQuantity = newQuantity;
+
+}
+
+void AIController::DeleteInteractables()
+{
+
+	interactables = nullptr;
+	interactableQuantity = 0;
+
 }
 
 void AIController::DeleteInteractable(int indexToDelete)
 {
-	if (character) {
+	int newQuantity = interactableQuantity - 1;
+	Interactable* newInteractables = new Interactable[newQuantity];
 
-		int newQuantity = interactableQuantity - 1;
-		Interactable* newInteractables = new Interactable[newQuantity];
+	for (int i = 0; i < newQuantity; i++) {
 
-		for (int i = 0; i < newQuantity; i++) {
-
-			if (i > indexToDelete) newInteractables[i - 1] = interactables[i];
-			else if (i < indexToDelete)	newInteractables[i] = interactables[i];
-
-		}
-
-		interactables = newInteractables;
-		interactableQuantity = newQuantity;
+		if (i > indexToDelete) newInteractables[i - 1] = interactables[i];
+		else if (i < indexToDelete)	newInteractables[i] = interactables[i];
 
 	}
+
+	interactables = newInteractables;
+	interactableQuantity = newQuantity;
+
 }
+
 
 void AIController::Play()
 {

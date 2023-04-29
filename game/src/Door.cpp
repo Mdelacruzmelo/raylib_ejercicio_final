@@ -31,9 +31,9 @@ void Door::Draw(Character* characterInput)
 
 		Vector2 messagePos;
 		if (doorSide == SIDE_TOP) messagePos = Vector2{ pos.x + width + 10.f, pos.y + height / 2 };
-		if (doorSide == SIDE_BOTTOM) messagePos = Vector2{ pos.x + width + 10.f, pos.y - 20.f };
-		if (doorSide == SIDE_RIGHT) messagePos = Vector2{ pos.x - 100.f, pos.y + height / 2 };
-		if (doorSide == SIDE_LEFT) messagePos = Vector2{ pos.x + width + 10.f, pos.y - height / 2 };
+		else if (doorSide == SIDE_BOTTOM) messagePos = Vector2{ pos.x + width + 10.f, pos.y - 20.f };
+		else if (doorSide == SIDE_RIGHT) messagePos = Vector2{ pos.x - 100.f, pos.y + height / 2 };
+		else messagePos = Vector2{ pos.x + width + 10.f, pos.y - height / 2 };
 
 		DrawText("Locked", messagePos.x, messagePos.y, 20, RED);
 
@@ -116,12 +116,23 @@ void Door::Unlock()
 {
 	locked = false;
 
-	if (CheckCollisionRecs(character->GetRect(), GetRect())) {
+	DrawText("UNLOCKING", 100, 150, 30, WHITE);
 
-		character->SetDoorTargetId(GetTargetId());
-		character->SetIsTransporting(true);
+	/*if (character) {
 
-	}
+		if (CheckCollisionRecs(character->GetRect(), GetRect())) {
+
+			character->SetDoorTargetId(GetTargetId());
+			character->SetIsTransporting(true);
+
+		}
+
+	}*/
+}
+
+bool Door::GetIsLocked()
+{
+	return locked;
 }
 
 void Door::Target(char* targetIdInput)
