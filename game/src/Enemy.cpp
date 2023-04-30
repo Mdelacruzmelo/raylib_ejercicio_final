@@ -89,8 +89,21 @@ void Enemy::Play()
 				explosionRadius,
 				Fade(RED, explosionOpacity)
 			);
+
+			if (destroyTextures) {
+
+				textureDestroyCounter += 1;
+
+				if (textureDestroyCounter % 4 == 0)
+					textureDestroyIndex++;
+
+				if (textureDestroyIndex < destroyTextureLength)
+					Draw(destroyTextures[textureDestroyIndex]);
+
+			}
 		}
 		else destroyed = true;
+
 
 	}
 	else if (destroyed) Restart();
@@ -126,6 +139,8 @@ void Enemy::SetRandomPosition()
 void Enemy::Restart()
 {
 	pos = initialPos;
+	textureCounter = 0;
+	textureDestroyCounter = 0;
 	destroyed = false;
 	isExploding = false;
 	alive = true;
@@ -133,6 +148,7 @@ void Enemy::Restart()
 	explosionOpacity = 1;
 	explosionRadius = size / 1.5f;
 	SetRandomPosition();
+	textureDestroyIndex = 0;
 }
 
 void Enemy::Explode()
@@ -157,9 +173,19 @@ void Enemy::SetTexturesLength(int textureLengthInput)
 	textureLength = textureLengthInput;
 }
 
+void Enemy::SetDestroyTexturesLength(int textureLengthInput)
+{
+	destroyTextureLength = textureLengthInput;
+}
+
 void Enemy::SetTextures(Texture2D* texturesInput)
 {
 	textures = texturesInput;
+}
+
+void Enemy::SetDestroyTextures(Texture2D* destroyTexturesInput)
+{
+	destroyTextures = destroyTexturesInput;
 }
 
 bool Enemy::GetIsDestroyed()

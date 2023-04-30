@@ -16,19 +16,17 @@ void Character::Draw(Texture2D textureInput) {
 	rec = Rectangle{ pos.x , pos.y, size, size };
 	collisionRec = Rectangle{ pos.x - radiusCollision, pos.y - radiusCollision, sizeCollision, sizeCollision };
 
-	if (alive) {
+	DrawRectangleRec(collisionRec, Fade(WHITE, .0f));
+	// DrawRectanglePro(rec, Vector2{ radius, radius }, angle, colorInput);
 
-		DrawRectangleRec(collisionRec, Fade(WHITE, .0f));
-		// DrawRectanglePro(rec, Vector2{ radius, radius }, angle, colorInput);
+	Rectangle source = { 0.f, 0.f, copSize, copSize };
+	Rectangle dest = { pos.x, pos.y, copSize, copSize };
+	DrawTexturePro(textureInput, source, dest, Vector2{ (float)copSize / 2.f, (float)copSize / 2.f }, angle, WHITE);
 
-		Rectangle source = { 0.f, 0.f, copSize, copSize };
-		Rectangle dest = { pos.x, pos.y, copSize, copSize };
-		DrawTexturePro(textureInput, source, dest, Vector2{ (float)copSize / 2.f, (float)copSize / 2.f }, angle, WHITE);
+	if (isVelocityTempIncreased) DrawVelocityTempBar();
 
-		if (isVelocityTempIncreased) DrawVelocityTempBar();
+	if (showingNoSpaceMessage) DrawMessageNoSpace();
 
-		if (showingNoSpaceMessage) DrawMessageNoSpace();
-	}
 }
 
 void Character::DrawMessageNoSpace() {

@@ -57,6 +57,8 @@ private:
 	bool keySetted = false;
 	int enemyTexturesLength = 4;
 	Texture2D* enemyTextures = new Texture2D[enemyTexturesLength];
+	int enemyDestroyTexturesLength = 5;
+	Texture2D* enemyDestroyTextures = new Texture2D[enemyDestroyTexturesLength];
 
 	int dificulty = 0;
 	int newDificulty = 0;

@@ -9,7 +9,6 @@ Interactable::Interactable(Vector2 posInput, E_ItemType typeInput, Character* ch
 	character = characterInput;
 	texture = textureInput;
 	rec = Rectangle{ pos.x,pos.y,textureSize.x, textureSize.y };
-	center = Vector2{ (float)textureSize.x / 2.f, (float)textureSize.y / 2.f };
 }
 
 void Interactable::Restart()
@@ -20,16 +19,8 @@ void Interactable::Restart()
 
 void Interactable::Draw()
 {
-	if (type == I_KEY) {
-
-		Rectangle source = { 0.f, 0.f, textureSize.x, textureSize.y };
-		Rectangle dest = { pos.x, pos.y, textureSize.x, textureSize.y };
-		DrawTexturePro(texture, source, dest, center, 0.f, WHITE);
-
-	}
-
+	DrawTextureEx(texture, pos, 0.f, 0.5f, WHITE);
 	DetectGrab();
-
 }
 
 

@@ -18,7 +18,9 @@ public:
 	bool GetIsExploding();
 	void ReinitializeExplode();
 	void SetTexturesLength(int textureLengthInput);
+	void SetDestroyTexturesLength(int textureLengthInput);
 	void SetTextures(Texture2D* texturesInput);
+	void SetDestroyTextures(Texture2D* texturesInput);
 	bool GetIsDestroyed();
 
 private:
@@ -30,8 +32,12 @@ private:
 	float explosionOpacity = 1;
 
 	int textureLength;
+	int destroyTextureLength;
+	int textureDestroyIndex = 0;
 	Texture2D* textures;
+	Texture2D* destroyTextures;
 	int textureCounter = 0;
+	int textureDestroyCounter = 0;
 
 	Interactable* key = nullptr;
 	Character* character = nullptr;
