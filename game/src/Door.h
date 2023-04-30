@@ -41,7 +41,4 @@ private:
 	int counterMessageLocked = 0;
 	Character* character;
 
-	Texture2D door;
-	Texture2D doorLocked;
-
 };

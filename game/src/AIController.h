@@ -70,5 +70,5 @@ private:
 	Sound* enemyDieSounds = new Sound[enemyDieSoundsQuantity];
 
 	int enemyBloodSoundsQuantity = 3;
-	Sound* enemyBloodSounds = new Sound[enemyBloodSoundsQuantity];;
+	Sound* enemyBloodSounds = new Sound[enemyBloodSoundsQuantity];
 };

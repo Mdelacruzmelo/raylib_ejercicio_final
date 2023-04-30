@@ -12,6 +12,7 @@ public:
 	void Draw(Texture2D textureInput);
 	void DrawVelocityTempBar();
 	bool GetIsAlive();
+	void SetIsAlive(bool isAliveInput);
 	void Die();
 	void ReinitializeAttackCircles();
 
@@ -99,6 +100,8 @@ public:
 	bool IsInventorySpaceAvailable();
 	void UseKeyInventory();
 	bool HasKey();
+	bool GetIsUsingKey();
+	void SetIsUsingKey(bool isUsing);
 
 	float GetAttackCircleRadius1();
 	float GetAttackCircleRadius2();
@@ -187,6 +190,8 @@ protected:
 
 	int inventorySize = 5;
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
+
+	bool isUsingKey = false;
 
 	char* loadedDoorsData;
 	int loadedEnvironment = 0;

@@ -7,11 +7,12 @@
 #include "InventoryItemsUtils.h"
 #include "Utils.h"
 #include "SaveData.h"
+#include "AIController.h"
 
 class PlayerController
 {
 public:
-	PlayerController(Character* characterInput, HUD* hudInput);
+	PlayerController(Character* characterInput, HUD* hudInput, AIController* aiControllerInput);
 
 	void Play();
 	void SetTypeHUD(E_TypeHUD typeHUDInput);
@@ -33,6 +34,7 @@ public:
 private:
 
 	SaveData* data;
+	AIController* aiController;
 	Vector2 movement = { 0.f, 0.f };
 	Vector2 mousePosition = { 0.f, 0.f };
 	float cursorSize = 50.f;
@@ -41,7 +43,7 @@ private:
 
 	Character* character = nullptr;
 	HUD* hud = nullptr;
-	E_TypeHUD typeHUD = H_PAUSE;
+	E_TypeHUD typeHUD = H_MAIN_MENU;
 
 	bool checkingSlots = true;
 	int slotsQuantity = 4;
@@ -62,5 +64,8 @@ private:
 	Sound* characterSounds = new Sound[characterSoundsQuantity];
 	int characterShootSoundsQuantity = 4;
 	Sound* characterShootSounds = new Sound[characterShootSoundsQuantity];
+
+	float loadingTime = 0.f;
+	float LOADING_MAX_SECONDS = 14.f;
 
 };

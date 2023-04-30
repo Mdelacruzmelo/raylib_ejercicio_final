@@ -1,10 +1,11 @@
 #include "PlayerController.h"
 #include <string>
 
-PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
+PlayerController::PlayerController(Character* characterInput, HUD* hudInput, AIController* aiControllerInput)
 {
 	character = characterInput;
 	hud = hudInput;
+	aiController = aiControllerInput;
 
 	// Sound steps 
 
@@ -19,6 +20,8 @@ PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 		characterShootSounds[i] = LoadSound(TextFormat("resources/sounds/shot%d.wav", i + 1));
 
 	character->SetShootSounds(characterShootSounds, characterShootSoundsQuantity);
+
+	hud->SetLoadingTimes(loadingTime, LOADING_MAX_SECONDS);
 }
 
 void PlayerController::Play()
@@ -36,6 +39,21 @@ void PlayerController::Play()
 
 		switch (typeHUD)
 		{
+		case H_LOADING_GAME:
+
+			loadingTime += GetFrameTime();
+
+			if (hud->ButtonPressed() == GO_SKIP || loadingTime >= LOADING_MAX_SECONDS) {
+
+				loadingTime = 0.f;
+				typeHUD = H_GAME;
+
+			}
+
+			hud->RestartMainMenuButtons();
+
+			break;
+
 		case H_GAME:
 
 			SetMouseCursor(3);
@@ -109,7 +127,13 @@ void PlayerController::Play()
 
 			// Draw character
 
-			if (character->GetIsAlive()) character->Draw();
+			if (character->GetIsAlive()) {
+
+				character->Draw();
+
+				if (character->GetLevel() > 5) typeHUD = H_WIN_GAME; // Ganar el juego
+
+			}
 			else typeHUD = H_LOOSE_GAME;
 
 			// Movimiento
@@ -197,6 +221,9 @@ void PlayerController::Play()
 					break;
 
 				case I_KEY:
+
+					character->SetIsUsingKey(true);
+					character->SetIsInteracting(true);
 					break;
 
 				default:
@@ -210,7 +237,7 @@ void PlayerController::Play()
 		case H_PAUSE:
 
 			if (hud->ButtonPressed() == RESUME) typeHUD = H_GAME;
-			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_HABILITIES;
+			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_ABILITIES;
 			else if (hud->ButtonPressed() == SAVE) typeHUD = H_SAVE_DATA;
 			else if (hud->ButtonPressed() == LOAD) typeHUD = H_LOAD_DATA;
 			else if (hud->ButtonPressed() == QUIT) typeHUD = H_MAIN_MENU;
@@ -219,7 +246,7 @@ void PlayerController::Play()
 
 			break;
 
-		case H_HABILITIES:
+		case H_ABILITIES:
 		case H_INIT_HABILITIES:
 
 			if (hud->ButtonPressed()) {
@@ -232,7 +259,15 @@ void PlayerController::Play()
 				}
 
 				if (hud->ButtonPressed() == GO_FORWARD) {
-					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_GAME;
+
+					if (typeHUD == H_INIT_HABILITIES) {
+
+						hud->SetLoadingTimes(loadingTime, LOADING_MAX_SECONDS);
+						typeHUD = H_LOADING_GAME;
+						character->SetIsAlive(true);
+						aiController->ClearAll();
+
+					}
 				}
 
 				if (
@@ -392,11 +427,13 @@ void PlayerController::Play()
 			break;
 
 		case H_MAIN_MENU:
-
-			character->SetInitialData();
-			character->SetIsInNewGame(true); // Escuchado por EnvironmentHandler
+		case H_LOOSE_GAME:
+		case H_WIN_GAME:
 
 			if (hud->ButtonPressed()) {
+
+				character->SetInitialData();
+				character->SetIsInNewGame(true); // Escuchado por EnvironmentHandler
 
 				if (hud->ButtonPressed() == NEW) typeHUD = H_INIT_HABILITIES;
 				else if (hud->ButtonPressed() == LOAD) typeHUD = H_INIT_LOAD_DATA;
@@ -406,12 +443,6 @@ void PlayerController::Play()
 
 			}
 
-			break;
-
-		case H_LOOSE_GAME:
-			break;
-
-		case H_WIN_GAME:
 			break;
 
 		default:

@@ -10,14 +10,14 @@ Door::Door(E_Side doorSideInput, char* doorIdInput)
 {
 	doorSide = doorSideInput;
 	doorId = doorIdInput;
-
-	door = LoadTexture("resources/textures/door.png");
-	doorLocked = LoadTexture("resources/textures/door_locked.png");
 }
 
 void Door::Draw(Character* characterInput)
 {
 	character = characterInput;
+
+	static Texture2D door = LoadTexture("resources/textures/door.png");
+	static Texture2D doorLocked = LoadTexture("resources/textures/door_locked.png");
 
 	Rectangle source = { 0.f, 0.f, width, height };
 	Rectangle dest = { pos.x + width / 2.f, pos.y + height / 2.f, width, height };
@@ -56,12 +56,14 @@ void Door::Draw(Character* characterInput)
 
 		if (locked) {
 
-			if (character->HasKey()) {
+			if (character->HasKey() || character->GetIsUsingKey()) {
 				character->UseKeyInventory();
 				Unlock();
 
 				static Sound openedSound = LoadSound("resources/sounds/door_opened.wav");
 				PlaySound(openedSound);
+
+				character->SetIsUsingKey(false);
 
 			}
 			else {

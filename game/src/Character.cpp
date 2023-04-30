@@ -82,6 +82,11 @@ bool Character::GetIsAlive()
 	return alive;
 }
 
+void Character::SetIsAlive(bool isAliveInput)
+{
+	alive = isAliveInput;
+}
+
 void Character::Die()
 {
 	alive = false;
@@ -110,7 +115,7 @@ void Character::Move(Vector2 movement)
 			if (soundTimer > 20) {
 
 				int randomSoundIndex = GetRandomValue(0, soundsQuantity - 1);
-				SetSoundVolume(sounds[randomSoundIndex], GetSoundvolume());
+				SetSoundVolume(sounds[randomSoundIndex], 0.1f);
 				PlaySound(sounds[randomSoundIndex]);
 				soundTimer = 0;
 
@@ -538,6 +543,16 @@ bool Character::HasKey()
 	}
 
 	return hasKey;
+}
+
+bool Character::GetIsUsingKey()
+{
+	return isUsingKey;
+}
+
+void Character::SetIsUsingKey(bool isUsing)
+{
+	isUsingKey = isUsing;
 }
 
 void Character::ShowNoInventorySpace()

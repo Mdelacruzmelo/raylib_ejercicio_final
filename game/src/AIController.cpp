@@ -81,15 +81,15 @@ void AIController::SpawnEnemies()
 		) {
 
 
-		if (dificulty == 0) enemyQuantitySpawned = 1;
-		else enemyQuantitySpawned += 1;
+		if (dificulty != 0) enemyQuantitySpawned += 1;
 		dificulty = newDificulty;
 
 	}
 
-	for (int i = 0; i < enemyQuantitySpawned; i++) {
+	for (int i = 0; i < enemyQuantity; i++) {
 
-		enemies[i]->Play();
+		if (i < enemyQuantitySpawned) enemies[i]->Play();
+		else enemies[i]->Restart();
 
 	}
 }
@@ -195,11 +195,6 @@ void AIController::InitConsumables()
 {
 	pillHealthTexture = LoadTexture("resources/textures/pill_health.png");
 	pillSpeedTexture = LoadTexture("resources/textures/pill_speed.png");
-
-	for (int i = 0; i < interactableQuantity; i++) {
-		interactables[i] = Interactable(Vector2{ -100.f,-100.f }, I_KEY, character, keyTexture);
-	}
-
 }
 
 void AIController::SpawnInteractables()
@@ -235,8 +230,7 @@ void AIController::SpawnInteractables()
 
 	for (int i = 0; i < interactableSpawnedQuantity; i++) {
 
-		if (interactables[i].GetIsGrabbed()) interactables[i].Restart();
-		else interactables[i].Draw();
+		if (!interactables[i].GetIsGrabbed()) interactables[i].Draw();
 
 	}
 

@@ -19,10 +19,8 @@ void Interactable::Restart()
 
 void Interactable::Draw()
 {
-	if (!grabbed) {
-		DrawTextureEx(texture, pos, 0.f, 0.5f, WHITE);
-		DetectGrab();
-	}
+	DrawTextureEx(texture, pos, 0.f, 0.5f, WHITE);
+	DetectGrab();
 }
 
 
