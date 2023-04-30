@@ -790,6 +790,7 @@ void HUD::DrawLoadingGameWidget()
 	DrawText("Tecla espacio para interactuar", 150, 190, 24, WHITE);
 	DrawText("Coge pildoras y usalas con los numeros del 1 - 5 del inventario", 150, 230, 24, WHITE);
 	DrawText("No mueras hasta llegar al nivel 5", 150, 490, 24, GREEN);
+	DrawText("(Menu de pausa con la telca E)", 150, 530, 16, WHITE);
 
 	Rectangle rectStart = Rectangle{
 		(float)GetScreenWidth() - 200.f,

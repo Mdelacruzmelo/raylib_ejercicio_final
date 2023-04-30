@@ -367,11 +367,8 @@ void PlayerController::Play()
 					else if (IsSlotOverwrite(hud->ButtonPressed())) {
 
 						SaveGame(hud->ButtonPressed());
-						// SaveSlotGame(hud->ButtonPressed());
-						checkingSlots = true;
 						hud->Notify("Partida guardada");
 						hud->CloseConfirmModal();
-
 						typeHUD = H_PAUSE;
 
 					}
@@ -400,7 +397,6 @@ void PlayerController::Play()
 
 							SaveGame(hud->ButtonPressed());
 							SaveSlotGame(hud->ButtonPressed());
-							checkingSlots = true;
 							hud->Notify("Partida guardada");
 
 							typeHUD = H_PAUSE;
@@ -580,7 +576,7 @@ void PlayerController::SetSlotWithSavedData(int slot, SavedData data)
 		std::string(Converter::IntToChar(data.inventory5)) + std::string("\n") +
 		std::string(Converter::IntToChar(data.environment)) + std::string("\n") +
 		std::string(data.doorsData) + std::string("\n") +
-		std::string(Converter::FloatToChar(data.locationy)) + std::string("\n") +
+		std::string(Converter::FloatToChar(data.locationx)) + std::string("\n") +
 		std::string(Converter::FloatToChar(data.locationy)) + std::string("\n") +
 		std::string(Converter::IntToChar(data.abPoints));
 
@@ -718,12 +714,11 @@ void PlayerController::SaveSlotGame(int slot)
 		if (sSlot.count > 0) {
 
 			int newLength = sSlot.count + 2; // + el numero y la coma
-			char* dataToSave = new char[newLength];
 
 			char* slotsData = LoadFileText("resources/savings/slots.txt");
 
 			std::string result = std::string(slotsData) + std::string(",") + std::string(Converter::IntToChar(slot));
-			char* charResult = new char[strlen(result.c_str()) + 1];
+			char* charResult = new char[strlen(result.c_str())];
 			strcpy(charResult, result.c_str());
 
 			SaveFileText("resources/savings/slots.txt", charResult);

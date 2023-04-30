@@ -667,7 +667,7 @@ bool Character::GetIsLoadingData()
 
 Vector2 Character::GetPosition()
 {
-	return pos;
+	return Vector2{ rec.x, rec.y };
 }
 
 void Character::SetSounds(Sound* soundsInput, int soundsQuantityInput)
