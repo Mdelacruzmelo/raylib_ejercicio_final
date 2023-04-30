@@ -211,7 +211,7 @@ void EnvironmentHandler::InitializeMap() // 1 Time executed, before BeginDrawing
 
 	// Doors locked
 
-	env1->GetDoor("door_A")->Lock();
+	// (float)env1->GetDoor("door_A")->Lock();
 
 }
 

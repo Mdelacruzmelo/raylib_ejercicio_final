@@ -7,23 +7,23 @@ Character::Character()
 
 void Character::Draw() {
 
-	Draw(WHITE);
+	Draw(texture);
 
 }
 
-void Character::Draw(Color colorInput) {
+void Character::Draw(Texture2D textureInput) {
 
 	rec = Rectangle{ pos.x , pos.y, size, size };
 	collisionRec = Rectangle{ pos.x - radiusCollision, pos.y - radiusCollision, sizeCollision, sizeCollision };
 
 	if (alive) {
 
-		DrawRectangleRec(collisionRec, Fade(colorInput, .0f));
+		DrawRectangleRec(collisionRec, Fade(WHITE, .0f));
 		// DrawRectanglePro(rec, Vector2{ radius, radius }, angle, colorInput);
 
 		Rectangle source = { 0.f, 0.f, copSize, copSize };
 		Rectangle dest = { pos.x, pos.y, copSize, copSize };
-		DrawTexturePro(texture, source, dest, Vector2{ 40.f,40.f }, angle, WHITE);
+		DrawTexturePro(textureInput, source, dest, Vector2{ (float)copSize / 2.f, (float)copSize / 2.f }, angle, WHITE);
 
 		if (isVelocityTempIncreased) DrawVelocityTempBar();
 

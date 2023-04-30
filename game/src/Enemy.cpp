@@ -2,6 +2,7 @@
 
 Enemy::Enemy()
 {
+	texture = LoadTexture("resources/textures/police.png");
 }
 
 void Enemy::SetTarget(Character* characterInput)
@@ -13,7 +14,7 @@ void Enemy::Play()
 {
 	if (GetIsAlive()) {
 
-		Draw(RED);
+		Draw(texture);
 
 		Rectangle currentRec = Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
 

@@ -2,16 +2,17 @@
 
 Door::Door()
 {
-	// Por defecto la primera puerta a la izquierda si se construye sin parámetros
-	// Cosa que posiblemente no ocurra, vamos a ver donde nos lleva el código
-
 	doorSide = SIDE_LEFT;
+	doorId = "door_A";
 }
 
 Door::Door(E_Side doorSideInput, char* doorIdInput)
 {
 	doorSide = doorSideInput;
 	doorId = doorIdInput;
+
+	door = LoadTexture("resources/textures/door.png");
+	doorLocked = LoadTexture("resources/textures/door_locked.png");
 }
 
 void Door::Draw(Character* characterInput)
@@ -21,9 +22,13 @@ void Door::Draw(Character* characterInput)
 	Color color = ORANGE;
 	if (locked) color = RED;
 
-	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, color);
+	// DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, color);
 
-	// Si se puede, enseñar mensaje de que la puerta está bloqueada
+	Rectangle source = { 0.f, 0.f, width, height };
+	Rectangle dest = { pos.x + width / 2.f, pos.y + height / 2.f, width, height };
+
+	if (locked) DrawTexturePro(doorLocked, source, dest, Vector2{ width / 2.f,height / 2.f }, rotation, WHITE);
+	else DrawTexturePro(door, source, dest, Vector2{ width / 2.f, height / 2.f }, rotation, WHITE);
 
 	if (showMessageLocked) {
 
@@ -50,7 +55,7 @@ void Door::Draw(Character* characterInput)
 	// Y detectar si el jugador está interactuando con la puerta
 
 	if (
-		CheckCollisionRecs(character->GetRect(), GetRect()) &&
+		CheckCollisionRecs(character->GetCollisionRect(), GetRect()) &&
 		character->GetIsInteracting()
 		) {
 
@@ -153,4 +158,9 @@ Vector2 Door::GetPosition()
 void Door::SetPosition(Vector2 newPos)
 {
 	pos = newPos;
+}
+
+void Door::SetRotation(float newRot)
+{
+	rotation = newRot;
 }

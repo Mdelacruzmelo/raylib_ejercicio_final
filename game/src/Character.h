@@ -9,7 +9,7 @@ public:
 	Character();
 
 	void Draw();
-	void Draw(Color colorInput);
+	void Draw(Texture2D textureInput);
 	void DrawVelocityTempBar();
 	bool GetIsAlive();
 	void Die();
@@ -138,7 +138,7 @@ protected:
 
 	float size = 40.f;
 	float radius = size / 2;
-	float sizeCollision = size * 1.5;
+	float sizeCollision = size * 2;
 	float radiusCollision = sizeCollision / 2;
 
 	float initialAttackDistance = 5.f;

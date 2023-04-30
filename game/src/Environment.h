@@ -43,10 +43,10 @@ private:
 	int rightDoorsQuantity = 0;
 	int leftDoorsQuantity = 0;
 
-	Door* topDoors = new Door[0];
-	Door* bottomDoors = new Door[0];
-	Door* rightDoors = new Door[0];
-	Door* leftDoors = new Door[0];
+	Door* topDoors;
+	Door* bottomDoors;
+	Door* rightDoors;
+	Door* leftDoors;
 
 	char* environmentId;
 };

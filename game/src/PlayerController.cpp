@@ -93,7 +93,6 @@ void PlayerController::Play()
 			}
 			else movement.y = 0;
 
-
 			// Draw character
 
 			if (character->GetIsAlive()) character->Draw();
