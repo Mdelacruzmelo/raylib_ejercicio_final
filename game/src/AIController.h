@@ -17,6 +17,7 @@ public:
 
 	void SpawnConsumable(E_ItemType typeInput);
 	void SpawnConsumables();
+	void InitConsumables();
 
 	void InitInteractables();
 	void SpawnInteractables();
@@ -43,6 +44,8 @@ private:
 	int consumableSpeedCounter = 0;
 	int consumableQuantity = 0;
 	Consumable* consumables = new Consumable[consumableQuantity];
+	Texture2D pillHealthTexture;
+	Texture2D pillSpeedTexture;
 
 	int necessaryKeys = 1;
 	int interactableTimer = 0;

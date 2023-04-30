@@ -5,6 +5,7 @@ AIController::AIController(Character* characterInput)
 	character = characterInput;
 	InitEnemies();
 	InitInteractables();
+	InitConsumables();
 }
 
 
@@ -40,7 +41,6 @@ void AIController::InitEnemies()
 
 	}
 }
-
 
 void AIController::SpawnEnemies()
 {
@@ -83,8 +83,10 @@ void AIController::DeleteEnemies()
 	enemyQuantitySpawned = 0;
 }
 
-void AIController::SpawnConsumable(E_ItemType typeInput)
+void AIController::SpawnConsumable(E_ItemType typeInput
+)
 {
+
 	if (character != nullptr) {
 
 		int newQuantity = consumableQuantity + 1;
@@ -110,7 +112,8 @@ void AIController::SpawnConsumable(E_ItemType typeInput)
 				newConsumables[i] = Consumable(
 					typeInput,
 					character,
-					Vector2{ spawmLocX, spawmLocY }
+					Vector2{ spawmLocX, spawmLocY },
+					typeInput == I_POTION_HEALTH ? pillHealthTexture : pillSpeedTexture
 				);
 
 			}
@@ -127,31 +130,27 @@ void AIController::SpawnConsumables()
 {
 	consumableHealthCounter += 1;
 
-	if (consumableHealthCounter >= GetRandomValue(240, 360)) {
+	if (consumableHealthCounter >= GetRandomValue(40, 60)) {
 
 		// Si el personaje tiene menos de la mitad de vida
-		// Y además no hemos spawneado otra pocion
+		// Y además no hemos spawneado otra pildora
 
-		if (character->GetNormalizedHealth() < 0.5f && consumableQuantity == 0) {
+		if (character->GetNormalizedHealth() < 0.3f && consumableQuantity == 0) {
 
 			SpawnConsumable(I_POTION_HEALTH);
 			consumableHealthCounter = 0;
 
 		}
-	}
 
-	consumableSpeedCounter += 1;
+		// Si no hemos spawneado otra pildora, 
+		// spawnea pildora de velocidad o salud aleatoriamente
 
-	if (consumableSpeedCounter >= GetRandomValue(640, 1060)) {
+		else if (consumableQuantity == 0) {
 
-		// Si hay más de 10 enemigos
-		// Y además no hemos spawneado otra pocion
+			int randomNumber = GetRandomValue(0, 1);
+			SpawnConsumable(randomNumber == 1 ? I_POTION_HEALTH : I_POTION_SPEED);
 
-		if (enemyQuantity > 10 && consumableQuantity == 0) {
-
-			SpawnConsumable(I_POTION_SPEED);
-			consumableSpeedCounter = 0;
-
+			consumableHealthCounter = 0;
 		}
 	}
 
@@ -167,6 +166,17 @@ void AIController::SpawnConsumables()
 void AIController::InitInteractables()
 {
 	keyTexture = LoadTexture("resources/textures/key.png");
+
+	for (int i = 0; i < interactableQuantity; i++) {
+		interactables[i] = Interactable(Vector2{ -100.f,-100.f }, I_KEY, character, keyTexture);
+	}
+
+}
+
+void AIController::InitConsumables()
+{
+	pillHealthTexture = LoadTexture("resources/textures/pill_health.png");
+	pillSpeedTexture = LoadTexture("resources/textures/pill_speed.png");
 
 	for (int i = 0; i < interactableQuantity; i++) {
 		interactables[i] = Interactable(Vector2{ -100.f,-100.f }, I_KEY, character, keyTexture);
