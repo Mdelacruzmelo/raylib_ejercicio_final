@@ -50,6 +50,7 @@ public:
 	void SetSlots(bool* slotsInput);
 	void SetSlotsQuantity(int slotsQuantityInput);
 	bool SlotAvailable();
+	void DrawBloodDamage();
 
 private:
 
@@ -81,4 +82,6 @@ private:
 
 	bool* slots;
 	int slotsQuantity = 0;
+	int hurtTimer = 0;
+	float hurtOpacity = 0.f;
 };

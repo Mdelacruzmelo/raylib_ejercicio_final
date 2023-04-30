@@ -5,6 +5,20 @@ PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
 {
 	character = characterInput;
 	hud = hudInput;
+
+	// Sound steps 
+
+	for (int i = 0; i < characterSoundsQuantity; i++)
+		characterSounds[i] = LoadSound(TextFormat("resources/sounds/footstep%d.wav", i + 1));
+
+	character->SetSounds(characterSounds, characterSoundsQuantity);
+
+	// Sound shoot
+
+	for (int i = 0; i < characterShootSoundsQuantity; i++)
+		characterShootSounds[i] = LoadSound(TextFormat("resources/sounds/shot%d.wav", i + 1));
+
+	character->SetShootSounds(characterShootSounds, characterShootSoundsQuantity);
 }
 
 void PlayerController::Play()

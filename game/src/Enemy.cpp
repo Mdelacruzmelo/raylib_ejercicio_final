@@ -16,6 +16,7 @@ void Enemy::Play()
 
 		if (textures) {
 
+			soundVolume = 0.2f;
 			textureCounter += 1;
 			static int textureIndex = 0;
 
@@ -42,32 +43,31 @@ void Enemy::Play()
 
 				Move(Vector2{ movX ,movY });
 
-				bool collision = CheckCollisionRecs(currentRec, character->GetRect());
-
-				if (collision) {
+				if (CheckCollisionRecs(currentRec, character->GetRect())) {
 
 					arrivedToLoc = true;
 					alive = false;
 					Explode();
 					character->ApplyDamage(10.f);
-
+					character->PlayHurtSound();
+					character->SetIsJustHurt(true);
 				}
 
 			}
 
-			bool attackCollision1 = CheckCollisionCircleRec(
+			bool bullet1Collision = CheckCollisionCircleRec(
 				character->GetAttackCircleCenter1(),
 				character->GetAttackCircleRadius1(),
 				currentRec
 			);
 
-			bool attackCollision2 = CheckCollisionCircleRec(
+			bool bullet2Collision = CheckCollisionCircleRec(
 				character->GetAttackCircleCenter2(),
 				character->GetAttackCircleRadius2(),
 				currentRec
 			);
 
-			if (attackCollision1 || attackCollision2) {
+			if (bullet1Collision || bullet2Collision) {
 				Explode();
 				character->IncreaseExperience();
 				alive = false;
@@ -155,6 +155,22 @@ void Enemy::Explode()
 {
 	isExploding = true;
 	alive = false;
+
+	if (dieSounds) {
+
+		int randomSoundIndex = GetRandomValue(0, dieSoundsQuantity - 1);
+		SetSoundVolume(dieSounds[randomSoundIndex], 0.1f);
+		PlaySound(dieSounds[randomSoundIndex]);
+
+	}
+
+	if (bloodSounds) {
+
+		int randomBloodSoundIndex = GetRandomValue(0, bloodSoundsQuantity - 1);
+		SetSoundVolume(bloodSounds[randomBloodSoundIndex], 1.f);
+		PlaySound(bloodSounds[randomBloodSoundIndex]);
+	}
+
 }
 
 bool Enemy::GetIsExploding()
@@ -168,27 +184,25 @@ void Enemy::ReinitializeExplode()
 	explosionOpacity = 1;
 }
 
-void Enemy::SetTexturesLength(int textureLengthInput)
+void Enemy::SetTextures(Texture2D* texturesInput, int textureLengthInput)
 {
+	textures = texturesInput;
 	textureLength = textureLengthInput;
 }
 
-void Enemy::SetDestroyTexturesLength(int textureLengthInput)
-{
-	destroyTextureLength = textureLengthInput;
-}
-
-void Enemy::SetTextures(Texture2D* texturesInput)
-{
-	textures = texturesInput;
-}
-
-void Enemy::SetDestroyTextures(Texture2D* destroyTexturesInput)
+void Enemy::SetDestroyTextures(Texture2D* destroyTexturesInput, int textureLengthInput)
 {
 	destroyTextures = destroyTexturesInput;
+	destroyTextureLength = textureLengthInput;
 }
 
 bool Enemy::GetIsDestroyed()
 {
 	return destroyed;
+}
+
+void Enemy::SetBloodSounds(Sound* soundsInput, int soundsInputQuantity)
+{
+	bloodSounds = soundsInput;
+	bloodSoundsQuantity = soundsInputQuantity;
 }

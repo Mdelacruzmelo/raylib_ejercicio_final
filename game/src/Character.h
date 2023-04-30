@@ -105,6 +105,10 @@ public:
 	Vector2 GetAttackCircleCenter1();
 	Vector2 GetAttackCircleCenter2();
 
+	void SetSounds(Sound* soundsInput, int soundsQuantityInput);
+	void SetDieSounds(Sound* soundsInput, int soundsQuantityInput);
+	void SetShootSounds(Sound* soundsInput, int soundsQuantityInput);
+
 	void SetData(SavedData data);
 	void SetInitialData();
 
@@ -117,6 +121,12 @@ public:
 
 	bool GetIsInNewGame();
 	void SetIsInNewGame(bool isNewGameInput);
+
+	float GetSoundvolume();
+	void PlayHurtSound();
+
+	bool GetIsJustHurt();
+	void SetIsJustHurt(bool hurtInput);
 
 protected:
 
@@ -202,7 +212,23 @@ protected:
 	bool updatingSlots = false;
 	bool inNewGame = false;
 
+	bool justHurt = false;
+
 	float angle = 0.f;
 	Texture2D texture;
 	int copSize = 80;
+
+	// Sounds 
+
+	int soundTimer = 0;
+
+	int soundsQuantity;
+	Sound* sounds;
+	float soundVolume = 0.5f;
+
+	int dieSoundsQuantity;
+	Sound* dieSounds;
+
+	int shootSoundsQuantity;
+	Sound* shootSounds;
 };

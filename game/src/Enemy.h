@@ -17,11 +17,10 @@ public:
 	void Explode();
 	bool GetIsExploding();
 	void ReinitializeExplode();
-	void SetTexturesLength(int textureLengthInput);
-	void SetDestroyTexturesLength(int textureLengthInput);
-	void SetTextures(Texture2D* texturesInput);
-	void SetDestroyTextures(Texture2D* texturesInput);
+	void SetTextures(Texture2D* texturesInput, int lengthInput);
+	void SetDestroyTextures(Texture2D* texturesInput, int lengthInput);
 	bool GetIsDestroyed();
+	void SetBloodSounds(Sound* soundsInput, int soundsInputQuantity);
 
 private:
 
@@ -30,6 +29,7 @@ private:
 	bool destroyed = false;
 	float explosionRadius = size / 1.5f;
 	float explosionOpacity = 1;
+	float soundVolume = 0.4;
 
 	int textureLength;
 	int destroyTextureLength;
@@ -43,4 +43,6 @@ private:
 	Character* character = nullptr;
 	Vector2 targetLoc = Vector2{ 0.f, 0.f };
 
+	Sound* bloodSounds;
+	int bloodSoundsQuantity;
 };

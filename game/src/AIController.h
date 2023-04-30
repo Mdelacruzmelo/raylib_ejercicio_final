@@ -64,5 +64,11 @@ private:
 	int newDificulty = 0;
 	int dificultyCounter = 0;
 
+	int enemySoundsQuantity = 3;
+	Sound* enemySounds = new Sound[enemySoundsQuantity];
+	int enemyDieSoundsQuantity = 3;
+	Sound* enemyDieSounds = new Sound[enemyDieSoundsQuantity];
 
+	int enemyBloodSoundsQuantity = 3;
+	Sound* enemyBloodSounds = new Sound[enemyBloodSoundsQuantity];;
 };

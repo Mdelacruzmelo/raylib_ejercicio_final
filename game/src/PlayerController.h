@@ -58,5 +58,9 @@ private:
 	int attackTimer = 0;
 	bool isAttackStarted = false;
 
+	int characterSoundsQuantity = 5;
+	Sound* characterSounds = new Sound[characterSoundsQuantity];
+	int characterShootSoundsQuantity = 4;
+	Sound* characterShootSounds = new Sound[characterShootSoundsQuantity];
 
 };

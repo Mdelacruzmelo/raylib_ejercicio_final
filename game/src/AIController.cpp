@@ -19,6 +19,18 @@ void AIController::InitEnemies()
 		enemyDestroyTextures[i] = LoadTexture(TextFormat("resources/textures/parasite_destroy%d.png", i + 1));
 	}
 
+	for (int i = 0; i < enemySoundsQuantity; i++) {
+		enemySounds[i] = LoadSound(TextFormat("resources/sounds/zombie%d.wav", i + 1));
+	}
+
+	for (int i = 0; i < enemyDieSoundsQuantity; i++) {
+		enemyDieSounds[i] = LoadSound(TextFormat("resources/sounds/zombie_die%d.wav", i + 1));
+	}
+
+	for (int i = 0; i < enemyBloodSoundsQuantity; i++) {
+		enemyBloodSounds[i] = LoadSound(TextFormat("resources/sounds/blood%d.wav", i + 1));
+	}
+
 	for (int i = 0; i < enemyQuantity; i++) {
 
 		enemies[i] = new Enemy();
@@ -40,10 +52,11 @@ void AIController::InitEnemies()
 		}
 
 		enemies[i]->SetPosition(Vector2{ posX, posY });
-		enemies[i]->SetTextures(enemyTextures);
-		enemies[i]->SetTexturesLength(enemyTexturesLength);
-		enemies[i]->SetDestroyTextures(enemyDestroyTextures);
-		enemies[i]->SetDestroyTexturesLength(enemyDestroyTexturesLength);
+		enemies[i]->SetTextures(enemyTextures, enemyTexturesLength);
+		enemies[i]->SetDestroyTextures(enemyDestroyTextures, enemyDestroyTexturesLength);
+		enemies[i]->SetSounds(enemySounds, enemySoundsQuantity);
+		enemies[i]->SetDieSounds(enemyDieSounds, enemyDieSoundsQuantity);
+		enemies[i]->SetBloodSounds(enemyBloodSounds, enemyBloodSoundsQuantity);
 
 	}
 }
@@ -92,7 +105,6 @@ void AIController::DeleteEnemies()
 void AIController::SpawnConsumable(E_ItemType typeInput
 )
 {
-
 	if (character != nullptr) {
 
 		int newQuantity = consumableQuantity + 1;

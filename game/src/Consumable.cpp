@@ -34,6 +34,10 @@ void Consumable::DetectGrab()
 				character->AddToInventory(type);
 				grabbed = true;
 
+				static Sound soundKeys = LoadSound("resources/sounds/pill1.wav");
+				SetSoundVolume(soundKeys, 0.5f);
+				PlaySound(soundKeys);
+
 			}
 			else {
 				character->ShowNoInventorySpace();

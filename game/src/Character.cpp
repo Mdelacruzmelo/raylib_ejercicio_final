@@ -99,18 +99,45 @@ void Character::Move(Vector2 movement)
 		pos.x + ((1 + velocity / 10) * acceleration * movement.x),
 		pos.y + ((1 + velocity / 10) * acceleration * movement.y)
 	};
+
+
+	if (movement.x != 0.f || movement.y != 0.f) {
+
+		if (sounds) {
+
+			soundTimer += 1;
+
+			if (soundTimer > 20) {
+
+				int randomSoundIndex = GetRandomValue(0, soundsQuantity - 1);
+				SetSoundVolume(sounds[randomSoundIndex], GetSoundvolume());
+				PlaySound(sounds[randomSoundIndex]);
+				soundTimer = 0;
+
+			}
+
+		}
+
+	}
 }
 
 void Character::Attack(Vector2 endVector) {
 
 	circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
 	circle1Radius = 20.f;
-
 	DrawCircle(circle1Center.x, circle1Center.y, circle1Radius, YELLOW);
 
 	circle2Center = { endVector.x, endVector.y };
 	circle2Radius = 30.f;
 	DrawCircle(circle2Center.x, circle2Center.y, circle2Radius, YELLOW);
+
+	if (shootSounds) {
+
+		int randomSoundIndex = GetRandomValue(0, shootSoundsQuantity - 1);
+		SetSoundVolume(shootSounds[randomSoundIndex], GetSoundvolume());
+		PlaySound(shootSounds[randomSoundIndex]);
+	}
+
 }
 
 float Character::GetAttack()
@@ -258,6 +285,24 @@ void Character::AddHealth(float healthAdded)
 	health += healthAdded;
 }
 
+void Character::PlayHurtSound()
+{
+	static Sound soundHurt = LoadSound("resources/sounds/hurt.wav");
+	PlaySound(soundHurt);
+
+	justHurt = true;
+}
+
+bool Character::GetIsJustHurt()
+{
+	return justHurt;
+}
+
+void Character::SetIsJustHurt(bool hurtInput)
+{
+	justHurt = hurtInput;
+}
+
 void Character::ApplyDamage(float damage)
 {
 	// Cuando incrementamos habilidad "defense", nos hacemos más resistentes
@@ -266,9 +311,7 @@ void Character::ApplyDamage(float damage)
 
 		float normalizedDefense = GetNormalizedDefense();
 		if (normalizedDefense >= 1.f) normalizedDefense = 0.9f;
-
 		float damageDismised = damage * normalizedDefense;
-
 		float restShield = shield - (damage - damageDismised);
 
 		if (restShield < 0) {
@@ -453,6 +496,13 @@ void Character::AddToInventory(E_ItemType item)
 
 void Character::RemoveFromInventory(int numPressed)
 {
+	static Sound soundUse = LoadSound("resources/sounds/pill2.wav");
+
+	if (inventory[numPressed - 1] == I_POTION_SPEED) soundUse = LoadSound("resources/sounds/speed.wav");
+
+	SetSoundVolume(soundUse, 0.5f);
+	PlaySound(soundUse);
+
 	inventory[numPressed - 1] = 0;
 }
 
@@ -580,6 +630,11 @@ void Character::SetIsInNewGame(bool isNewGameInput)
 	inNewGame = isNewGameInput;
 }
 
+float Character::GetSoundvolume()
+{
+	return soundVolume;
+}
+
 char* Character::GetLoadedDoorsData()
 {
 	return loadedDoorsData;
@@ -598,4 +653,23 @@ bool Character::GetIsLoadingData()
 Vector2 Character::GetPosition()
 {
 	return pos;
+}
+
+void Character::SetSounds(Sound* soundsInput, int soundsQuantityInput)
+{
+	sounds = soundsInput;
+	soundsQuantity = soundsQuantityInput;
+}
+
+
+void Character::SetDieSounds(Sound* soundsInput, int soundsQuantityInput)
+{
+	dieSounds = soundsInput;
+	dieSoundsQuantity = soundsQuantityInput;
+}
+
+void Character::SetShootSounds(Sound* soundsInput, int soundsQuantityInput)
+{
+	shootSounds = soundsInput;
+	shootSoundsQuantity = soundsQuantityInput;
 }

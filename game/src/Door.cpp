@@ -19,18 +19,13 @@ void Door::Draw(Character* characterInput)
 {
 	character = characterInput;
 
-	Color color = ORANGE;
-	if (locked) color = RED;
-
-	// DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, color);
-
 	Rectangle source = { 0.f, 0.f, width, height };
 	Rectangle dest = { pos.x + width / 2.f, pos.y + height / 2.f, width, height };
 
 	if (locked) DrawTexturePro(doorLocked, source, dest, Vector2{ width / 2.f,height / 2.f }, rotation, WHITE);
 	else DrawTexturePro(door, source, dest, Vector2{ width / 2.f, height / 2.f }, rotation, WHITE);
 
-	if (showMessageLocked) {
+	if (showMessageLocked && locked) {
 
 		counterMessageLocked += 1;
 
@@ -64,13 +59,26 @@ void Door::Draw(Character* characterInput)
 			if (character->HasKey()) {
 				character->UseKeyInventory();
 				Unlock();
+
+				static Sound openedSound = LoadSound("resources/sounds/door_opened.wav");
+				PlaySound(openedSound);
+
 			}
-			else showMessageLocked = true;
+			else {
+
+				showMessageLocked = true;
+				static Sound lockedSound = LoadSound("resources/sounds/door_locked.wav");
+				PlaySound(lockedSound);
+			}
 
 		}
 		else {
 			character->SetDoorTargetId(GetTargetId());
 			character->SetIsTransporting(true);
+
+			showMessageLocked = true;
+			static Sound passSound = LoadSound("resources/sounds/door_passed.wav");
+			PlaySound(passSound);
 		}
 	}
 }

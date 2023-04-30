@@ -637,9 +637,42 @@ void HUD::DrawLoadDataWidget(E_TypeHUD typeHUDInput)
 	}
 }
 
+void HUD::DrawBloodDamage() {
+
+	hurtTimer += 1;
+
+	if (hurtTimer > 0 && hurtTimer < 10) {
+		hurtOpacity += 0.02f;
+	}
+	else if (hurtTimer >= 10 && hurtTimer < 30) {
+		hurtOpacity -= 0.02f;
+	}
+	else {
+		hurtTimer = 0;
+		hurtOpacity = 0.f;
+		character->SetIsJustHurt(false);
+	}
+
+	static int gradientWidth1 = 350;
+	static int gradientWidth2 = 150;
+
+	DrawRectangleGradientH(0, 0, gradientWidth1, GetScreenHeight(), Fade(RED, hurtOpacity), BLANK);
+	DrawRectangleGradientH(GetScreenWidth() - gradientWidth1, 0, gradientWidth1, GetScreenHeight(), BLANK, Fade(RED, hurtOpacity));
+	DrawRectangleGradientV(0, 0, GetScreenWidth(), gradientWidth1, Fade(RED, hurtOpacity), BLANK);
+	DrawRectangleGradientV(0, GetScreenHeight() - gradientWidth1, GetScreenWidth(), gradientWidth1, BLANK, Fade(RED, hurtOpacity));
+
+	DrawRectangleGradientH(0, 0, gradientWidth2, GetScreenHeight(), Fade(RED, hurtOpacity), BLANK);
+	DrawRectangleGradientH(GetScreenWidth() - gradientWidth2, 0, gradientWidth2, GetScreenHeight(), BLANK, Fade(RED, hurtOpacity));
+	DrawRectangleGradientV(0, 0, GetScreenWidth(), gradientWidth2, Fade(RED, hurtOpacity), BLANK);
+	DrawRectangleGradientV(0, GetScreenHeight() - gradientWidth2, GetScreenWidth(), gradientWidth2, BLANK, Fade(RED, hurtOpacity));
+
+}
+
 void HUD::DrawGameWidget()
 {
 	if (character && character->GetIsAlive()) {
+
+		if (character->GetIsJustHurt()) DrawBloodDamage();
 
 		// Barra de experiencia Fondo negro
 

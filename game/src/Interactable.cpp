@@ -19,8 +19,10 @@ void Interactable::Restart()
 
 void Interactable::Draw()
 {
-	DrawTextureEx(texture, pos, 0.f, 0.5f, WHITE);
-	DetectGrab();
+	if (!grabbed) {
+		DrawTextureEx(texture, pos, 0.f, 0.5f, WHITE);
+		DetectGrab();
+	}
 }
 
 
@@ -36,6 +38,10 @@ void Interactable::DetectGrab()
 
 				character->AddToInventory(type);
 				grabbed = true;
+
+				static Sound soundKeys = LoadSound("resources/sounds/keys.wav");
+				SetSoundVolume(soundKeys, 2.f);
+				PlaySound(soundKeys);
 
 			}
 			else {
