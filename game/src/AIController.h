@@ -18,8 +18,6 @@ public:
 	void SpawnConsumable(E_ItemType typeInput);
 	void SpawnConsumables();
 
-	void SpawnInteractable(E_ItemType typeInput);
-	void SpawnInteractable(E_ItemType typeInput, Vector2 posInput);
 	void InitInteractables();
 	void SpawnInteractables();
 
@@ -51,6 +49,7 @@ private:
 	int interactableQuantity = 1;
 	int interactableSpawnedQuantity = 0;
 	Interactable* interactables = new Interactable[interactableQuantity];
+	Texture2D keyTexture;
 
 	bool keySetted = false;
 	int enemyTexturesLength = 4;
@@ -59,5 +58,6 @@ private:
 	int dificulty = 0;
 	int newDificulty = 0;
 	int dificultyCounter = 0;
+
 
 };

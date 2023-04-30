@@ -4,6 +4,7 @@ AIController::AIController(Character* characterInput)
 {
 	character = characterInput;
 	InitEnemies();
+	InitInteractables();
 }
 
 
@@ -163,6 +164,16 @@ void AIController::SpawnConsumables()
 	}
 }
 
+void AIController::InitInteractables()
+{
+	keyTexture = LoadTexture("resources/textures/key.png");
+
+	for (int i = 0; i < interactableQuantity; i++) {
+		interactables[i] = Interactable(Vector2{ -100.f,-100.f }, I_KEY, character, keyTexture);
+	}
+
+}
+
 void AIController::SpawnInteractables()
 {
 	if (interactableSpawnedQuantity < necessaryKeys)
@@ -182,7 +193,12 @@ void AIController::SpawnInteractables()
 				interactableSpawnedQuantity += 1;
 
 				for (int i = 0; i < interactableQuantity; i++) {
-					interactables[i] = Interactable(enemies[i]->GetPosition(), I_KEY, character);
+					interactables[i] = Interactable(
+						enemies[i]->GetPosition(),
+						I_KEY,
+						character,
+						keyTexture
+					);
 				}
 			}
 		}
@@ -191,10 +207,7 @@ void AIController::SpawnInteractables()
 
 	for (int i = 0; i < interactableSpawnedQuantity; i++) {
 
-		if (interactables[i].GetGrabbed()) {
-			interactables[i].Restart();
-			interactableSpawnedQuantity--;
-		}
+		if (interactables[i].GetIsGrabbed()) interactables[i].Restart();
 		else interactables[i].Draw();
 
 	}

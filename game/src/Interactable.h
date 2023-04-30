@@ -6,33 +6,25 @@
 class Interactable
 {
 public:
-
 	Interactable();
-	Interactable(Vector2 posInput, E_ItemType typeInput, Character* characterInput);
+	Interactable(Vector2 posInput, E_ItemType typeInput, Character* characterInput, Texture2D textureInput);
 
 	void Restart();
 	void Draw();
 	void DetectGrab();
-	bool GetGrabbed();
+	bool GetIsGrabbed();
 
 private:
 
 	Vector2 initialPos = Vector2{ -100.f, -100.f };
 	Vector2 pos;
-	float squareSize = 20.f;
-	Color color = YELLOW;
-	float padding = 5.f;
-	float longitude = 30.f;
+	Vector2 textureSize = Vector2{ 80.f, 80.f };
+	Vector2 center;
 
 	E_ItemType type = I_KEY;
-
-	Rectangle longPart;
-	Rectangle squarePart;
-	Rectangle tooth1Part;
-	Rectangle tooth2Part;
-	Rectangle tooth3Part;
-	Rectangle round;
+	Rectangle rec;
 
 	Character* character;
+	Texture2D texture;
 	bool grabbed = false;
 };
