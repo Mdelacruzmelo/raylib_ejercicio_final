@@ -584,7 +584,7 @@ void PlayerController::SetSlotWithSavedData(int slot, SavedData data)
 		std::string(Converter::FloatToChar(data.locationy)) + std::string("\n") +
 		std::string(Converter::IntToChar(data.abPoints));
 
-	char* resultChar = new char[strlen(result.c_str()) + 1];
+	char* resultChar = new char[strlen(result.c_str())];
 	strcpy(resultChar, result.c_str());
 
 	SaveFileText(TextFormat("resources/savings/slot%d.txt", slot), resultChar);

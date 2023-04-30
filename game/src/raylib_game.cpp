@@ -47,11 +47,11 @@ int main(void)
 		BeginDrawing();
 		ClearBackground(BLACK);
 
+		envHandler->Draw();
+
 		if (controller->GetTypeHUD() == H_GAME) {
 
-			envHandler->Draw();
 			aiController->Play();
-
 		}
 
 		if (controller->GetTypeHUD() == H_GAME || controller->GetTypeHUD() == H_PAUSE) {
