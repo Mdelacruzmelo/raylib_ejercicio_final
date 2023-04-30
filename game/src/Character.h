@@ -19,6 +19,7 @@ public:
 	void Attack(Vector2 endVector);
 
 	Rectangle GetRect();
+	Rectangle GetCollisionRect();
 	Vector2 GetSize();
 	int GetLevel();
 
@@ -38,6 +39,8 @@ public:
 
 	Vector2 GetPosition();
 	void SetPosition(Vector2 newPos);
+
+	void SetAngle(float newAngle);
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
@@ -135,6 +138,8 @@ protected:
 
 	float size = 40.f;
 	float radius = size / 2;
+	float sizeCollision = size * 1.5;
+	float radiusCollision = sizeCollision / 2;
 
 	float initialAttackDistance = 5.f;
 	float attackDistance = initialAttackDistance;
@@ -182,6 +187,7 @@ protected:
 	Vector2 initialPos = { 600.f, 540.f };
 	Vector2 pos = initialPos;
 	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+	Rectangle collisionRec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
 
 	Vector2 circle1Center;
 	float circle1Radius = 0.f;
@@ -196,4 +202,7 @@ protected:
 	bool updatingSlots = false;
 	bool inNewGame = false;
 
+	float angle = 0.f;
+	Texture2D texture;
+	int copSize = 80;
 };

@@ -26,7 +26,7 @@ void Consumable::DetectGrab()
 	if (character) {
 
 		if (
-			CheckCollisionRecs(character->GetRect(), rec) &&
+			CheckCollisionRecs(character->GetCollisionRect(), rec) &&
 			character->GetIsInteracting()
 			) {
 

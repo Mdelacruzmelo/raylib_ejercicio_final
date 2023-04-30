@@ -45,7 +45,7 @@ void Interactable::DetectGrab()
 {
 	if (character && !grabbed) {
 		if (
-			CheckCollisionRecs(character->GetRect(), round) &&
+			CheckCollisionRecs(character->GetCollisionRect(), round) &&
 			character->GetIsInteracting()
 			) {
 

@@ -122,6 +122,11 @@ void AIController::SpawnInteractable(E_ItemType typeInput)
 				if (spawmLocY < GetScreenHeight() / 2) spawmLocY = GetScreenHeight() / 2 + GetRandomValue(10, 50) + GetScreenHeight() / 4;
 				else spawmLocY = GetScreenHeight() / 4 - GetRandomValue(10, 50);
 
+				if (typeInput == I_KEY) {
+					spawmLocX += 100.f;
+					spawmLocY -= 100.f;
+				}
+
 				newInteractables[i] = Interactable(
 					Vector2{ spawmLocX, spawmLocY },
 					typeInput,
@@ -218,7 +223,7 @@ void AIController::Play()
 
 	if (counter >= GetRandomValue(minRateEnemy, maxRateEnemy)) {
 
-		SpawnEnemy();
+		// SpawnEnemy();
 		counter = 0;
 
 	}

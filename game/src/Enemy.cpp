@@ -17,17 +17,6 @@ void Enemy::Play()
 
 		Rectangle currentRec = Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
 
-		// Obtener radios de ataque y guardarlos para más adelante 
-
-		Vector2 characterCircle1Center = character->GetAttackCircleCenter1();
-		float characterCircle1Radius = character->GetAttackCircleRadius1();
-
-		Vector2 characterCircle2Center = character->GetAttackCircleCenter2();
-		float characterCircle2Radius = character->GetAttackCircleRadius2();
-
-		// rec = Rectangle{ pos.x, pos.y, width, height };
-		// DrawRectangleRec(rec, RED);
-
 		if (character != nullptr) {
 
 			// MoveTo(character->GetPosition());
@@ -58,14 +47,14 @@ void Enemy::Play()
 			}
 
 			bool attackCollision1 = CheckCollisionCircleRec(
-				characterCircle1Center,
-				characterCircle1Radius,
+				character->GetAttackCircleCenter1(),
+				character->GetAttackCircleRadius1(),
 				currentRec
 			);
 
 			bool attackCollision2 = CheckCollisionCircleRec(
-				characterCircle2Center,
-				characterCircle2Radius,
+				character->GetAttackCircleCenter2(),
+				character->GetAttackCircleRadius2(),
 				currentRec
 			);
 
@@ -96,7 +85,7 @@ void Enemy::Play()
 
 	}
 
-	if (hasKey ) {
+	if (hasKey) {
 
 		DrawText("KEY SPAWNEDDASDASDFASDF ", 600, 800, 60, GREEN);
 		key->Draw();
@@ -120,7 +109,7 @@ void Enemy::Explode()
 	isExploding = true;
 
 	if (hasKey) {
-		
+
 		key = new Interactable(pos, I_KEY, character);
 		keySpawned = true;
 	}

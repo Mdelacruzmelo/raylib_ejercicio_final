@@ -2,6 +2,7 @@
 
 Character::Character()
 {
+	texture = LoadTexture("resources/textures/police.png");
 }
 
 void Character::Draw() {
@@ -12,11 +13,17 @@ void Character::Draw() {
 
 void Character::Draw(Color colorInput) {
 
-	rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+	rec = Rectangle{ pos.x , pos.y, size, size };
+	collisionRec = Rectangle{ pos.x - radiusCollision, pos.y - radiusCollision, sizeCollision, sizeCollision };
 
 	if (alive) {
 
-		DrawRectangleRec(rec, colorInput);
+		DrawRectangleRec(collisionRec, Fade(colorInput, .0f));
+		// DrawRectanglePro(rec, Vector2{ radius, radius }, angle, colorInput);
+
+		Rectangle source = { 0.f, 0.f, copSize, copSize };
+		Rectangle dest = { pos.x, pos.y, copSize, copSize };
+		DrawTexturePro(texture, source, dest, Vector2{ 40.f,40.f }, angle, WHITE);
 
 		if (isVelocityTempIncreased) DrawVelocityTempBar();
 
@@ -99,16 +106,13 @@ void Character::Move(Vector2 movement)
 void Character::Attack(Vector2 endVector) {
 
 	circle1Center = { (endVector.x + pos.x) / 2,(endVector.y + pos.y) / 2 };
-	circle1Radius = 30.f;
+	circle1Radius = 20.f;
 
-	DrawCircle(circle1Center.x, circle1Center.y, circle1Radius, RED);
+	DrawCircle(circle1Center.x, circle1Center.y, circle1Radius, YELLOW);
 
 	circle2Center = { endVector.x, endVector.y };
-	circle2Radius = 20.f;
-	DrawCircle(circle2Center.x, circle2Center.y, circle2Radius, RED);
-
-	// Todo, mirar cuando se ataca, con qué intersectan los circulos para afectar al objetivo del ataque
-
+	circle2Radius = 30.f;
+	DrawCircle(circle2Center.x, circle2Center.y, circle2Radius, YELLOW);
 }
 
 float Character::GetAttack()
@@ -149,6 +153,11 @@ void Character::SubstractAbPoints(int substract)
 Rectangle Character::GetRect()
 {
 	return rec;
+}
+
+Rectangle Character::GetCollisionRect()
+{
+	return collisionRec;
 }
 
 Vector2 Character::GetSize()
@@ -239,6 +248,11 @@ char* Character::GetDoorTargetId()
 void Character::SetPosition(Vector2 newPos)
 {
 	pos = newPos;
+}
+
+void Character::SetAngle(float newAngle)
+{
+	angle = newAngle;
 }
 
 void Character::AddHealth(float healthAdded)

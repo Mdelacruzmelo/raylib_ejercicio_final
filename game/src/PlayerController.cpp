@@ -20,40 +20,39 @@ void PlayerController::Play()
 
 		hud->Draw(typeHUD);
 
-		// Attack aiming and radius
-
-		Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
-		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
-		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-		Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
-		Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
-
 		switch (typeHUD)
 		{
 		case H_GAME:
+
+			SetMouseCursor(3);
+
+			// Attack aiming and radius
+
+			vDifference = Vector2{
+				mousePosition.x - character->GetPosition().x,
+				mousePosition.y - character->GetPosition().y
+			};
+
+			hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+
+			normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
+
+			scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
+
+			endVector = Vector2Add(character->GetPosition(), scaledVector);
+
+			angle = atan2f(vDifference.x, vDifference.y) * RAD2DEG * -1;
+
+			character->SetAngle(angle);
 
 			// Mouse cursor
 
 			mousePosition = GetMousePosition();
 
-			DrawRectangle(
-				(int)(mousePosition.x - cursorRadius),
-				(int)(mousePosition.y - (cursorDepth / 2)),
-				(int)cursorSize,
-				(int)cursorDepth,
-				WHITE
-			);
-			DrawRectangle(
-				(int)(mousePosition.x - (cursorDepth / 2)),
-				(int)(mousePosition.y - cursorRadius),
-				(int)cursorDepth,
-				(int)cursorSize,
-				WHITE
-			);
-
 			// Linetrace
 
 			DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
+			DrawLineV(character->GetPosition(), endVector, RED);
 
 			// Movimiento
 
@@ -100,17 +99,32 @@ void PlayerController::Play()
 			if (character->GetIsAlive()) character->Draw();
 			else typeHUD = H_LOOSE_GAME;
 
-
-			DrawLineV(character->GetPosition(), endVector, RED);
-
 			// Movimiento
 
 			character->Move(movement);
 
 			// Atacar
 
-			if (IsMouseButtonPressed(0)) character->Attack(endVector);
-			else character->ReinitializeAttackCircles();
+			if (isAttackStarted) {
+
+				attackTimer += 1;
+
+				if (attackTimer >= 30) {
+					isAttackStarted = false;
+					attackTimer = 0;
+				}
+
+			}
+
+			if (IsMouseButtonPressed(0) && !isAttackStarted) {
+
+				character->Attack(endVector);
+				isAttackStarted = true;
+
+			}
+			else {
+				character->ReinitializeAttackCircles();
+			}
 
 			// Interactuar
 

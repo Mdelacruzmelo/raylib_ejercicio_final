@@ -47,4 +47,16 @@ private:
 	int slotsQuantity = 4;
 	bool* slots = new bool[slotsQuantity] {false, false, false, false};
 	bool loadSlotSuccess;
+
+	Vector2 vDifference = Vector2{ 0.f, 0.f };
+	float hipotenuse = 0.f;
+	Vector2 normalizedAiming = Vector2{ 0.f, 0.f };
+	Vector2 scaledVector = Vector2{ 0.f, 0.f };
+	Vector2 endVector = Vector2{ 0.f, 0.f };
+	float angle = 0.f;
+
+	int attackTimer = 0;
+	bool isAttackStarted = false;
+
+
 };
