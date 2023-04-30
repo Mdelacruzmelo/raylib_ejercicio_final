@@ -10,11 +10,16 @@ public:
 	Enemy();
 
 	void Play();
-	void AppendKey();
+	void Restart();
 	void SetTarget(Character* characterInput);
 	void SetPosition(Vector2 posInput);
+	void SetRandomPosition();
 	void Explode();
+	bool GetIsExploding();
 	void ReinitializeExplode();
+	void SetTexturesLength(int textureLengthInput);
+	void SetTextures(Texture2D* texturesInput);
+	bool GetIsDestroyed();
 
 private:
 
@@ -23,8 +28,10 @@ private:
 	bool destroyed = false;
 	float explosionRadius = size / 1.5f;
 	float explosionOpacity = 1;
-	bool hasKey = false;
-	bool keySpawned = false;
+
+	int textureLength;
+	Texture2D* textures;
+	int textureCounter = 0;
 
 	Interactable* key = nullptr;
 	Character* character = nullptr;

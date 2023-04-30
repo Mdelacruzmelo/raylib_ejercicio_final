@@ -3,59 +3,83 @@
 AIController::AIController(Character* characterInput)
 {
 	character = characterInput;
+	InitEnemies();
 }
 
-void AIController::SpawnEnemy()
+
+void AIController::InitEnemies()
 {
-	int newEnemyQuantity = enemyQuantity + 1;
-	Enemy* newEnemies = new Enemy[newEnemyQuantity];
+	for (int i = 0; i < enemyTexturesLength; i++) {
+		enemyTextures[i] = LoadTexture(TextFormat("resources/textures/parasite%d.png", i + 1));
+	}
 
-	for (int i = 0; i < newEnemyQuantity; i++) {
+	for (int i = 0; i < enemyQuantity; i++) {
 
-		if (i < enemyQuantity) {
+		enemies[i] = new Enemy();
+		enemies[i]->SetTarget(character);
 
-			newEnemies[i] = enemies[i];
+		int randomVal = GetRandomValue(0, 3);
+		float posX = 100.f;
+		float posY = -100.f;
 
+		if (randomVal == 1) {
+			posX = GetScreenWidth();
 		}
-		else {
-
-			newEnemies[i] = Enemy();
-
-			if (character != nullptr) {
-
-				newEnemies[i].SetTarget(character);
-
-				int randomVal = GetRandomValue(0, 3);
-				float posX = 100.f;
-				float posY = -100.f;
-
-				if (randomVal == 1) {
-					posX = GetScreenWidth();
-				}
-				else if (randomVal == 2) {
-					posY = GetScreenHeight();
-				}
-				else if (randomVal == 3) {
-					posX = GetScreenWidth();
-					posY = GetScreenHeight();
-				}
-
-
-				newEnemies[i].SetPosition(Vector2{ posX, posY });
-			}
+		else if (randomVal == 2) {
+			posY = GetScreenHeight();
 		}
+		else if (randomVal == 3) {
+			posX = GetScreenWidth();
+			posY = GetScreenHeight();
+		}
+
+		enemies[i]->SetPosition(Vector2{ posX, posY });
+		enemies[i]->SetTextures(enemyTextures);
+		enemies[i]->SetTexturesLength(enemyTexturesLength);
+
+	}
+}
+
+
+void AIController::SpawnEnemies()
+{
+	dificultyCounter += 1;
+
+	// Si el personaje tiene menos de la mitad de vida
+	if (character->GetNormalizedHealth() < 0.3f) newDificulty = 0;
+
+	if (dificultyCounter >= 300) {
+
+		newDificulty += 1;
+		dificultyCounter = 0;
 
 	}
 
-	enemies = newEnemies;
-	enemyQuantity = newEnemyQuantity;
+	if (
+		dificulty != newDificulty &&
+		enemyQuantitySpawned < enemyQuantity
+		) {
 
+
+		if (dificulty == 0) enemyQuantitySpawned = 1;
+		else enemyQuantitySpawned += 1;
+		dificulty = newDificulty;
+
+	}
+
+	for (int i = 0; i < enemyQuantitySpawned; i++) {
+
+		enemies[i]->Play();
+
+	}
 }
 
 void AIController::DeleteEnemies()
 {
-	enemyQuantity = 0;
-	enemies = nullptr;
+	for (int i = 0; i < enemyQuantity; i++) {
+		enemies[i]->Restart();
+	}
+	enemyQuantitySpawned = 0;
 }
 
 void AIController::SpawnConsumable(E_ItemType typeInput)
@@ -98,165 +122,8 @@ void AIController::SpawnConsumable(E_ItemType typeInput)
 
 }
 
-void AIController::SpawnInteractable(E_ItemType typeInput)
+void AIController::SpawnConsumables()
 {
-	if (character != nullptr) {
-
-		int newQuantity = interactableQuantity + 1;
-		Interactable* newInteractables = new Interactable[newQuantity];
-
-		for (int i = 0; i < newQuantity; i++) {
-
-			if (i < interactableQuantity) newInteractables[i] = interactables[i];
-			else {
-
-				// Si el jugador esta en la mitad izquierda de la pantalla, ponlo en la derecha y viceversa
-
-				float spawmLocX = character->GetPosition().x;
-				if (spawmLocX < GetScreenWidth() / 2) spawmLocX = GetScreenWidth() / 2 + GetRandomValue(10, 50) - GetScreenWidth() / 4;
-				else spawmLocX = GetScreenWidth() / 4 - GetRandomValue(10, 50);
-
-				// Si el jugador esta en la mitad superior de la pantalla, ponlo en la inferior y viceversa
-
-				float spawmLocY = character->GetPosition().y;
-				if (spawmLocY < GetScreenHeight() / 2) spawmLocY = GetScreenHeight() / 2 + GetRandomValue(10, 50) + GetScreenHeight() / 4;
-				else spawmLocY = GetScreenHeight() / 4 - GetRandomValue(10, 50);
-
-				if (typeInput == I_KEY) {
-					spawmLocX += 100.f;
-					spawmLocY -= 100.f;
-				}
-
-				newInteractables[i] = Interactable(
-					Vector2{ spawmLocX, spawmLocY },
-					typeInput,
-					character
-				);
-
-			}
-		}
-
-		interactables = newInteractables;
-		interactableQuantity = newQuantity;
-
-	}
-
-}
-
-void AIController::ClearAll() {
-
-	DeleteEnemies();
-	DeleteConsumables();
-	DeleteInteractables();
-
-}
-
-
-void AIController::DeleteConsumables() {
-
-	consumables = nullptr;
-	consumableQuantity = 0;
-
-}
-
-void AIController::DeleteConsumable(int indexToDelete)
-{
-
-	int newQuantity = consumableQuantity - 1;
-	Consumable* newConsumables = new Consumable[newQuantity];
-
-	for (int i = 0; i < newQuantity; i++) {
-
-		if (i > indexToDelete) newConsumables[i - 1] = consumables[i];
-		else if (i < indexToDelete) newConsumables[i] = consumables[i];
-
-	}
-
-	consumables = newConsumables;
-	consumableQuantity = newQuantity;
-
-}
-
-void AIController::DeleteInteractables()
-{
-
-	interactables = nullptr;
-	interactableQuantity = 0;
-
-}
-
-void AIController::DeleteInteractable(int indexToDelete)
-{
-	int newQuantity = interactableQuantity - 1;
-	Interactable* newInteractables = new Interactable[newQuantity];
-
-	for (int i = 0; i < newQuantity; i++) {
-
-		if (i > indexToDelete) newInteractables[i - 1] = interactables[i];
-		else if (i < indexToDelete)	newInteractables[i] = interactables[i];
-
-	}
-
-	interactables = newInteractables;
-	interactableQuantity = newQuantity;
-
-}
-
-
-void AIController::Play()
-{
-
-	// Enemigos 
-
-	counter += 1;
-
-
-	int minRateEnemy = 60;
-	int maxRateEnemy = 90;
-
-	// Si el personaje tiene menos de la mitad de vida
-
-	if (character->GetNormalizedHealth() < 0.5f) {
-		minRateEnemy = 140;
-		maxRateEnemy = 240;
-	}
-
-	if (counter >= GetRandomValue(minRateEnemy, maxRateEnemy)) {
-
-		// SpawnEnemy();
-		counter = 0;
-
-	}
-
-	for (int i = 0; i < enemyQuantity; i++) enemies[i].Play();
-
-	// Interactables
-
-	interactableCounter += 1;
-
-	if (interactableCounter >= GetRandomValue(20, 30)) {
-
-		// Por cada 10 enemigos tendrás una llave
-		// Y si no hay mas llaves en el campo
-
-		if (enemyQuantity > 0 && enemyQuantity % 10 == 0 && interactableQuantity == 0) {
-
-			SpawnInteractable(I_KEY);
-			interactableCounter = 0;
-
-		}
-	}
-
-	for (int i = 0; i < interactableQuantity; i++) {
-
-		interactables[i].Draw();
-
-		if (interactables[i].GetGrabbed()) DeleteInteractable(i);
-
-	}
-
-	// Consumibles
-
 	consumableHealthCounter += 1;
 
 	if (consumableHealthCounter >= GetRandomValue(240, 360)) {
@@ -294,5 +161,87 @@ void AIController::Play()
 		if (consumables[i].GetGrabbed()) DeleteConsumable(i);
 
 	}
+}
 
+void AIController::SpawnInteractables()
+{
+	if (interactableSpawnedQuantity < necessaryKeys)
+		interactableTimer += 1.f;
+
+	if (
+		interactableSpawnedQuantity < necessaryKeys &&
+		interactableTimer > 300
+		) {
+
+		interactableTimer = 0;
+
+		for (int i = 0; i < enemyQuantitySpawned; i++) {
+
+			if (enemies[i]->GetIsExploding()) {
+
+				interactableSpawnedQuantity += 1;
+
+				for (int i = 0; i < interactableQuantity; i++) {
+					interactables[i] = Interactable(enemies[i]->GetPosition(), I_KEY, character);
+				}
+			}
+		}
+
+	}
+
+	for (int i = 0; i < interactableSpawnedQuantity; i++) {
+
+		if (interactables[i].GetGrabbed()) {
+			interactables[i].Restart();
+			interactableSpawnedQuantity--;
+		}
+		else interactables[i].Draw();
+
+	}
+
+}
+
+void AIController::ClearAll() {
+
+	DeleteEnemies();
+	DeleteConsumables();
+	DeleteInteractables();
+
+}
+
+void AIController::DeleteConsumables() {
+
+	consumables = nullptr;
+	consumableQuantity = 0;
+
+}
+
+void AIController::DeleteConsumable(int indexToDelete)
+{
+
+	int newQuantity = consumableQuantity - 1;
+	Consumable* newConsumables = new Consumable[newQuantity];
+
+	for (int i = 0; i < newQuantity; i++) {
+
+		if (i > indexToDelete) newConsumables[i - 1] = consumables[i];
+		else if (i < indexToDelete) newConsumables[i] = consumables[i];
+
+	}
+
+	consumables = newConsumables;
+	consumableQuantity = newQuantity;
+
+}
+
+void AIController::DeleteInteractables()
+{
+	interactableSpawnedQuantity = 0;
+}
+
+void AIController::Play()
+{
+	SpawnEnemies();
+	SpawnInteractables();
+	SpawnConsumables();
 }

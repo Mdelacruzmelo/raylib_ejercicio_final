@@ -23,6 +23,12 @@ Interactable::Interactable(Vector2 posInput, E_ItemType typeInput, Character* ch
 	};
 }
 
+void Interactable::Restart()
+{
+	pos = initialPos;
+	grabbed = false;
+}
+
 void Interactable::Draw()
 {
 	if (type == I_KEY) {

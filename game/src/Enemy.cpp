@@ -2,7 +2,7 @@
 
 Enemy::Enemy()
 {
-	texture = LoadTexture("resources/textures/police.png");
+	SetRandomPosition();
 }
 
 void Enemy::SetTarget(Character* characterInput)
@@ -14,22 +14,30 @@ void Enemy::Play()
 {
 	if (GetIsAlive()) {
 
-		Draw(texture);
+		if (textures) {
+
+			textureCounter += 1;
+			static int textureIndex = 0;
+
+			if (textureCounter % 10 == 0) textureIndex++;
+			if (textureIndex >= textureLength - 1) textureIndex = 0;
+
+			Draw(textures[textureIndex]);
+
+		}
 
 		Rectangle currentRec = Rectangle{ pos.x - (size / 2), pos.y - (size / 2), size, size };
 
 		if (character != nullptr) {
 
-			// MoveTo(character->GetPosition());
-
 			if (!arrivedToLoc && !isExploding) {
 
 				float movX = 0.f;
-				if (pos.x > character->GetPosition().x) movX = -1.f;
+				if (pos.x >= character->GetPosition().x + 10) movX = -1.f;
 				else if (pos.x < character->GetPosition().x) movX = 1.f;
 
 				float movY = 0.f;
-				if (pos.y > character->GetPosition().y) movY = -1.f;
+				if (pos.y >= character->GetPosition().y + 10) movY = -1.f;
 				else if (pos.y < character->GetPosition().y) movY = 1.f;
 
 				Move(Vector2{ movX ,movY });
@@ -85,40 +93,76 @@ void Enemy::Play()
 		else destroyed = true;
 
 	}
+	else if (destroyed) Restart();
 
-	if (hasKey) {
-
-		DrawText("KEY SPAWNEDDASDASDFASDF ", 600, 800, 60, GREEN);
-		key->Draw();
-
-	}
-
-}
-
-void Enemy::AppendKey()
-{
-	hasKey = true;
 }
 
 void Enemy::SetPosition(Vector2 posInput)
 {
-	this->pos = posInput;
+	pos = posInput;
+	initialPos = posInput;
+}
+
+void Enemy::SetRandomPosition()
+{
+	int randomVal = GetRandomValue(0, 3);
+	float posX = 100.f;
+	float posY = -100.f;
+
+	if (randomVal == 1) {
+		posX = GetScreenWidth();
+	}
+	else if (randomVal == 2) {
+		posY = GetScreenHeight();
+	}
+	else if (randomVal == 3) {
+		posX = GetScreenWidth();
+		posY = GetScreenHeight();
+	}
+
+	SetPosition(Vector2{ posX, posY });
+}
+
+void Enemy::Restart()
+{
+	pos = initialPos;
+	destroyed = false;
+	isExploding = false;
+	alive = true;
+	arrivedToLoc = false;
+	explosionOpacity = 1;
+	explosionRadius = size / 1.5f;
+	SetRandomPosition();
 }
 
 void Enemy::Explode()
 {
 	isExploding = true;
+	alive = false;
+}
 
-	if (hasKey) {
-
-		key = new Interactable(pos, I_KEY, character);
-		keySpawned = true;
-	}
-
+bool Enemy::GetIsExploding()
+{
+	return isExploding;
 }
 
 void Enemy::ReinitializeExplode()
 {
 	explosionRadius = size / 1.5f;
 	explosionOpacity = 1;
+}
+
+void Enemy::SetTexturesLength(int textureLengthInput)
+{
+	textureLength = textureLengthInput;
+}
+
+void Enemy::SetTextures(Texture2D* texturesInput)
+{
+	textures = texturesInput;
+}
+
+bool Enemy::GetIsDestroyed()
+{
+	return destroyed;
 }

@@ -407,10 +407,10 @@ void Character::IncreaseAttackDistance()
 
 void Character::IncreaseExperience()
 {
-	experience += 1.f;
+	experience += 10.f;
 	if (experience >= maxExperience) {
 		experience = 0;
-		level = 2;
+		level += 1;
 		AddAbPoints(1);
 	}
 }

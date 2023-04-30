@@ -10,13 +10,14 @@ public:
 	Interactable();
 	Interactable(Vector2 posInput, E_ItemType typeInput, Character* characterInput);
 
-	void Interact();
+	void Restart();
 	void Draw();
 	void DetectGrab();
 	bool GetGrabbed();
 
 private:
 
+	Vector2 initialPos = Vector2{ -100.f, -100.f };
 	Vector2 pos;
 	float squareSize = 20.f;
 	Color color = YELLOW;
