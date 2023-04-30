@@ -13,8 +13,12 @@ public:
 	void DrawAbilitiesWidget(E_TypeHUD typeHUDInput);
 	void DrawSaveDataWidget();
 	void DrawLoadDataWidget(E_TypeHUD typeHUDInput);
+	void DrawLoadingGameWidget();
+	void DrawLooseGameWidget();
+	void DrawWinGameWidget();
 	void DrawMainMenuWidget();
 	void DrawGameWidget();
+	void DrawbackgroundGradient();
 
 	void ItemNumberPress(int num);
 	void DrawAbButtons(E_AbilityType abType, int order);
@@ -50,6 +54,10 @@ public:
 	void SetSlots(bool* slotsInput);
 	void SetSlotsQuantity(int slotsQuantityInput);
 	bool SlotAvailable();
+	void DrawBloodDamage();
+	void SoundHover(int buttonNumber);
+
+	void SetLoadingTimes(float time, float maxTime);
 
 private:
 
@@ -81,4 +89,25 @@ private:
 
 	bool* slots;
 	int slotsQuantity = 0;
+	int hurtTimer = 0;
+	float hurtOpacity = 0.f;
+
+	Texture2D pillHealthTexture;
+	Texture2D pillSpeedTexture;
+	Texture2D keyTexture;
+	Texture2D police;
+	Texture2D policeWin;
+
+	Sound buttonHoverSound;
+	Sound buttonClickedSound;
+	Sound buttonRemoveSound;
+	Sound buttonDisabledSound;
+
+	bool playedHoverSound = false;
+	int buttonNumberHovered = 0;
+	float loadingTime;
+	float loadingMaxTime;
+	float LOADING_MAX_SECONDS = 10.f;
+	float loadingBarPercentage = 0.f;
+
 };

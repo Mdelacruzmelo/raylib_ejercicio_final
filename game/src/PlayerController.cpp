@@ -1,10 +1,27 @@
 #include "PlayerController.h"
 #include <string>
 
-PlayerController::PlayerController(Character* characterInput, HUD* hudInput)
+PlayerController::PlayerController(Character* characterInput, HUD* hudInput, AIController* aiControllerInput)
 {
 	character = characterInput;
 	hud = hudInput;
+	aiController = aiControllerInput;
+
+	// Sound steps 
+
+	for (int i = 0; i < characterSoundsQuantity; i++)
+		characterSounds[i] = LoadSound(TextFormat("resources/sounds/footstep%d.wav", i + 1));
+
+	character->SetSounds(characterSounds, characterSoundsQuantity);
+
+	// Sound shoot
+
+	for (int i = 0; i < characterShootSoundsQuantity; i++)
+		characterShootSounds[i] = LoadSound(TextFormat("resources/sounds/shot%d.wav", i + 1));
+
+	character->SetShootSounds(characterShootSounds, characterShootSoundsQuantity);
+
+	hud->SetLoadingTimes(loadingTime, LOADING_MAX_SECONDS);
 }
 
 void PlayerController::Play()
@@ -20,40 +37,54 @@ void PlayerController::Play()
 
 		hud->Draw(typeHUD);
 
-		// Attack aiming and radius
-
-		Vector2 vDifference = Vector2{ mousePosition.x - character->GetPosition().x, mousePosition.y - character->GetPosition().y };
-		float hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
-		Vector2 normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
-		Vector2 scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
-		Vector2 endVector = Vector2Add(character->GetPosition(), scaledVector);
-
 		switch (typeHUD)
 		{
+		case H_LOADING_GAME:
+
+			loadingTime += GetFrameTime();
+
+			if (hud->ButtonPressed() == GO_SKIP || loadingTime >= LOADING_MAX_SECONDS) {
+
+				loadingTime = 0.f;
+				typeHUD = H_GAME;
+
+			}
+
+			hud->RestartMainMenuButtons();
+
+			break;
+
 		case H_GAME:
+
+			SetMouseCursor(3);
+
+			// Attack aiming and radius
+
+			vDifference = Vector2{
+				mousePosition.x - character->GetPosition().x,
+				mousePosition.y - character->GetPosition().y
+			};
+
+			hipotenuse = (float)sqrt(pow(vDifference.x, 2) + pow(vDifference.y, 2));
+
+			normalizedAiming = Vector2{ vDifference.x / hipotenuse, vDifference.y / hipotenuse };
+
+			scaledVector = Vector2Scale(normalizedAiming, (character->GetAttackDistance() * 20));
+
+			endVector = Vector2Add(character->GetPosition(), scaledVector);
+
+			angle = atan2f(vDifference.x, vDifference.y) * RAD2DEG * -1;
+
+			character->SetAngle(angle);
 
 			// Mouse cursor
 
 			mousePosition = GetMousePosition();
 
-			DrawRectangle(
-				(int)(mousePosition.x - cursorRadius),
-				(int)(mousePosition.y - (cursorDepth / 2)),
-				(int)cursorSize,
-				(int)cursorDepth,
-				WHITE
-			);
-			DrawRectangle(
-				(int)(mousePosition.x - (cursorDepth / 2)),
-				(int)(mousePosition.y - cursorRadius),
-				(int)cursorDepth,
-				(int)cursorSize,
-				WHITE
-			);
-
 			// Linetrace
 
 			DrawLineV(character->GetPosition(), mousePosition, Fade(WHITE, 0.1f));
+			DrawLineV(character->GetPosition(), endVector, RED);
 
 			// Movimiento
 
@@ -94,14 +125,16 @@ void PlayerController::Play()
 			}
 			else movement.y = 0;
 
-
 			// Draw character
 
-			if (character->GetIsAlive()) character->Draw();
+			if (character->GetIsAlive()) {
+
+				character->Draw();
+
+				if (character->GetLevel() > 5) typeHUD = H_WIN_GAME; // Ganar el juego
+
+			}
 			else typeHUD = H_LOOSE_GAME;
-
-
-			DrawLineV(character->GetPosition(), endVector, RED);
 
 			// Movimiento
 
@@ -109,8 +142,26 @@ void PlayerController::Play()
 
 			// Atacar
 
-			if (IsMouseButtonPressed(0)) character->Attack(endVector);
-			else character->ReinitializeAttackCircles();
+			if (isAttackStarted) {
+
+				attackTimer += 1;
+
+				if (attackTimer >= 30) {
+					isAttackStarted = false;
+					attackTimer = 0;
+				}
+
+			}
+
+			if (IsMouseButtonPressed(0) && !isAttackStarted) {
+
+				character->Attack(endVector);
+				isAttackStarted = true;
+
+			}
+			else {
+				character->ReinitializeAttackCircles();
+			}
 
 			// Interactuar
 
@@ -170,6 +221,9 @@ void PlayerController::Play()
 					break;
 
 				case I_KEY:
+
+					character->SetIsUsingKey(true);
+					character->SetIsInteracting(true);
 					break;
 
 				default:
@@ -183,7 +237,7 @@ void PlayerController::Play()
 		case H_PAUSE:
 
 			if (hud->ButtonPressed() == RESUME) typeHUD = H_GAME;
-			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_HABILITIES;
+			else if (hud->ButtonPressed() == HABILITIES) typeHUD = H_ABILITIES;
 			else if (hud->ButtonPressed() == SAVE) typeHUD = H_SAVE_DATA;
 			else if (hud->ButtonPressed() == LOAD) typeHUD = H_LOAD_DATA;
 			else if (hud->ButtonPressed() == QUIT) typeHUD = H_MAIN_MENU;
@@ -192,7 +246,7 @@ void PlayerController::Play()
 
 			break;
 
-		case H_HABILITIES:
+		case H_ABILITIES:
 		case H_INIT_HABILITIES:
 
 			if (hud->ButtonPressed()) {
@@ -205,7 +259,15 @@ void PlayerController::Play()
 				}
 
 				if (hud->ButtonPressed() == GO_FORWARD) {
-					if (typeHUD == H_INIT_HABILITIES) typeHUD = H_GAME;
+
+					if (typeHUD == H_INIT_HABILITIES) {
+
+						hud->SetLoadingTimes(loadingTime, LOADING_MAX_SECONDS);
+						typeHUD = H_LOADING_GAME;
+						character->SetIsAlive(true);
+						aiController->ClearAll();
+
+					}
 				}
 
 				if (
@@ -365,11 +427,13 @@ void PlayerController::Play()
 			break;
 
 		case H_MAIN_MENU:
-
-			character->SetInitialData();
-			character->SetIsInNewGame(true); // Escuchado por EnvironmentHandler
+		case H_LOOSE_GAME:
+		case H_WIN_GAME:
 
 			if (hud->ButtonPressed()) {
+
+				character->SetInitialData();
+				character->SetIsInNewGame(true); // Escuchado por EnvironmentHandler
 
 				if (hud->ButtonPressed() == NEW) typeHUD = H_INIT_HABILITIES;
 				else if (hud->ButtonPressed() == LOAD) typeHUD = H_INIT_LOAD_DATA;
@@ -379,12 +443,6 @@ void PlayerController::Play()
 
 			}
 
-			break;
-
-		case H_LOOSE_GAME:
-			break;
-
-		case H_WIN_GAME:
 			break;
 
 		default:

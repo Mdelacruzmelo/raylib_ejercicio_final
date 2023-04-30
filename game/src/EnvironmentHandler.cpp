@@ -184,21 +184,21 @@ void EnvironmentHandler::InitializeMap() // 1 Time executed, before BeginDrawing
 {
 	// Environment 1
 
-	Environment* env1 = new Environment(DARKGRAY);
+	Environment* env1 = new Environment(CLITERAL(Color) { 12, 19, 23, 255 });
 	env1->Activate();
 	env1->AddDoor(SIDE_RIGHT, "door_A");
 	Append(env1);
 
 	// Environment 2
 
-	Environment* env2 = new Environment(DARKPURPLE);
+	Environment* env2 = new Environment(CLITERAL(Color) { 12, 23, 16, 255 });
 	env2->AddDoor(SIDE_LEFT, "door_B");
 	env2->AddDoor(SIDE_BOTTOM, "door_C");
 	Append(env2);
 
 	// Environment 3
 
-	Environment* env3 = new Environment(BLACK);
+	Environment* env3 = new Environment(CLITERAL(Color) { 23, 12, 12, 255 });
 	env3->AddDoor(SIDE_TOP, "door_D");
 	Append(env3);
 

@@ -3,62 +3,107 @@
 AIController::AIController(Character* characterInput)
 {
 	character = characterInput;
+	InitEnemies();
+	InitInteractables();
+	InitConsumables();
 }
 
-void AIController::SpawnEnemy()
+
+void AIController::InitEnemies()
 {
-	int newEnemyQuantity = enemyQuantity + 1;
-	Enemy* newEnemies = new Enemy[newEnemyQuantity];
+	for (int i = 0; i < enemyTexturesLength; i++) {
+		enemyTextures[i] = LoadTexture(TextFormat("resources/textures/parasite%d.png", i + 1));
+	}
 
-	for (int i = 0; i < newEnemyQuantity; i++) {
+	for (int i = 0; i < enemyDestroyTexturesLength; i++) {
+		enemyDestroyTextures[i] = LoadTexture(TextFormat("resources/textures/parasite_destroy%d.png", i + 1));
+	}
 
-		if (i < enemyQuantity) {
+	for (int i = 0; i < enemySoundsQuantity; i++) {
+		enemySounds[i] = LoadSound(TextFormat("resources/sounds/zombie%d.wav", i + 1));
+	}
 
-			newEnemies[i] = enemies[i];
+	for (int i = 0; i < enemyDieSoundsQuantity; i++) {
+		enemyDieSounds[i] = LoadSound(TextFormat("resources/sounds/zombie_die%d.wav", i + 1));
+	}
 
+	for (int i = 0; i < enemyBloodSoundsQuantity; i++) {
+		enemyBloodSounds[i] = LoadSound(TextFormat("resources/sounds/blood%d.wav", i + 1));
+	}
+
+	for (int i = 0; i < enemyQuantity; i++) {
+
+		enemies[i] = new Enemy();
+		enemies[i]->SetTarget(character);
+
+		int randomVal = GetRandomValue(0, 3);
+		float posX = 100.f;
+		float posY = -100.f;
+
+		if (randomVal == 1) {
+			posX = GetScreenWidth();
 		}
-		else {
-
-			newEnemies[i] = Enemy();
-
-			if (character != nullptr) {
-
-				newEnemies[i].SetTarget(character);
-
-				int randomVal = GetRandomValue(0, 3);
-				float posX = 100.f;
-				float posY = -100.f;
-
-				if (randomVal == 1) {
-					posX = GetScreenWidth();
-				}
-				else if (randomVal == 2) {
-					posY = GetScreenHeight();
-				}
-				else if (randomVal == 3) {
-					posX = GetScreenWidth();
-					posY = GetScreenHeight();
-				}
-
-
-				newEnemies[i].SetPosition(Vector2{ posX, posY });
-			}
+		else if (randomVal == 2) {
+			posY = GetScreenHeight();
 		}
+		else if (randomVal == 3) {
+			posX = GetScreenWidth();
+			posY = GetScreenHeight();
+		}
+
+		enemies[i]->SetPosition(Vector2{ posX, posY });
+		enemies[i]->SetTextures(enemyTextures, enemyTexturesLength);
+		enemies[i]->SetDestroyTextures(enemyDestroyTextures, enemyDestroyTexturesLength);
+		enemies[i]->SetSounds(enemySounds, enemySoundsQuantity);
+		enemies[i]->SetDieSounds(enemyDieSounds, enemyDieSoundsQuantity);
+		enemies[i]->SetBloodSounds(enemyBloodSounds, enemyBloodSoundsQuantity);
+
+	}
+}
+
+void AIController::SpawnEnemies()
+{
+	dificultyCounter += 1;
+
+	// Si el personaje tiene menos de la mitad de vida
+	if (character->GetNormalizedHealth() < 0.3f) newDificulty = 0;
+
+	if (dificultyCounter >= 300) {
+
+		newDificulty += 1;
+		dificultyCounter = 0;
 
 	}
 
-	enemies = newEnemies;
-	enemyQuantity = newEnemyQuantity;
+	if (
+		dificulty != newDificulty &&
+		enemyQuantitySpawned < enemyQuantity
+		) {
 
+
+		if (dificulty != 0) enemyQuantitySpawned += 1;
+		dificulty = newDificulty;
+
+	}
+
+	for (int i = 0; i < enemyQuantity; i++) {
+
+		if (i < enemyQuantitySpawned) enemies[i]->Play();
+		else enemies[i]->Restart();
+
+	}
 }
 
 void AIController::DeleteEnemies()
 {
-	enemyQuantity = 0;
-	enemies = nullptr;
+	for (int i = 0; i < enemyQuantity; i++) {
+		enemies[i]->Restart();
+	}
+	enemyQuantitySpawned = 0;
 }
 
-void AIController::SpawnConsumable(E_ItemType typeInput)
+void AIController::SpawnConsumable(E_ItemType typeInput
+)
 {
 	if (character != nullptr) {
 
@@ -85,7 +130,8 @@ void AIController::SpawnConsumable(E_ItemType typeInput)
 				newConsumables[i] = Consumable(
 					typeInput,
 					character,
-					Vector2{ spawmLocX, spawmLocY }
+					Vector2{ spawmLocX, spawmLocY },
+					typeInput == I_POTION_HEALTH ? pillHealthTexture : pillSpeedTexture
 				);
 
 			}
@@ -98,41 +144,93 @@ void AIController::SpawnConsumable(E_ItemType typeInput)
 
 }
 
-void AIController::SpawnInteractable(E_ItemType typeInput)
+void AIController::SpawnConsumables()
 {
-	if (character != nullptr) {
+	consumableHealthCounter += 1;
 
-		int newQuantity = interactableQuantity + 1;
-		Interactable* newInteractables = new Interactable[newQuantity];
+	if (consumableHealthCounter >= GetRandomValue(40, 60)) {
 
-		for (int i = 0; i < newQuantity; i++) {
+		// Si el personaje tiene menos de la mitad de vida
+		// Y además no hemos spawneado otra pildora
 
-			if (i < interactableQuantity) newInteractables[i] = interactables[i];
-			else {
+		if (character->GetNormalizedHealth() < 0.3f && consumableQuantity == 0) {
 
-				// Si el jugador esta en la mitad izquierda de la pantalla, ponlo en la derecha y viceversa
+			SpawnConsumable(I_POTION_HEALTH);
+			consumableHealthCounter = 0;
 
-				float spawmLocX = character->GetPosition().x;
-				if (spawmLocX < GetScreenWidth() / 2) spawmLocX = GetScreenWidth() / 2 + GetRandomValue(10, 50) - GetScreenWidth() / 4;
-				else spawmLocX = GetScreenWidth() / 4 - GetRandomValue(10, 50);
+		}
 
-				// Si el jugador esta en la mitad superior de la pantalla, ponlo en la inferior y viceversa
+		// Si no hemos spawneado otra pildora, 
+		// spawnea pildora de velocidad o salud aleatoriamente
 
-				float spawmLocY = character->GetPosition().y;
-				if (spawmLocY < GetScreenHeight() / 2) spawmLocY = GetScreenHeight() / 2 + GetRandomValue(10, 50) + GetScreenHeight() / 4;
-				else spawmLocY = GetScreenHeight() / 4 - GetRandomValue(10, 50);
+		else if (consumableQuantity == 0) {
 
-				newInteractables[i] = Interactable(
-					Vector2{ spawmLocX, spawmLocY },
-					typeInput,
-					character
-				);
+			int randomNumber = GetRandomValue(0, 1);
+			SpawnConsumable(randomNumber == 1 ? I_POTION_HEALTH : I_POTION_SPEED);
 
+			consumableHealthCounter = 0;
+		}
+	}
+
+	for (int i = 0; i < consumableQuantity; i++) {
+
+		consumables[i].Draw();
+
+		if (consumables[i].GetGrabbed()) DeleteConsumable(i);
+
+	}
+}
+
+void AIController::InitInteractables()
+{
+	keyTexture = LoadTexture("resources/textures/key.png");
+
+	for (int i = 0; i < interactableQuantity; i++) {
+		interactables[i] = Interactable(Vector2{ -100.f,-100.f }, I_KEY, character, keyTexture);
+	}
+
+}
+
+void AIController::InitConsumables()
+{
+	pillHealthTexture = LoadTexture("resources/textures/pill_health.png");
+	pillSpeedTexture = LoadTexture("resources/textures/pill_speed.png");
+}
+
+void AIController::SpawnInteractables()
+{
+	if (interactableSpawnedQuantity < necessaryKeys)
+		interactableTimer += 1.f;
+
+	if (
+		interactableSpawnedQuantity < necessaryKeys &&
+		interactableTimer > 300
+		) {
+
+		interactableTimer = 0;
+
+		for (int i = 0; i < enemyQuantitySpawned; i++) {
+
+			if (enemies[i]->GetIsExploding()) {
+
+				interactableSpawnedQuantity += 1;
+
+				for (int i = 0; i < interactableQuantity; i++) {
+					interactables[i] = Interactable(
+						enemies[i]->GetPosition(),
+						I_KEY,
+						character,
+						keyTexture
+					);
+				}
 			}
 		}
 
-		interactables = newInteractables;
-		interactableQuantity = newQuantity;
+	}
+
+	for (int i = 0; i < interactableSpawnedQuantity; i++) {
+
+		if (!interactables[i].GetIsGrabbed()) interactables[i].Draw();
 
 	}
 
@@ -145,7 +243,6 @@ void AIController::ClearAll() {
 	DeleteInteractables();
 
 }
-
 
 void AIController::DeleteConsumables() {
 
@@ -174,120 +271,12 @@ void AIController::DeleteConsumable(int indexToDelete)
 
 void AIController::DeleteInteractables()
 {
-
-	interactables = nullptr;
-	interactableQuantity = 0;
-
+	interactableSpawnedQuantity = 0;
 }
-
-void AIController::DeleteInteractable(int indexToDelete)
-{
-	int newQuantity = interactableQuantity - 1;
-	Interactable* newInteractables = new Interactable[newQuantity];
-
-	for (int i = 0; i < newQuantity; i++) {
-
-		if (i > indexToDelete) newInteractables[i - 1] = interactables[i];
-		else if (i < indexToDelete)	newInteractables[i] = interactables[i];
-
-	}
-
-	interactables = newInteractables;
-	interactableQuantity = newQuantity;
-
-}
-
 
 void AIController::Play()
 {
-
-	// Enemigos 
-
-	counter += 1;
-
-
-	int minRateEnemy = 60;
-	int maxRateEnemy = 90;
-
-	// Si el personaje tiene menos de la mitad de vida
-
-	if (character->GetNormalizedHealth() < 0.5f) {
-		minRateEnemy = 140;
-		maxRateEnemy = 240;
-	}
-
-	if (counter >= GetRandomValue(minRateEnemy, maxRateEnemy)) {
-
-		SpawnEnemy();
-		counter = 0;
-
-	}
-
-	for (int i = 0; i < enemyQuantity; i++) enemies[i].Play();
-
-	// Interactables
-
-	interactableCounter += 1;
-
-	if (interactableCounter >= GetRandomValue(20, 30)) {
-
-		// Por cada 10 enemigos tendrás una llave
-		// Y si no hay mas llaves en el campo
-
-		if (enemyQuantity > 0 && enemyQuantity % 10 == 0 && interactableQuantity == 0) {
-
-			SpawnInteractable(I_KEY);
-			interactableCounter = 0;
-
-		}
-	}
-
-	for (int i = 0; i < interactableQuantity; i++) {
-
-		interactables[i].Draw();
-
-		if (interactables[i].GetGrabbed()) DeleteInteractable(i);
-
-	}
-
-	// Consumibles
-
-	consumableHealthCounter += 1;
-
-	if (consumableHealthCounter >= GetRandomValue(240, 360)) {
-
-		// Si el personaje tiene menos de la mitad de vida
-		// Y además no hemos spawneado otra pocion
-
-		if (character->GetNormalizedHealth() < 0.5f && consumableQuantity == 0) {
-
-			SpawnConsumable(I_POTION_HEALTH);
-			consumableHealthCounter = 0;
-
-		}
-	}
-
-	consumableSpeedCounter += 1;
-
-	if (consumableSpeedCounter >= GetRandomValue(640, 1060)) {
-
-		// Si hay más de 10 enemigos
-		// Y además no hemos spawneado otra pocion
-
-		if (enemyQuantity > 10 && consumableQuantity == 0) {
-
-			SpawnConsumable(I_POTION_SPEED);
-			consumableSpeedCounter = 0;
-
-		}
-	}
-
-	for (int i = 0; i < consumableQuantity; i++) {
-
-		consumables[i].Draw();
-
-		if (consumables[i].GetGrabbed()) DeleteConsumable(i);
-
-	}
-
+	SpawnEnemies();
+	SpawnInteractables();
+	SpawnConsumables();
 }

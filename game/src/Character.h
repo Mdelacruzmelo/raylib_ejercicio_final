@@ -9,9 +9,10 @@ public:
 	Character();
 
 	void Draw();
-	void Draw(Color colorInput);
+	void Draw(Texture2D textureInput);
 	void DrawVelocityTempBar();
 	bool GetIsAlive();
+	void SetIsAlive(bool isAliveInput);
 	void Die();
 	void ReinitializeAttackCircles();
 
@@ -19,6 +20,7 @@ public:
 	void Attack(Vector2 endVector);
 
 	Rectangle GetRect();
+	Rectangle GetCollisionRect();
 	Vector2 GetSize();
 	int GetLevel();
 
@@ -38,6 +40,8 @@ public:
 
 	Vector2 GetPosition();
 	void SetPosition(Vector2 newPos);
+
+	void SetAngle(float newAngle);
 
 	void AddHealth(float healthAdded);
 	void ApplyDamage(float damage);
@@ -96,11 +100,17 @@ public:
 	bool IsInventorySpaceAvailable();
 	void UseKeyInventory();
 	bool HasKey();
+	bool GetIsUsingKey();
+	void SetIsUsingKey(bool isUsing);
 
 	float GetAttackCircleRadius1();
 	float GetAttackCircleRadius2();
 	Vector2 GetAttackCircleCenter1();
 	Vector2 GetAttackCircleCenter2();
+
+	void SetSounds(Sound* soundsInput, int soundsQuantityInput);
+	void SetDieSounds(Sound* soundsInput, int soundsQuantityInput);
+	void SetShootSounds(Sound* soundsInput, int soundsQuantityInput);
 
 	void SetData(SavedData data);
 	void SetInitialData();
@@ -114,6 +124,12 @@ public:
 
 	bool GetIsInNewGame();
 	void SetIsInNewGame(bool isNewGameInput);
+
+	float GetSoundvolume();
+	void PlayHurtSound();
+
+	bool GetIsJustHurt();
+	void SetIsJustHurt(bool hurtInput);
 
 protected:
 
@@ -135,6 +151,8 @@ protected:
 
 	float size = 40.f;
 	float radius = size / 2;
+	float sizeCollision = size * 2;
+	float radiusCollision = sizeCollision / 2;
 
 	float initialAttackDistance = 5.f;
 	float attackDistance = initialAttackDistance;
@@ -173,6 +191,8 @@ protected:
 	int inventorySize = 5;
 	int* inventory = new int[5] {0, 0, 0, 0, 0};
 
+	bool isUsingKey = false;
+
 	char* loadedDoorsData;
 	int loadedEnvironment = 0;
 	bool isLoadingEnvironment = false;
@@ -182,6 +202,7 @@ protected:
 	Vector2 initialPos = { 600.f, 540.f };
 	Vector2 pos = initialPos;
 	Rectangle rec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
+	Rectangle collisionRec = Rectangle{ pos.x - radius, pos.y - radius, size, size };
 
 	Vector2 circle1Center;
 	float circle1Radius = 0.f;
@@ -196,4 +217,23 @@ protected:
 	bool updatingSlots = false;
 	bool inNewGame = false;
 
+	bool justHurt = false;
+
+	float angle = 0.f;
+	Texture2D texture;
+	int copSize = 80;
+
+	// Sounds 
+
+	int soundTimer = 0;
+
+	int soundsQuantity;
+	Sound* sounds;
+	float soundVolume = 0.5f;
+
+	int dieSoundsQuantity;
+	Sound* dieSounds;
+
+	int shootSoundsQuantity;
+	Sound* shootSounds;
 };

@@ -136,6 +136,7 @@ void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 	for (int i = 0; i < topDoorsQuantity; i++) {
 		Vector2 posTopDraw = { distanceXTopDoors * (i + 1), 0.f };
 		topDoors[i].SetPosition(posTopDraw);
+		topDoors[i].SetRotation(0.f);
 	}
 
 	// Setear posiciones Bottom doors
@@ -144,6 +145,7 @@ void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 	for (int i = 0; i < bottomDoorsQuantity; i++) {
 		Vector2 posBottomDraw = { distanceXBottomDoors * (i + 1), (GetScreenHeight() - bottomDoors[i].GetHeight()) };
 		bottomDoors[i].SetPosition(posBottomDraw);
+		bottomDoors[i].SetRotation(180.f);
 	}
 
 	// Setear posiciones Right doors
@@ -152,6 +154,7 @@ void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 	for (int i = 0; i < rightDoorsQuantity; i++) {
 		Vector2 posRightDraw = { GetScreenWidth() - rightDoors[i].GetWidth(), distanceYRightDoors * (i + 1) };
 		rightDoors[i].SetPosition(posRightDraw);
+		rightDoors[i].SetRotation(90.f);
 	}
 
 	// Setear posiciones Left doors
@@ -160,6 +163,7 @@ void Environment::AddDoor(E_Side doorSide, char* doorIdInput)
 	for (int i = 0; i < leftDoorsQuantity; i++) {
 		Vector2 posLeftDraw = { 0.f, distanceYLeftDoors * (i + 1) };
 		leftDoors[i].SetPosition(posLeftDraw);
+		leftDoors[i].SetRotation(270.f);
 	}
 
 

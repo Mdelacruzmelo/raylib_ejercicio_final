@@ -2,10 +2,8 @@
 
 Door::Door()
 {
-	// Por defecto la primera puerta a la izquierda si se construye sin parámetros
-	// Cosa que posiblemente no ocurra, vamos a ver donde nos lleva el código
-
 	doorSide = SIDE_LEFT;
+	doorId = "door_A";
 }
 
 Door::Door(E_Side doorSideInput, char* doorIdInput)
@@ -18,24 +16,26 @@ void Door::Draw(Character* characterInput)
 {
 	character = characterInput;
 
-	Color color = ORANGE;
-	if (locked) color = RED;
+	static Texture2D door = LoadTexture("resources/textures/door.png");
+	static Texture2D doorLocked = LoadTexture("resources/textures/door_locked.png");
 
-	DrawRectangle((int)pos.x, (int)pos.y, (int)width, (int)height, color);
+	Rectangle source = { 0.f, 0.f, width, height };
+	Rectangle dest = { pos.x + width / 2.f, pos.y + height / 2.f, width, height };
 
-	// Si se puede, enseñar mensaje de que la puerta está bloqueada
+	if (locked) DrawTexturePro(doorLocked, source, dest, Vector2{ width / 2.f,height / 2.f }, rotation, WHITE);
+	else DrawTexturePro(door, source, dest, Vector2{ width / 2.f, height / 2.f }, rotation, WHITE);
 
-	if (showMessageLocked) {
+	if (showMessageLocked && locked) {
 
 		counterMessageLocked += 1;
 
 		Vector2 messagePos;
 		if (doorSide == SIDE_TOP) messagePos = Vector2{ pos.x + width + 10.f, pos.y + height / 2 };
 		else if (doorSide == SIDE_BOTTOM) messagePos = Vector2{ pos.x + width + 10.f, pos.y - 20.f };
-		else if (doorSide == SIDE_RIGHT) messagePos = Vector2{ pos.x - 100.f, pos.y + height / 2 };
+		else if (doorSide == SIDE_RIGHT) messagePos = Vector2{ pos.x - 100.f, pos.y };
 		else messagePos = Vector2{ pos.x + width + 10.f, pos.y - height / 2 };
 
-		DrawText("Locked", messagePos.x, messagePos.y, 20, RED);
+		DrawText("Cerrado", messagePos.x, messagePos.y, 20, RED);
 
 		if (counterMessageLocked >= 60) {
 
@@ -50,22 +50,37 @@ void Door::Draw(Character* characterInput)
 	// Y detectar si el jugador está interactuando con la puerta
 
 	if (
-		CheckCollisionRecs(character->GetRect(), GetRect()) &&
+		CheckCollisionRecs(character->GetCollisionRect(), GetRect()) &&
 		character->GetIsInteracting()
 		) {
 
 		if (locked) {
 
-			if (character->HasKey()) {
+			if (character->HasKey() || character->GetIsUsingKey()) {
 				character->UseKeyInventory();
 				Unlock();
+
+				static Sound openedSound = LoadSound("resources/sounds/door_opened.wav");
+				PlaySound(openedSound);
+
+				character->SetIsUsingKey(false);
+
 			}
-			else showMessageLocked = true;
+			else {
+
+				showMessageLocked = true;
+				static Sound lockedSound = LoadSound("resources/sounds/door_locked.wav");
+				PlaySound(lockedSound);
+			}
 
 		}
 		else {
 			character->SetDoorTargetId(GetTargetId());
 			character->SetIsTransporting(true);
+
+			showMessageLocked = true;
+			static Sound passSound = LoadSound("resources/sounds/door_passed.wav");
+			PlaySound(passSound);
 		}
 	}
 }
@@ -153,4 +168,9 @@ Vector2 Door::GetPosition()
 void Door::SetPosition(Vector2 newPos)
 {
 	pos = newPos;
+}
+
+void Door::SetRotation(float newRot)
+{
+	rotation = newRot;
 }

@@ -24,12 +24,15 @@ public:
 	char* GetTargetId();
 	Vector2 GetPosition();
 	void SetPosition(Vector2 newPos);
+	void SetRotation(float newRot);
 
 private:
 
 	Vector2 pos;
-	float width = 40.f;
-	float height = 70.f;
+	float width = 80.f;
+	float height = 80.f;
+	float doorSize = 80.f;
+	float rotation = 0.f;
 	E_Side doorSide;
 	char* doorId;
 	char* doorTargetId;
@@ -37,4 +40,5 @@ private:
 	bool showMessageLocked = false;
 	int counterMessageLocked = 0;
 	Character* character;
+
 };

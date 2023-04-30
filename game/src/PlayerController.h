@@ -7,11 +7,12 @@
 #include "InventoryItemsUtils.h"
 #include "Utils.h"
 #include "SaveData.h"
+#include "AIController.h"
 
 class PlayerController
 {
 public:
-	PlayerController(Character* characterInput, HUD* hudInput);
+	PlayerController(Character* characterInput, HUD* hudInput, AIController* aiControllerInput);
 
 	void Play();
 	void SetTypeHUD(E_TypeHUD typeHUDInput);
@@ -33,6 +34,7 @@ public:
 private:
 
 	SaveData* data;
+	AIController* aiController;
 	Vector2 movement = { 0.f, 0.f };
 	Vector2 mousePosition = { 0.f, 0.f };
 	float cursorSize = 50.f;
@@ -41,10 +43,29 @@ private:
 
 	Character* character = nullptr;
 	HUD* hud = nullptr;
-	E_TypeHUD typeHUD = H_PAUSE;
+	E_TypeHUD typeHUD = H_MAIN_MENU;
 
 	bool checkingSlots = true;
 	int slotsQuantity = 4;
 	bool* slots = new bool[slotsQuantity] {false, false, false, false};
 	bool loadSlotSuccess;
+
+	Vector2 vDifference = Vector2{ 0.f, 0.f };
+	float hipotenuse = 0.f;
+	Vector2 normalizedAiming = Vector2{ 0.f, 0.f };
+	Vector2 scaledVector = Vector2{ 0.f, 0.f };
+	Vector2 endVector = Vector2{ 0.f, 0.f };
+	float angle = 0.f;
+
+	int attackTimer = 0;
+	bool isAttackStarted = false;
+
+	int characterSoundsQuantity = 5;
+	Sound* characterSounds = new Sound[characterSoundsQuantity];
+	int characterShootSoundsQuantity = 4;
+	Sound* characterShootSounds = new Sound[characterShootSoundsQuantity];
+
+	float loadingTime = 0.f;
+	float LOADING_MAX_SECONDS = 14.f;
+
 };

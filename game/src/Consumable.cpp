@@ -4,21 +4,20 @@ Consumable::Consumable()
 {
 }
 
-Consumable::Consumable(E_ItemType typeInput, Character* characterInput, Vector2 loc)
+Consumable::Consumable(E_ItemType typeInput, Character* characterInput, Vector2 loc, Texture2D textureInput)
 {
 	type = typeInput;
 	character = characterInput;
 	location = loc;
-
-	// TODO: Dibujar imagen de item
 
 	if (typeInput == I_POTION_HEALTH) color = GREEN;
 	else if (typeInput == I_POTION_STRENGTH) color = ORANGE;
 	else if (typeInput == I_POTION_SPEED) color = BLUE;
 	else color = YELLOW;
 
-	rec = { location.x, location.y, size, size };
+	texture = textureInput;
 
+	rec = { location.x, location.y, size, size };
 }
 
 void Consumable::DetectGrab()
@@ -26,14 +25,18 @@ void Consumable::DetectGrab()
 	if (character) {
 
 		if (
-			CheckCollisionRecs(character->GetRect(), rec) &&
+			CheckCollisionRecs(character->GetCollisionRect(), rec) &&
 			character->GetIsInteracting()
 			) {
 
 			if (character->IsInventorySpaceAvailable()) {
-			
+
 				character->AddToInventory(type);
 				grabbed = true;
+
+				static Sound soundKeys = LoadSound("resources/sounds/pill1.wav");
+				SetSoundVolume(soundKeys, 0.5f);
+				PlaySound(soundKeys);
 
 			}
 			else {
@@ -71,7 +74,9 @@ Rectangle Consumable::GetRect()
 void Consumable::Draw()
 {
 	if (!grabbed) {
-		DrawRectangleRec(rec, color);
+
+		DrawTextureEx(texture, location, 0.f, 0.5f, WHITE);
 		DetectGrab();
+
 	}
 }

@@ -7,7 +7,7 @@ class Consumable
 {
 public:
 	Consumable();
-	Consumable(E_ItemType typeInput, Character* characterInput, Vector2 loc);
+	Consumable(E_ItemType typeInput, Character* characterInput, Vector2 loc, Texture2D textureInput);
 	void DetectGrab();
 	bool GetGrabbed();
 	void SetGrabbed(bool grabbedInput);
@@ -26,5 +26,7 @@ private:
 	float size = 30.f;
 	Rectangle rec = { location.x, location.y, size, size };
 	Color color = GREEN;
+
+	Texture2D texture;
 
 };

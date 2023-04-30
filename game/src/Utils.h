@@ -19,6 +19,7 @@ enum E_GameSlot {
 enum E_Button {
 	GO_BACK = 10,
 	GO_FORWARD = 11,
+	GO_SKIP = 12,
 };
 
 enum E_PauseButton {
@@ -33,7 +34,7 @@ enum E_PauseButton {
 enum E_TypeHUD {
 	H_GAME,
 	H_PAUSE,
-	H_HABILITIES,
+	H_ABILITIES,
 	H_INIT_HABILITIES,
 	H_SAVE_DATA,
 	H_LOAD_DATA,
@@ -41,6 +42,7 @@ enum E_TypeHUD {
 	H_MAIN_MENU,
 	H_LOOSE_GAME,
 	H_WIN_GAME,
+	H_LOADING_GAME,
 };
 
 enum E_ItemType {
